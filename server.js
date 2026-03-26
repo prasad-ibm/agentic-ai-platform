@@ -2,7 +2,7 @@ require('dotenv').config(); // loads .env for local dev (no-op on Railway)
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('crypto'); // built-in Node.js — no package needed
 const path = require('path');
 const fs = require('fs');
 
