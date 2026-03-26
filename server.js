@@ -1,0 +1,267 @@
+require('dotenv').config(); // loads .env for local dev (no-op on Railway)
+const express = require('express');
+const { Pool } = require('pg');
+const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+const fs = require('fs');
+
+const app = express();
+const PORT = process.env.PORT || 3030;
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname)));
+
+// ── DATABASE SETUP ─────────────────────────────────────────────────────────
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+async function initDB() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS clients (
+      id          TEXT PRIMARY KEY,
+      name        TEXT NOT NULL,
+      industry    TEXT DEFAULT '',
+      size        TEXT DEFAULT '',
+      created_at  TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS assessments (
+      id                 TEXT PRIMARY KEY,
+      client_id          TEXT NOT NULL REFERENCES clients(id),
+      stakeholder_name   TEXT NOT NULL,
+      stakeholder_role   TEXT DEFAULT '',
+      stakeholder_email  TEXT DEFAULT '',
+      domain             TEXT NOT NULL,
+      answers            JSONB NOT NULL DEFAULT '[]',
+      scores             JSONB NOT NULL DEFAULT '{}',
+      overall_score      DOUBLE PRECISION NOT NULL DEFAULT 0,
+      maturity_level     TEXT NOT NULL DEFAULT 'L1',
+      created_at         TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS projects (
+      id              TEXT PRIMARY KEY,
+      client_id       TEXT NOT NULL REFERENCES clients(id),
+      project_name    TEXT NOT NULL,
+      domain          TEXT NOT NULL,
+      asset_name      TEXT DEFAULT '',
+      status          TEXT NOT NULL DEFAULT 'planned',
+      progress        INTEGER DEFAULT 0,
+      sponsor         TEXT DEFAULT '',
+      sponsor_email   TEXT DEFAULT '',
+      start_date      TEXT DEFAULT '',
+      target_date     TEXT DEFAULT '',
+      investment      DOUBLE PRECISION DEFAULT 0,
+      projected_roi   DOUBLE PRECISION DEFAULT 0,
+      actual_savings  DOUBLE PRECISION DEFAULT 0,
+      kpi_target      TEXT DEFAULT '',
+      kpi_actual      TEXT DEFAULT '',
+      notes           TEXT DEFAULT '',
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      updated_at      TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+
+  console.log('✅ Database tables ready');
+}
+
+// ── CLIENT ROUTES ──────────────────────────────────────────────────────────
+app.get('/api/clients', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM clients ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/clients', async (req, res) => {
+  const { name, industry, size } = req.body;
+  if (!name) return res.status(400).json({ error: 'Client name required' });
+  try {
+    const id = uuidv4();
+    await pool.query(
+      'INSERT INTO clients (id, name, industry, size) VALUES ($1, $2, $3, $4)',
+      [id, name, industry || '', size || '']
+    );
+    res.json({ id, name, industry, size });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── ASSESSMENT ROUTES ──────────────────────────────────────────────────────
+app.get('/api/assessments', async (req, res) => {
+  const { client_id, domain } = req.query;
+  const params = [];
+  let idx = 1;
+  let q = 'SELECT * FROM assessments WHERE 1=1';
+  if (client_id) { q += ` AND client_id = $${idx++}`; params.push(client_id); }
+  if (domain)    { q += ` AND domain = $${idx++}`;    params.push(domain); }
+  q += ' ORDER BY created_at DESC';
+  try {
+    const { rows } = await pool.query(q, params);
+    res.json(rows); // answers/scores already parsed as objects (JSONB)
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/assessments', async (req, res) => {
+  const { client_id, stakeholder_name, stakeholder_role, stakeholder_email,
+          domain, answers, scores, overall_score, maturity_level } = req.body;
+  if (!client_id || !stakeholder_name || !domain || !answers)
+    return res.status(400).json({ error: 'Missing required fields' });
+  try {
+    const id = uuidv4();
+    await pool.query(
+      `INSERT INTO assessments
+        (id,client_id,stakeholder_name,stakeholder_role,stakeholder_email,domain,answers,scores,overall_score,maturity_level)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [id, client_id, stakeholder_name, stakeholder_role || '', stakeholder_email || '',
+       domain, JSON.stringify(answers), JSON.stringify(scores), overall_score || 0, maturity_level || 'L1']
+    );
+    res.json({ id, message: 'Assessment saved' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Aggregated view for a client across all stakeholders
+app.get('/api/assessments/aggregate/:client_id', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM assessments WHERE client_id = $1', [req.params.client_id]
+    );
+    if (!rows.length) return res.json({ message: 'No assessments yet', data: [] });
+
+    const byDomain = {};
+    rows.forEach(r => {
+      const scores = typeof r.scores === 'string' ? JSON.parse(r.scores) : r.scores;
+      if (!byDomain[r.domain])
+        byDomain[r.domain] = { domain: r.domain, stakeholders: [], avgScores: {}, overallAvg: 0 };
+      byDomain[r.domain].stakeholders.push({
+        name: r.stakeholder_name, role: r.stakeholder_role, overall: r.overall_score, scores
+      });
+    });
+    Object.values(byDomain).forEach(d => {
+      const dims = {};
+      d.stakeholders.forEach(s => {
+        Object.entries(s.scores).forEach(([dim, val]) => {
+          if (!dims[dim]) dims[dim] = [];
+          dims[dim].push(val);
+        });
+      });
+      Object.entries(dims).forEach(([dim, vals]) => {
+        d.avgScores[dim] = vals.reduce((a, b) => a + b, 0) / vals.length;
+      });
+      d.overallAvg = d.stakeholders.reduce((a, s) => a + s.overall, 0) / d.stakeholders.length;
+    });
+    res.json({ client_id: req.params.client_id, domains: Object.values(byDomain) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── PROJECT / DEPLOYMENT ROUTES ────────────────────────────────────────────
+app.get('/api/projects', async (req, res) => {
+  const { client_id, status } = req.query;
+  const params = [];
+  let idx = 1;
+  let q = 'SELECT * FROM projects WHERE 1=1';
+  if (client_id) { q += ` AND client_id = $${idx++}`; params.push(client_id); }
+  if (status)    { q += ` AND status = $${idx++}`;    params.push(status); }
+  q += ' ORDER BY created_at DESC';
+  try {
+    const { rows } = await pool.query(q, params);
+    res.json(rows);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/projects', async (req, res) => {
+  const { client_id, project_name, domain, asset_name, status, progress,
+          sponsor, sponsor_email, start_date, target_date,
+          investment, projected_roi, actual_savings, kpi_target, kpi_actual, notes } = req.body;
+  if (!client_id || !project_name || !domain)
+    return res.status(400).json({ error: 'Missing required fields' });
+  try {
+    const id = uuidv4();
+    await pool.query(
+      `INSERT INTO projects
+        (id,client_id,project_name,domain,asset_name,status,progress,sponsor,sponsor_email,
+         start_date,target_date,investment,projected_roi,actual_savings,kpi_target,kpi_actual,notes)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+      [id, client_id, project_name, domain, asset_name || '', status || 'planned',
+       progress || 0, sponsor || '', sponsor_email || '', start_date || '', target_date || '',
+       investment || 0, projected_roi || 0, actual_savings || 0,
+       kpi_target || '', kpi_actual || '', notes || '']
+    );
+    res.json({ id, message: 'Project created' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/projects/:id', async (req, res) => {
+  const { status, progress, actual_savings, kpi_actual, notes } = req.body;
+  try {
+    await pool.query(
+      `UPDATE projects SET
+        status         = COALESCE($1, status),
+        progress       = COALESCE($2, progress),
+        actual_savings = COALESCE($3, actual_savings),
+        kpi_actual     = COALESCE($4, kpi_actual),
+        notes          = COALESCE($5, notes),
+        updated_at     = NOW()
+       WHERE id = $6`,
+      [status ?? null, progress ?? null, actual_savings ?? null, kpi_actual ?? null, notes ?? null, req.params.id]
+    );
+    res.json({ message: 'Updated' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/projects/:id', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM projects WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── ROI SUMMARY ────────────────────────────────────────────────────────────
+app.get('/api/roi-summary/:client_id', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM projects WHERE client_id = $1', [req.params.client_id]
+    );
+    const summary = {
+      total_investment:    rows.reduce((s, r) => s + (r.investment || 0), 0),
+      total_projected_roi: rows.reduce((s, r) => s + (r.projected_roi || 0), 0),
+      total_actual_savings:rows.reduce((s, r) => s + (r.actual_savings || 0), 0),
+      by_domain: {},
+      by_status: { planned: 0, in_progress: 0, live: 0, completed: 0 },
+      projects: rows.length
+    };
+    rows.forEach(r => {
+      summary.by_status[r.status] = (summary.by_status[r.status] || 0) + 1;
+      if (!summary.by_domain[r.domain])
+        summary.by_domain[r.domain] = { investment: 0, roi: 0, savings: 0, count: 0 };
+      summary.by_domain[r.domain].investment += r.investment || 0;
+      summary.by_domain[r.domain].roi        += r.projected_roi || 0;
+      summary.by_domain[r.domain].savings    += r.actual_savings || 0;
+      summary.by_domain[r.domain].count++;
+    });
+    res.json(summary);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── CATCH-ALL → serve .html files ──────────────────────────────────────────
+app.get('/{*path}', (req, res) => {
+  const exactFile = path.join(__dirname, req.path);
+  if (fs.existsSync(exactFile) && fs.statSync(exactFile).isFile()) return res.sendFile(exactFile);
+  const htmlFile = path.join(__dirname, req.path + '.html');
+  if (fs.existsSync(htmlFile)) return res.sendFile(htmlFile);
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
+initDB()
+  .then(() => app.listen(PORT, () =>
+    console.log(`🚀 Agentic AI Value Platform running on http://localhost:${PORT}`)
+  ))
+  .catch(err => { console.error('❌ DB init failed:', err.message); process.exit(1); });

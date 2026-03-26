@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentic AI Value Platform — IBM Client Zero Edition</title>
+  <link rel="stylesheet" href="/ibm-theme.css" />
+  <style>
+    /* ── IBM CARBON G100 TOKEN OVERRIDES ────────────────────────────── */
+    :root {
+      --bg-0:        #161616;
+      --bg-1:        #262626;
+      --bg-2:        #393939;
+      --bg-card:     #262626;
+      --bg-card-h:   #333333;
+      --blue:        #0f62fe;
+      --blue-l:      #4589ff;
+      --cyan:        #33b1ff;
+      --cyan-d:      #1192e8;
+      --gold:        #f1c21b;
+      --green:       #42be65;
+      --green-d:     #24a148;
+      --red:         #ff8389;
+      --purple:      #be95ff;
+      --text-0:      #f4f4f4;
+      --text-1:      #c6c6c6;
+      --text-2:      #8d8d8d;
+      --border:      #393939;
+      --border-b:    #4589ff;
+      --radius:      0px;
+      --radius-lg:   2px;
+      --shadow:      0 2px 6px rgba(0,0,0,0.3);
+      --shadow-b:    0 4px 16px rgba(15,98,254,0.25);
+      --transition:  0.15s ease;
+    }
+
+    /* ── RESET ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--bg-0);
+      color: var(--text-0);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: #78a9ff; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
+    .label   { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--blue-l); }
+    .h-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; }
+    h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+    h3 { font-size: 1.25rem; font-weight: 600; }
+    h4 { font-size: 1rem; font-weight: 600; }
+    p  { color: var(--text-1); }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── LAYOUT ─────────────────────────────────────────────────────── */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    .section   { padding: 96px 0; }
+    .section-sm{ padding: 64px 0; }
+    .grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .grid-3  { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .grid-4  { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+    .flex    { display: flex; }
+    .flex-center { display: flex; align-items: center; justify-content: center; }
+    .gap-1   { gap: 0.5rem; }
+    .gap-2   { gap: 1rem; }
+    .gap-3   { gap: 1.5rem; }
+    .gap-4   { gap: 2rem; }
+    .col     { flex-direction: column; }
+
+    /* ── COMPONENTS ─────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .badge-blue  { background: rgba(15,98,254,0.15); color: var(--blue-l); border: 1px solid rgba(15,98,254,0.3); }
+    .badge-cyan  { background: rgba(51,177,255,0.1);  color: var(--cyan);   border: 1px solid rgba(51,177,255,0.25);}
+    .badge-gold  { background: rgba(241,194,27,0.1);  color: var(--gold);   border: 1px solid rgba(241,194,27,0.25);}
+    .badge-green { background: rgba(66,190,101,0.1);  color: var(--green);  border: 1px solid rgba(66,190,101,0.25);}
+    .badge-red   { background: rgba(250,77,86,0.1);   color: var(--red);    border: 1px solid rgba(250,77,86,0.25);}
+    .badge-purple{ background: rgba(165,110,255,0.1); color: var(--purple); border: 1px solid rgba(165,110,255,0.25);}
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: var(--radius);
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; border: none; transition: var(--transition);
+      text-decoration: none; letter-spacing: 0.02em;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: #0353e9; }
+    .btn-ghost { background: transparent; color: #78a9ff; border: 1px solid var(--border-b); }
+    .btn-ghost:hover { background: rgba(69,137,255,0.12); }
+    .btn-gold { background: var(--gold); color: #000; font-weight: 700; }
+    .btn-gold:hover { background: #f5cd3d; transform: translateY(-1px); }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.75rem;
+      transition: var(--transition);
+    }
+    .card:hover { background: var(--bg-card-h); border-color: var(--border-b); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .card-glow { box-shadow: 0 0 0 1px rgba(51,177,255,0.15), 0 8px 32px rgba(15,98,254,0.15); }
+
+    .divider { height: 1px; background: var(--border); margin: 2rem 0; }
+    .tag { background: var(--bg-2); color: var(--text-1); font-size: 12px; padding: 3px 10px; border-radius: 3px; }
+
+    /* ── NAVIGATION ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #161616;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; height: 48px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .nav-logo {
+      width: 48px; height: 18px;
+      background: var(--blue); clip-path: none;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; color: white;
+    }
+    .nav-sep { width: 1px; height: 20px; background: var(--border); }
+    .nav-title { font-size: 13px; font-weight: 600; color: var(--text-0); letter-spacing: 0.02em; }
+    .nav-links { display: flex; align-items: center; gap: 0; }
+    .nav-links a { font-size: 0.875rem; font-weight: 400; color: var(--text-1); height: 48px; display: flex; align-items: center; padding: 0 1rem; border-bottom: 2px solid transparent; transition: all var(--transition); text-decoration: none; }
+    .nav-links a:hover { color: var(--text-0); background: var(--bg-1); text-decoration: none; }
+    .nav-links a.active { color: var(--text-0); border-bottom-color: var(--blue); }
+    .nav-cta { display: flex; gap: 0.75rem; }
+
+    /* ── HERO ──────────────────────────────────────────────────────────── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; overflow: hidden;
+      padding-top: 48px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(15,98,254,0.18) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 50% at 20% 70%, rgba(51,177,255,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 40% at 80% 80%, rgba(165,110,255,0.06) 0%, transparent 60%),
+                  var(--bg-0);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    #particles { position: absolute; inset: 0; pointer-events: none; }
+    .hero-content { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 0 2rem; width: 100%; }
+    .hero-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; min-height: calc(100vh - 48px); }
+    .hero-left { padding: 5rem 0; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+    .hero-eyebrow-line { height: 2px; width: 40px; background: linear-gradient(90deg, var(--cyan), transparent); }
+    .hero-title { margin-bottom: 1.25rem; }
+    .hero-title .grad {
+      background: linear-gradient(135deg, #fff 0%, var(--cyan) 50%, var(--blue-l) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { font-size: 1.1rem; color: var(--text-1); max-width: 520px; margin-bottom: 2rem; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+    .hero-stats { display: flex; gap: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .h-stat { text-align: left; }
+    .h-stat-num { font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .h-stat-lbl { font-size: 11px; color: var(--text-2); margin-top: 4px; }
+
+    /* LAST MILE VISUAL (Right side of hero) */
+    .hero-right { position: relative; padding: 5rem 0; }
+    .lm-diagram {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; box-shadow: var(--shadow);
+    }
+    .lm-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-2); margin-bottom: 1.5rem; }
+    .lm-pipeline { display: flex; align-items: center; gap: 0; position: relative; }
+    .lm-stage {
+      flex: 1; text-align: center; position: relative;
+    }
+    .lm-node {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 8px; font-size: 18px; position: relative; z-index: 2;
+    }
+    .lm-node.done  { background: rgba(66,190,101,0.15); border: 2px solid var(--green); }
+    .lm-node.warn  { background: rgba(241,194,27,0.15); border: 2px solid var(--gold); }
+    .lm-node.fail  { background: rgba(250,77,86,0.15);  border: 2px solid var(--red);  }
+    .lm-node.gap   { background: rgba(15,98,254,0.15);  border: 2px dashed var(--blue-l); }
+    .lm-stage-lbl  { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-2); }
+    .lm-connector {
+      flex: 0 0 32px; height: 2px; position: relative;
+      background: linear-gradient(90deg, var(--green) 0%, var(--gold) 50%, var(--red) 100%);
+      margin-bottom: 32px;
+    }
+    .lm-connector::after {
+      content: '▶'; position: absolute; right: -8px; top: -7px; font-size: 10px;
+      color: var(--text-2);
+    }
+    .lm-gap-overlay {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 38%;
+      background: linear-gradient(90deg, transparent, rgba(250,77,86,0.05));
+      border-left: 2px dashed rgba(250,77,86,0.3); border-radius: 0 12px 12px 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .lm-gap-label {
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-size: 10px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: rgba(250,77,86,0.6);
+    }
+    .lm-metrics { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .lm-metric {
+      background: var(--bg-1); border-radius: 6px; padding: 12px;
+      border: 1px solid var(--border); text-align: center;
+    }
+    .lm-metric-val { font-size: 1.4rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .lm-metric-lbl { font-size: 10px; color: var(--text-2); line-height: 1.3; }
+    .lm-insight { margin-top: 1rem; padding: 12px 16px; background: rgba(250,77,86,0.06); border: 1px solid rgba(250,77,86,0.2); border-radius: 6px; }
+    .lm-insight p { font-size: 12px; color: var(--text-1); line-height: 1.5; }
+    .lm-insight strong { color: var(--red); }
+
+    /* ── PROBLEM SECTION ─────────────────────────────────────────────── */
+    #problem { background: var(--bg-0); }
+    .problem-header { text-align: center; max-width: 720px; margin: 0 auto 4rem; }
+    .problem-header p { font-size: 1.05rem; margin-top: 1rem; }
+    .prob-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-bottom: 4rem; }
+    .prob-card {
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 2rem;
+      border: 1px solid var(--border); position: relative; overflow: hidden;
+      transition: var(--transition);
+    }
+    .prob-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .prob-card.c1::before { background: linear-gradient(90deg, var(--gold), transparent); }
+    .prob-card.c2::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .prob-card.c3::before { background: linear-gradient(90deg, var(--purple), transparent); }
+    .prob-card:hover { background: var(--bg-card-h); transform: translateY(-3px); box-shadow: var(--shadow); }
+    .prob-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .prob-stat { font-size: 3rem; font-weight: 700; line-height: 1; margin: 0.75rem 0 0.25rem; }
+    .prob-card.c1 .prob-stat { color: var(--gold); }
+    .prob-card.c2 .prob-stat { color: var(--red); }
+    .prob-card.c3 .prob-stat { color: var(--purple); }
+    .prob-desc { font-size: 13px; color: var(--text-1); line-height: 1.6; margin-top: 0.75rem; }
+
+    /* Value Leak Diagram */
+    .value-leak { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; }
+    .vl-title { text-align: center; margin-bottom: 2rem; }
+    .vl-funnel { display: flex; align-items: flex-end; gap: 0; justify-content: center; padding-bottom: 0; }
+    .vl-stage {
+      text-align: center; position: relative;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .vl-bar-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-end; height: 190px;
+    }
+    .vl-bar-pct {
+      font-size: 12px; font-weight: 700; margin-bottom: 5px;
+      min-height: 18px; line-height: 18px; white-space: nowrap;
+    }
+    .vl-bar {
+      width: 72px; border-radius: 4px 4px 0 0;
+      min-height: 4px;
+    }
+    .vl-arrow { font-size: 1.5rem; color: var(--text-2); display: flex; align-items: flex-end; height: 190px; padding: 0 8px; padding-bottom: 12px; }
+    .vl-lbl { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; color: var(--text-2); max-width: 80px; line-height: 1.3; }
+    .vl-leak-tag {
+      position: absolute; right: -20px; top: 20px;
+      font-size: 10px; color: var(--red); font-weight: 600;
+      background: rgba(250,77,86,0.1); border: 1px solid rgba(250,77,86,0.3);
+      padding: 2px 6px; border-radius: 3px; white-space: nowrap;
+    }
+    .vl-bridge {
+      margin-top: 2rem; padding: 1.25rem 2rem;
+      background: rgba(15,98,254,0.08); border: 1px solid rgba(15,98,254,0.2);
+      border-radius: 6px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .vl-bridge p { font-size: 14px; color: var(--text-1); flex: 1; }
+    .vl-bridge strong { color: var(--cyan); }
+
+    /* ── SUCCESS SECTION ─────────────────────────────────────────────── */
+    #success {
+      background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 50%, var(--bg-0) 100%);
+      position: relative; overflow: hidden;
+    }
+    #success::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    }
+    .success-header { text-align: center; max-width: 760px; margin: 0 auto 1.5rem; }
+    .success-header p { font-size: 1.05rem; margin-top: 1rem; }
+    .ibm-proof-banner {
+      background: linear-gradient(135deg, rgba(15,98,254,0.12) 0%, rgba(51,177,255,0.08) 100%);
+      border: 1px solid rgba(51,177,255,0.2); border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem; margin-bottom: 3rem; display: flex;
+      align-items: center; gap: 2rem; flex-wrap: wrap;
+    }
+    .ibm-logo-text {
+      font-size: 1.5rem; font-weight: 700; letter-spacing: 3px; color: var(--blue-l);
+      border-right: 1px solid var(--border); padding-right: 2rem;
+      flex-shrink: 0;
+    }
+    .ibm-tagline { font-size: 14px; color: var(--text-1); flex: 1; line-height: 1.6; }
+    .ibm-global-stats { display: flex; gap: 2rem; flex-shrink: 0; flex-wrap: wrap; }
+    .ibm-gstat { text-align: center; }
+    .ibm-gstat-n { font-size: 1.5rem; font-weight: 700; color: var(--cyan); line-height: 1; }
+    .ibm-gstat-l { font-size: 10px; color: var(--text-2); margin-top: 4px; letter-spacing: 0.5px; }
+
+    /* Domain Tabs */
+    .domain-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid var(--border); }
+    .domain-tab {
+      padding: 12px 28px; font-size: 14px; font-weight: 600; cursor: pointer;
+      color: var(--text-2); border-bottom: 2px solid transparent; transition: var(--transition);
+      background: none; border-top: none; border-left: none; border-right: none;
+      font-family: inherit; letter-spacing: 0.02em;
+    }
+    .domain-tab:hover { color: var(--text-0); }
+    .domain-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+    .domain-panel { display: none; padding-top: 2rem; }
+    .domain-panel.active { display: block; }
+
+    .domain-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2.5rem; align-items: start; }
+    .domain-info {}
+    .domain-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .domain-desc { font-size: 14px; color: var(--text-1); line-height: 1.7; margin-bottom: 1.5rem; }
+    .domain-processes { margin-bottom: 1.5rem; }
+    .dp-item {
+      display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dp-item:last-child { border-bottom: none; }
+    .dp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .dp-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .dp-detail { font-size: 12px; color: var(--text-2); }
+
+    .domain-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .dm-card {
+      background: var(--bg-0); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .dm-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .hr-accent::after  { background: var(--cyan); }
+    .fin-accent::after { background: var(--gold); }
+    .pro-accent::after { background: var(--green); }
+    .dm-val { font-size: 2.4rem; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+    .dm-val.cyan   { color: var(--cyan); }
+    .dm-val.gold   { color: var(--gold); }
+    .dm-val.green  { color: var(--green); }
+    .dm-val.purple { color: var(--purple); }
+    .dm-val.red    { color: var(--red); }
+    .dm-lbl { font-size: 11px; color: var(--text-2); line-height: 1.4; letter-spacing: 0.3px; }
+    .dm-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; font-style: italic; }
+
+    .process-flow { background: var(--bg-0); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+    .pf-title { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-2); margin-bottom: 1.25rem; }
+    .pf-steps { display: flex; flex-direction: column; gap: 0; }
+    .pf-step {
+      display: flex; align-items: flex-start; gap: 12px; padding: 10px 0;
+      border-bottom: 1px solid var(--border); position: relative;
+    }
+    .pf-step:last-child { border-bottom: none; }
+    .pf-num {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; font-family: 'IBM Plex Mono', monospace;
+    }
+    .pf-content { flex: 1; }
+    .pf-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .pf-detail { font-size: 11px; color: var(--text-2); }
+    .pf-tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .pf-tag { font-size: 10px; padding: 2px 8px; border-radius: 3px; font-weight: 600; }
+    .pf-tag.automated   { background: rgba(66,190,101,0.12); color: var(--green); }
+    .pf-tag.bottleneck  { background: rgba(250,77,86,0.12);  color: var(--red); }
+    .pf-tag.opportunity { background: rgba(51,177,255,0.12); color: var(--cyan); }
+    .pf-tag.manual      { background: rgba(241,194,27,0.12); color: var(--gold); }
+
+    /* ── PLATFORM SECTION ────────────────────────────────────────────── */
+    #platform { background: var(--bg-0); position: relative; }
+    #platform::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .platform-header { text-align: center; max-width: 800px; margin: 0 auto 3rem; }
+    .platform-header p { font-size: 1.05rem; margin-top: 1rem; }
+    .pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-bottom: 3.5rem; }
+    .pillar {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; position: relative; overflow: hidden;
+      transition: var(--transition);
+    }
+    .pillar::before {
+      content: ''; position: absolute; inset: 0; opacity: 0;
+      transition: opacity 0.3s; border-radius: var(--radius-lg);
+    }
+    .pillar.p1::before { background: radial-gradient(ellipse at top left, rgba(51,177,255,0.1), transparent 70%); }
+    .pillar.p2::before { background: radial-gradient(ellipse at top left, rgba(241,194,27,0.1), transparent 70%); }
+    .pillar.p3::before { background: radial-gradient(ellipse at top left, rgba(66,190,101,0.1), transparent 70%); }
+    .pillar:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .pillar:hover::before { opacity: 1; }
+    .pillar-step { position: absolute; top: 1.25rem; right: 1.25rem; font-size: 3.5rem; font-weight: 700; color: rgba(255,255,255,0.04); font-family: 'IBM Plex Mono', monospace; line-height: 1; }
+    .pillar-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .pillar-num { font-size: 11px; font-weight: 700; letter-spacing: 3px; margin-bottom: 0.75rem; }
+    .pillar.p1 .pillar-num { color: var(--cyan); }
+    .pillar.p2 .pillar-num { color: var(--gold); }
+    .pillar.p3 .pillar-num { color: var(--green); }
+    .pillar h3 { margin-bottom: 0.75rem; }
+    .pillar p  { font-size: 13px; color: var(--text-1); line-height: 1.65; margin-bottom: 1.25rem; }
+    .pillar-list { display: flex; flex-direction: column; gap: 8px; }
+    .pillar-list li { font-size: 12px; color: var(--text-1); display: flex; align-items: flex-start; gap: 8px; }
+    .pillar-list li::before { content: '→'; color: var(--text-2); flex-shrink: 0; }
+    .pillar-cta { margin-top: 1.5rem; }
+
+    /* Journey Timeline */
+    .journey { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; margin-bottom: 3rem; }
+    .journey-title { text-align: center; margin-bottom: 2rem; }
+    .journey-steps { display: flex; align-items: flex-start; gap: 0; position: relative; }
+    .journey-steps::before {
+      content: ''; position: absolute; top: 28px; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--cyan) 0%, var(--gold) 50%, var(--green) 100%);
+    }
+    .j-step { flex: 1; text-align: center; position: relative; padding-top: 0; }
+    .j-dot {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem; position: relative; z-index: 2;
+      font-size: 1.2rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace;
+    }
+    .j-dot.cyan   { background: rgba(51,177,255,0.15); border: 2px solid var(--cyan); color: var(--cyan); }
+    .j-dot.gold   { background: rgba(241,194,27,0.15); border: 2px solid var(--gold); color: var(--gold); }
+    .j-dot.green  { background: rgba(66,190,101,0.15); border: 2px solid var(--green); color: var(--green); }
+    .j-dot.blue   { background: rgba(15,98,254,0.15);  border: 2px solid var(--blue-l); color: var(--blue-l); }
+    .j-dot.purple { background: rgba(165,110,255,0.15);border: 2px solid var(--purple); color: var(--purple); }
+    .j-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .j-desc { font-size: 11px; color: var(--text-2); line-height: 1.4; max-width: 110px; margin: 0 auto; }
+    .j-time { font-size: 10px; color: var(--text-2); margin-top: 6px; padding: 2px 8px; background: var(--bg-0); border-radius: 3px; display: inline-block; }
+
+    /* Asset Grid */
+    .assets-header { text-align: center; margin-bottom: 2rem; }
+    .asset-domains { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .asset-filter-btn {
+      padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); background: transparent;
+      color: var(--text-1); font-family: inherit; transition: var(--transition);
+    }
+    .asset-filter-btn:hover, .asset-filter-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(51,177,255,0.08); }
+    .asset-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .asset-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 1.25rem; transition: var(--transition); cursor: pointer;
+    }
+    .asset-card:hover { background: var(--bg-card-h); border-color: var(--border-b); transform: translateY(-2px); }
+    .asset-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .asset-icon { font-size: 1.5rem; }
+    .asset-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .asset-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; margin-bottom: 0.75rem; }
+    .asset-metrics { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .asset-m { font-size: 11px; }
+    .asset-m span { font-weight: 700; color: var(--green); }
+
+    /* ── CTA SECTION ─────────────────────────────────────────────────── */
+    #cta {
+      background: linear-gradient(135deg, rgba(15,98,254,0.15) 0%, rgba(51,177,255,0.08) 100%);
+      border-top: 1px solid rgba(51,177,255,0.15);
+      border-bottom: 1px solid rgba(51,177,255,0.15);
+    }
+    .cta-inner { text-align: center; max-width: 680px; margin: 0 auto; }
+    .cta-inner h2 { margin-bottom: 1rem; }
+    .cta-inner p { font-size: 1rem; margin-bottom: 2rem; }
+    .cta-domains { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .cta-domain {
+      padding: 12px 20px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-1); transition: var(--transition); font-family: inherit;
+      text-align: center;
+    }
+    .cta-domain:hover, .cta-domain.selected { border-color: var(--cyan); color: var(--cyan); background: rgba(51,177,255,0.08); }
+    .cta-domain .cd-icon { font-size: 1.75rem; display: block; margin-bottom: 6px; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; }
+
+    /* ── FOOTER ─────────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg-1); border-top: 1px solid var(--border);
+      padding: 3rem 0 2rem;
+    }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 2rem; }
+    .footer-brand p { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-top: 0.75rem; max-width: 280px; }
+    .footer-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 1rem; color: var(--text-0); letter-spacing: 0.5px; }
+    .footer-col a { display: block; font-size: 13px; color: var(--text-2); margin-bottom: 8px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--cyan); }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-bottom p { font-size: 12px; color: var(--text-2); }
+    .footer-source { font-size: 11px; color: var(--text-2); }
+
+    /* ── ANIMATIONS ──────────────────────────────────────────────────── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse-ring { 0%,100% { box-shadow: 0 0 0 0 rgba(51,177,255,0.3); } 50% { box-shadow: 0 0 0 8px rgba(51,177,255,0); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .animate-fade-up { animation: fadeUp 0.7s ease forwards; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .pulse { animation: pulse-ring 2s ease-in-out infinite; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .counter { transition: all 0.5s ease; }
+    [data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    [data-reveal].revealed { opacity: 1; transform: translateY(0); }
+
+    /* ── SCROLLBAR ───────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-0); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-layout  { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-right   { display: none; }
+      .grid-3, .prob-cards, .pillars, .asset-grid { grid-template-columns: 1fr 1fr; }
+      .domain-layout { grid-template-columns: 1fr; }
+      .footer-top   { grid-template-columns: 1fr 1fr; }
+      .journey-steps { flex-direction: column; gap: 1.5rem; }
+      .journey-steps::before { display: none; }
+    }
+    @media (max-width: 640px) {
+      .grid-3, .prob-cards, .pillars, .asset-grid, .grid-4, .domain-metrics { grid-template-columns: 1fr; }
+      .ibm-proof-banner { flex-direction: column; }
+      .ibm-logo-text { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 1rem; }
+      .hero-stats { flex-wrap: wrap; }
+      .domain-tabs { flex-wrap: wrap; }
+      .nav-links    { display: none; }
+      .footer-top   { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ───────── NAVIGATION ─────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Agentic AI Value Platform</span>
+  </div>
+  <div class="nav-links">
+    <a href="#problem" class="active">The Gap</a>
+    <a href="#success">Client Zero</a>
+    <a href="#platform">Platform</a>
+    <a href="assess.html">Assess</a>
+    <a href="assets.html">Asset Library</a>
+    <a href="tracker.html">Deployments</a>
+    <a href="roi.html">ROI Tracker</a>
+  </div>
+  <div class="nav-cta">
+    <a href="assess.html" class="btn btn-ghost" style="padding:8px 16px;font-size:13px;">Assess Maturity</a>
+    <a href="assess.html" class="btn btn-primary" style="padding:8px 16px;font-size:13px;">Start Now →</a>
+  </div>
+</nav>
+
+<!-- ───────── HERO ───────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-layout">
+      <div class="hero-left">
+        <div class="hero-eyebrow animate-fade-up">
+          <div class="hero-eyebrow-line"></div>
+          <span class="label">IBM Agentic AI Deployment Framework</span>
+        </div>
+        <h1 class="hero-title animate-fade-up delay-1">
+          Bridge the<br/><span class="grad">Last Mile</span><br/>of AI Value
+        </h1>
+        <p class="hero-sub animate-fade-up delay-2">
+          Most enterprises build AI — few realize its full ROI. This platform closes the gap between AI deployment and measurable business outcomes across Finance, HR, and Procurement — guided by IBM's own $3.5B transformation.
+        </p>
+        <div class="hero-actions animate-fade-up delay-3">
+          <a href="assess.html" class="btn btn-primary">Assess Your Maturity →</a>
+          <a href="#success" class="btn btn-ghost">View IBM Proof Points</a>
+        </div>
+        <div class="hero-stats animate-fade-up delay-4">
+          <div class="h-stat">
+            <div class="h-stat-num" data-target="3.5" data-suffix="B">$0B</div>
+            <div class="h-stat-lbl">IBM Productivity Gains</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-num" data-target="94" data-suffix="%">0%</div>
+            <div class="h-stat-lbl">HR Requests Auto-Resolved</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-num" data-target="315" data-suffix="M">$0M</div>
+            <div class="h-stat-lbl">Procurement Savings</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-num" data-target="3.9" data-suffix="M hrs">0</div>
+            <div class="h-stat-lbl">Hours Saved in 2024</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right animate-float">
+        <div class="lm-diagram">
+          <div class="lm-title">⚡ The Last Mile AI Deployment Gap</div>
+          <div class="lm-pipeline">
+            <div class="lm-stage">
+              <div class="lm-node done">💡</div>
+              <div class="lm-stage-lbl">Strategy &amp;<br/>Vision</div>
+            </div>
+            <div class="lm-connector"></div>
+            <div class="lm-stage">
+              <div class="lm-node done">🏗️</div>
+              <div class="lm-stage-lbl">Build &amp;<br/>Deploy</div>
+            </div>
+            <div class="lm-connector" style="background:linear-gradient(90deg,var(--gold),var(--red))"></div>
+            <div class="lm-stage">
+              <div class="lm-node warn">📊</div>
+              <div class="lm-stage-lbl">KPI<br/>Alignment</div>
+            </div>
+            <div class="lm-connector" style="background:var(--red)"></div>
+            <div class="lm-stage">
+              <div class="lm-node fail">💰</div>
+              <div class="lm-stage-lbl">ROI<br/>Realization</div>
+            </div>
+            <div class="lm-connector" style="background:rgba(250,77,86,0.4)"></div>
+            <div class="lm-stage">
+              <div class="lm-node gap">🚀</div>
+              <div class="lm-stage-lbl">Scale &amp;<br/>Sustain</div>
+            </div>
+          </div>
+          <div class="lm-metrics">
+            <div class="lm-metric">
+              <div class="lm-metric-val" style="color:var(--red)">77%</div>
+              <div class="lm-metric-lbl">AI projects fail to scale past PoC</div>
+            </div>
+            <div class="lm-metric">
+              <div class="lm-metric-val" style="color:var(--gold)">23%</div>
+              <div class="lm-metric-lbl">Report measurable ROI from AI</div>
+            </div>
+            <div class="lm-metric">
+              <div class="lm-metric-val" style="color:var(--cyan)">18mo</div>
+              <div class="lm-metric-lbl">Avg. time to first value realization</div>
+            </div>
+          </div>
+          <div class="lm-insight">
+            <p><strong>The Problem:</strong> Organizations invest in AI but lack the process mining, maturity frameworks, and pre-built assets needed to connect deployments to <strong>trackable KPIs and sustained ROI</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SECTION 1: THE PROBLEM ────────────────────────────────── -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-header" data-reveal>
+      <span class="badge badge-red" style="margin-bottom:1rem;">⚠ The AI Deployment Gap</span>
+      <h2>Built, But Not<br/>Delivering Value</h2>
+      <p>Enterprises are deploying AI at scale — but the last mile between deployment and measurable business value remains broken. Without process-mining-led maturity assessment and pre-built assets aligned to KPIs, AI stays in pilot mode forever.</p>
+    </div>
+
+    <div class="prob-cards" data-reveal>
+      <div class="prob-card c1">
+        <span class="prob-icon">🏗️</span>
+        <h4>Built, But Not Tracked</h4>
+        <div class="prob-stat">77%</div>
+        <div class="label" style="color:var(--gold)">of AI initiatives</div>
+        <p class="prob-desc">fail to move beyond proof of concept. AI gets built but is never connected to process KPIs, making value measurement impossible and executive confidence eroded.</p>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text-2)">↳ No process baseline → No improvement signal → No ROI proof</div>
+      </div>
+      <div class="prob-card c2">
+        <span class="prob-icon">📉</span>
+        <h4>Deployed, But Not Measured</h4>
+        <div class="prob-stat">$4.4T</div>
+        <div class="label" style="color:var(--red)">AI market by 2030</div>
+        <p class="prob-desc">of projected enterprise AI investment — yet only 23% of organizations report meaningful, measurable ROI. Deployment happens; value tracking and benchmark comparison does not.</p>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text-2)">↳ No benchmark → No gap analysis → No prioritized asset deployment</div>
+      </div>
+      <div class="prob-card c3">
+        <span class="prob-icon">🎯</span>
+        <h4>Investment Without Returns</h4>
+        <div class="prob-stat">18mo</div>
+        <div class="label" style="color:var(--purple)">Avg. to first value</div>
+        <p class="prob-desc">average time before enterprises realize first value from AI projects — with no accelerator assets to compress timelines, reduce rework, or guarantee business outcome alignment.</p>
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--text-2)">↳ No assets → Long cycles → Missed business window → Value erosion</div>
+      </div>
+    </div>
+
+    <!-- Value Leak Diagram -->
+    <div class="value-leak" data-reveal>
+      <div class="vl-title">
+        <span class="badge badge-red" style="margin-bottom:0.5rem;">Process Mining View</span>
+        <h3 style="margin-top:0.5rem;">Where AI Value Leaks Out of the Pipeline</h3>
+        <p style="font-size:13px;color:var(--text-2);margin-top:0.25rem;">Tracing the drop-off from AI investment intent to realized business value across enterprise operations</p>
+      </div>
+      <div class="vl-funnel" style="overflow-x:auto;">
+        <div class="vl-stage">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:var(--blue-l)">100%</div>
+            <div class="vl-bar" style="height:160px;background:linear-gradient(180deg,var(--blue),var(--blue-l));"></div>
+          </div>
+          <div class="vl-lbl">AI Investment Intent</div>
+        </div>
+        <div class="vl-arrow">→</div>
+        <div class="vl-stage" style="position:relative">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:var(--cyan)">85%</div>
+            <div class="vl-bar" style="height:130px;background:linear-gradient(180deg,var(--cyan),var(--cyan-d));"></div>
+          </div>
+          <div class="vl-leak-tag">-15% No strategy alignment</div>
+          <div class="vl-lbl">PoC Initiated</div>
+        </div>
+        <div class="vl-arrow">→</div>
+        <div class="vl-stage" style="position:relative">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:var(--gold)">58%</div>
+            <div class="vl-bar" style="height:88px;background:linear-gradient(180deg,var(--gold),#d4a017);"></div>
+          </div>
+          <div class="vl-leak-tag">-27% No KPI baseline</div>
+          <div class="vl-lbl">PoC to Production</div>
+        </div>
+        <div class="vl-arrow">→</div>
+        <div class="vl-stage" style="position:relative">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:#f97316">36%</div>
+            <div class="vl-bar" style="height:56px;background:linear-gradient(180deg,#f97316,#ea580c);"></div>
+          </div>
+          <div class="vl-leak-tag">-22% No change mgmt</div>
+          <div class="vl-lbl">Scaled Deployment</div>
+        </div>
+        <div class="vl-arrow">→</div>
+        <div class="vl-stage" style="position:relative">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:var(--red)">23%</div>
+            <div class="vl-bar" style="height:36px;background:linear-gradient(180deg,var(--red),#be123c);"></div>
+          </div>
+          <div class="vl-leak-tag">-13% No ROI tracking</div>
+          <div class="vl-lbl">Measurable ROI</div>
+        </div>
+        <div class="vl-arrow">→</div>
+        <div class="vl-stage">
+          <div class="vl-bar-wrap">
+            <div class="vl-bar-pct" style="color:var(--green)">11%</div>
+            <div class="vl-bar" style="height:22px;background:linear-gradient(180deg,var(--green),var(--green-d));"></div>
+          </div>
+          <div class="vl-lbl">Sustained Value at Scale</div>
+        </div>
+      </div>
+      <div class="vl-bridge">
+        <span style="font-size:1.5rem;">🔗</span>
+        <p>
+          <strong>This platform bridges every drop-off point.</strong> From maturity assessment that establishes baselines, to pre-built assets that compress time-to-production, to real-time ROI dashboards that track value against industry benchmarks — we eliminate the gaps that kill AI programs before they deliver.
+        </p>
+        <a href="assess.html" class="btn btn-primary" style="flex-shrink:0;">Close the Gap →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SECTION 2: IBM CLIENT ZERO SUCCESS ─────────────────────── -->
+<section id="success" class="section">
+  <div class="container">
+    <div class="success-header" data-reveal>
+      <span class="badge badge-blue" style="margin-bottom:1rem;">🏆 IBM Client Zero — Verified Enterprise Results</span>
+      <h2>Proof That AI Delivers<br/>at Enterprise Scale</h2>
+      <p>IBM deployed its own AI assets internally first — across 490 workflows, 3 core domains, and 270,000 employees. The results set the industry benchmark for what is possible.</p>
+    </div>
+
+    <div class="ibm-proof-banner" data-reveal>
+      <div class="ibm-logo-text">IBM</div>
+      <div class="ibm-tagline">
+        <strong style="color:var(--text-0)">IBM as Client Zero:</strong> Before recommending AI transformation to clients, IBM deployed watsonx, automation and hybrid cloud internally — decomposing 490 workflows into targeted AI opportunities, creating 3,000+ digital workers, and delivering verifiable, auditable business outcomes across Finance, HR, and Procurement.
+      </div>
+      <div class="ibm-global-stats">
+        <div class="ibm-gstat">
+          <div class="ibm-gstat-n">$3.5B</div>
+          <div class="ibm-gstat-l">Total Productivity Gains</div>
+        </div>
+        <div class="ibm-gstat">
+          <div class="ibm-gstat-n">3.9M</div>
+          <div class="ibm-gstat-l">Hours Saved · 2024</div>
+        </div>
+        <div class="ibm-gstat">
+          <div class="ibm-gstat-n">490</div>
+          <div class="ibm-gstat-l">Workflows Decomposed</div>
+        </div>
+        <div class="ibm-gstat">
+          <div class="ibm-gstat-n">3,000+</div>
+          <div class="ibm-gstat-l">Digital Workers Created</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Domain Tabs -->
+    <div class="domain-tabs" data-reveal>
+      <button class="domain-tab active" onclick="switchDomain('hr',this)">👥 Human Resources</button>
+      <button class="domain-tab" onclick="switchDomain('finance',this)">💰 Finance</button>
+      <button class="domain-tab" onclick="switchDomain('procurement',this)">🔗 Procurement</button>
+    </div>
+
+    <!-- HR Panel -->
+    <div class="domain-panel active" id="panel-hr">
+      <div class="domain-layout">
+        <div class="domain-info" data-reveal>
+          <div class="badge badge-cyan" style="margin-bottom:1rem;">AskHR · watsonx Orchestrate</div>
+          <h3 style="margin-bottom:0.75rem;">HR Transformation: From Cost Center to Strategic Engine</h3>
+          <p class="domain-desc">IBM deployed AskHR — a multi-agent AI system powered by watsonx Orchestrate — integrating with Workday, SAP, and Concur to automate 80+ HR tasks across benefits, payroll, career management, and employee queries. The transformation took NPS from -35 to +74 while reducing costs by 40%.</p>
+          <div class="domain-processes">
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Benefits Administration</div><div class="dp-detail">Automated enrollment, eligibility checks, life event changes — zero-touch processing</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--cyan)"></div><div><div class="dp-name">Payroll Query Resolution</div><div class="dp-detail">94% of payroll questions resolved by AI agent without human escalation</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Career & Skills Management</div><div class="dp-detail">AI-guided skills gap identification and learning path recommendations</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--purple)"></div><div><div class="dp-name">Employee Letters & Compliance</div><div class="dp-detail">Automated document generation across 7,000 policy pages in multiple languages</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--blue-l)"></div><div><div class="dp-name">Organizational Updates</div><div class="dp-detail">Automated processing of compensation changes, role updates, org restructures</div></div></div>
+          </div>
+          <div style="padding:12px 16px;background:rgba(51,177,255,0.06);border:1px solid rgba(51,177,255,0.15);border-radius:6px;">
+            <p style="font-size:13px;color:var(--text-1);font-style:italic;">"If we can do this within IBM, you can really see a vision of doing it across every industry, across every client." — Joanne Wright, SVP Transformation & Operations, IBM</p>
+          </div>
+        </div>
+        <div data-reveal>
+          <div class="domain-metrics" style="margin-bottom:1.5rem;">
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">94%</div>
+              <div class="dm-lbl">Inquiry Containment Rate</div>
+              <div class="dm-sub">11.5M interactions handled</div>
+            </div>
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">75%</div>
+              <div class="dm-lbl">Reduction in Support Tickets</div>
+              <div class="dm-sub">vs. 2016 baseline</div>
+            </div>
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">40%</div>
+              <div class="dm-lbl">HR Ops Cost Reduction</div>
+              <div class="dm-sub">over 4 years</div>
+            </div>
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">99%</div>
+              <div class="dm-lbl">Manager Adoption Rate</div>
+              <div class="dm-sub">global workforce</div>
+            </div>
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">80+</div>
+              <div class="dm-lbl">HR Tasks Automated</div>
+              <div class="dm-sub">end-to-end zero-touch</div>
+            </div>
+            <div class="dm-card hr-accent">
+              <div class="dm-val cyan">$1B</div>
+              <div class="dm-lbl">HR Savings Since 2011</div>
+              <div class="dm-sub">cumulative program value</div>
+            </div>
+          </div>
+          <div class="process-flow">
+            <div class="pf-title">🔬 Process Mining View — HR Transaction Journey</div>
+            <div class="pf-steps">
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(51,177,255,0.15);color:var(--cyan)">01</div>
+                <div class="pf-content">
+                  <div class="pf-name">Employee Query Initiation</div>
+                  <div class="pf-detail">AskHR ingests query via chat, email, or voice — classifies intent</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">NLP Classification</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(51,177,255,0.15);color:var(--cyan)">02</div>
+                <div class="pf-content">
+                  <div class="pf-name">Domain Routing (Benefits/Payroll/Career)</div>
+                  <div class="pf-detail">Multi-agent orchestration routes to specialist AI agent — no human triage</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(241,194,27,0.15);color:var(--gold)">03</div>
+                <div class="pf-content">
+                  <div class="pf-name">Policy &amp; System Lookup</div>
+                  <div class="pf-detail">Agent queries 7,000 policy pages + live Workday/SAP data in real-time</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">RAG-powered</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">04</div>
+                <div class="pf-content">
+                  <div class="pf-name">Resolution &amp; Action</div>
+                  <div class="pf-detail">94% resolved autonomously — remainder escalated with full context package</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">94% Zero-Touch</span><span class="pf-tag manual">6% Escalated</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">05</div>
+                <div class="pf-content">
+                  <div class="pf-name">Continuous Learning Loop</div>
+                  <div class="pf-detail">55.1K pieces of feedback collected in 2024 — model improves continuously</div>
+                  <div class="pf-tag-row"><span class="pf-tag opportunity">Feedback Loop</span><span class="pf-tag automated">Self-Improving</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance Panel -->
+    <div class="domain-panel" id="panel-finance">
+      <div class="domain-layout">
+        <div class="domain-info" data-reveal>
+          <div class="badge badge-gold" style="margin-bottom:1rem;">watsonx · EPM · Digital Workers</div>
+          <h3 style="margin-bottom:0.75rem;">Finance Transformation: From Compliance Burden to AI-Driven Insight Engine</h3>
+          <p class="domain-desc">IBM decomposed its finance function into discrete micro-tasks and deployed digital workers for document parsing, tax processing, journal entry automation, and financial planning. The EPM platform now enables conversational business intelligence — any finance leader can ask natural language questions and receive instant, actionable insights from live ERP data.</p>
+          <div class="domain-processes">
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Tax Processing Automation</div><div class="dp-detail">Document parsing and compliance prep reduced by ~100,000 hours annually</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Financial Planning &amp; Analysis (FP&amp;A)</div><div class="dp-detail">AI-generated forecasts, variance explanations, budget cycles 33% faster</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Procure-to-Pay (P2P)</div><div class="dp-detail">Invoice validation and PO matching — 25% cost-per-invoice reduction, 32% faster cycles</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Order-to-Cash (O2C)</div><div class="dp-detail">AI credit checks, payment reminders — DSO reduced 32%, uncollectibles down 43%</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--gold)"></div><div><div class="dp-name">Record-to-Report (R2R)</div><div class="dp-detail">Monthly close cycle shortened 33% through journal entry automation and reconciliation</div></div></div>
+          </div>
+          <div style="padding:12px 16px;background:rgba(241,194,27,0.06);border:1px solid rgba(241,194,27,0.2);border-radius:6px;">
+            <p style="font-size:13px;color:var(--text-1)"><span style="color:var(--gold)">🏆 Hackettgroup 2024 Digital Award Winner:</span> IBM's "Plan-to-Results" AI platform won the Digital Award for AI-driven insights in Enterprise Performance Management — recognized as a best-in-class finance transformation.</p>
+          </div>
+        </div>
+        <div data-reveal>
+          <div class="domain-metrics" style="margin-bottom:1.5rem;">
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">33%</div>
+              <div class="dm-lbl">Faster Budget Cycles</div>
+              <div class="dm-sub">FP&amp;A AI-generated forecasts</div>
+            </div>
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">57%</div>
+              <div class="dm-lbl">Sales Forecast Error Reduction</div>
+              <div class="dm-sub">watsonx predictive models</div>
+            </div>
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">25%</div>
+              <div class="dm-lbl">Cost-per-Invoice Reduction</div>
+              <div class="dm-sub">P2P process automation</div>
+            </div>
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">43%</div>
+              <div class="dm-lbl">Uncollectibles Reduction</div>
+              <div class="dm-sub">O2C AI-powered collections</div>
+            </div>
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">32%</div>
+              <div class="dm-lbl">DSO Reduction</div>
+              <div class="dm-sub">Days Sales Outstanding</div>
+            </div>
+            <div class="dm-card fin-accent">
+              <div class="dm-val gold">100K</div>
+              <div class="dm-lbl">Hours Saved · Tax Processing</div>
+              <div class="dm-sub">Annual via digital workers</div>
+            </div>
+          </div>
+          <div class="process-flow">
+            <div class="pf-title">🔬 Process Mining View — Finance Close Cycle</div>
+            <div class="pf-steps">
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(241,194,27,0.15);color:var(--gold)">01</div>
+                <div class="pf-content">
+                  <div class="pf-name">Sub-Ledger Close &amp; Accruals</div>
+                  <div class="pf-detail">AI agents auto-detect missing accruals, propose entries, validate against policy</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">Anomaly Detection</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(241,194,27,0.15);color:var(--gold)">02</div>
+                <div class="pf-content">
+                  <div class="pf-name">Journal Entry Processing</div>
+                  <div class="pf-detail">Digital workers process standard JEs — humans review exceptions only</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag bottleneck">Exception Focus</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(250,77,86,0.15);color:var(--red)">03</div>
+                <div class="pf-content">
+                  <div class="pf-name">Account Reconciliation</div>
+                  <div class="pf-detail">Previously the #1 bottleneck — AI matches transactions, flags only true breaks</div>
+                  <div class="pf-tag-row"><span class="pf-tag bottleneck">Was: Key Bottleneck</span><span class="pf-tag automated">Now: Automated</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(241,194,27,0.15);color:var(--gold)">04</div>
+                <div class="pf-content">
+                  <div class="pf-name">Variance Analysis &amp; Explanations</div>
+                  <div class="pf-detail">AI generates natural language variance commentary — 33% faster close achieved</div>
+                  <div class="pf-tag-row"><span class="pf-tag opportunity">Gen AI NLG</span><span class="pf-tag automated">Automated</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">05</div>
+                <div class="pf-content">
+                  <div class="pf-name">CFO Dashboard &amp; Conversational BI</div>
+                  <div class="pf-detail">Finance leaders ask NL questions, receive instant insights from live ERP data</div>
+                  <div class="pf-tag-row"><span class="pf-tag opportunity">Conversational AI</span><span class="pf-tag automated">Real-Time</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Procurement Panel -->
+    <div class="domain-panel" id="panel-procurement">
+      <div class="domain-layout">
+        <div class="domain-info" data-reveal>
+          <div class="badge badge-green" style="margin-bottom:1rem;">watsonx · Coupa · SAP Ariba · Sterling OMS</div>
+          <h3 style="margin-bottom:0.75rem;">Procurement Transformation: From Reactive Buying to Intelligent Supply Chain</h3>
+          <p class="domain-desc">IBM automated 90% of purchase order processing, drove 30% logistics cost reduction over 3 years, and saved $315M through AI-powered supply chain optimization. Supplier management, contract lifecycle, and spend analytics are now orchestrated by intelligent agents working 24/7 across IBM's global supply chain.</p>
+          <div class="domain-processes">
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Purchase Order Automation</div><div class="dp-detail">90% of PO processing automated — $315M saved over 3 years, 15.6% productivity gain</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Supplier Risk &amp; Compliance</div><div class="dp-detail">AI monitors Dun &amp; Bradstreet data, flags supplier risk in real-time — saves hundreds of thousands of hours in compliance</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Logistics &amp; Distribution</div><div class="dp-detail">AI-optimized routing and allocation — 30% logistics cost reduction over 3 years</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Invoice Management</div><div class="dp-detail">Automated discrepancy detection, blocked invoice clearing — improved cash flow</div></div></div>
+            <div class="dp-item"><div class="dp-dot" style="background:var(--green)"></div><div><div class="dp-name">Sourcing &amp; Contract Events</div><div class="dp-detail">AI-generated RFPs, supplier recommendations, contract workflow automation</div></div></div>
+          </div>
+          <div style="padding:12px 16px;background:rgba(66,190,101,0.06);border:1px solid rgba(66,190,101,0.2);border-radius:6px;">
+            <p style="font-size:13px;color:var(--text-1)"><span style="color:var(--green)">⚡ Scale:</span> IBM's supply chain spans 175+ countries. Automating 90% of PO processing while achieving 30% logistics cost reduction at this scale is a validated proof point for any enterprise procurement transformation.</p>
+          </div>
+        </div>
+        <div data-reveal>
+          <div class="domain-metrics" style="margin-bottom:1.5rem;">
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">90%</div>
+              <div class="dm-lbl">PO Processing Automated</div>
+              <div class="dm-sub">End-to-end zero-touch</div>
+            </div>
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">$315M</div>
+              <div class="dm-lbl">Procurement Savings</div>
+              <div class="dm-sub">Over 3 years via AI + automation</div>
+            </div>
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">30%</div>
+              <div class="dm-lbl">Logistics Cost Reduction</div>
+              <div class="dm-sub">3-year sustained reduction</div>
+            </div>
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">15.6%</div>
+              <div class="dm-lbl">Hardware Supply Productivity</div>
+              <div class="dm-sub">AI-driven cost savings</div>
+            </div>
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">100K+</div>
+              <div class="dm-lbl">Hours Saved · Compliance</div>
+              <div class="dm-sub">Supplier compliance automation</div>
+            </div>
+            <div class="dm-card pro-accent">
+              <div class="dm-val green">175+</div>
+              <div class="dm-lbl">Countries · Scale</div>
+              <div class="dm-sub">Global supply chain coverage</div>
+            </div>
+          </div>
+          <div class="process-flow">
+            <div class="pf-title">🔬 Process Mining View — Source-to-Pay Journey</div>
+            <div class="pf-steps">
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">01</div>
+                <div class="pf-content">
+                  <div class="pf-name">Need Identification &amp; Requisition</div>
+                  <div class="pf-detail">AI agents detect reorder points, auto-generate requisitions from inventory signals</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">Predictive</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(250,77,86,0.15);color:var(--red)">02</div>
+                <div class="pf-content">
+                  <div class="pf-name">Approval Routing</div>
+                  <div class="pf-detail">Previously the top bottleneck — AI pre-validates policy compliance, routes intelligently</div>
+                  <div class="pf-tag-row"><span class="pf-tag bottleneck">Was: Major Delay</span><span class="pf-tag automated">Now: Smart Routing</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">03</div>
+                <div class="pf-content">
+                  <div class="pf-name">Supplier Selection &amp; PO Generation</div>
+                  <div class="pf-detail">AI matches preferred suppliers, generates PO — 90% fully automated</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">90% Automated</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">04</div>
+                <div class="pf-content">
+                  <div class="pf-name">Goods Receipt &amp; 3-Way Match</div>
+                  <div class="pf-detail">AI performs PO–receipt–invoice match, resolves discrepancies autonomously</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">Exception Mgmt</span></div>
+                </div>
+              </div>
+              <div class="pf-step">
+                <div class="pf-num" style="background:rgba(66,190,101,0.15);color:var(--green)">05</div>
+                <div class="pf-content">
+                  <div class="pf-name">Payment &amp; Supplier Reconciliation</div>
+                  <div class="pf-detail">Automated payment runs, supplier portal updates, real-time spend analytics</div>
+                  <div class="pf-tag-row"><span class="pf-tag automated">Automated</span><span class="pf-tag opportunity">Real-Time Analytics</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SECTION 3: PLATFORM ────────────────────────────────────── -->
+<section id="platform" class="section">
+  <div class="container">
+    <div class="platform-header" data-reveal>
+      <span class="badge badge-gold" style="margin-bottom:1rem;">🚀 The Asset Acceleration Platform</span>
+      <h2>From Maturity Gap<br/>to Realized Value — Fast</h2>
+      <p>Three integrated modules that compress the typical 18-month AI value journey to weeks. Assess where you are, deploy pre-built assets against your gaps, and measure ROI continuously against industry benchmarks.</p>
+    </div>
+
+    <!-- Three Pillars -->
+    <div class="pillars" data-reveal>
+      <div class="pillar p1">
+        <div class="pillar-step">01</div>
+        <div class="pillar-icon">🎯</div>
+        <div class="pillar-num">Step 01 · Assess</div>
+        <h3>Maturity Assessment</h3>
+        <p>A structured, process-mining-led diagnostic across Finance, HR, and Procurement. Benchmarks your current capabilities against IBM and industry standards across 30+ dimensions. Identifies and prioritizes your highest-value automation gaps.</p>
+        <ul class="pillar-list">
+          <li>30-question domain assessment with weighted scoring</li>
+          <li>5-level maturity model per process area</li>
+          <li>Automated gap identification vs. industry benchmarks</li>
+          <li>Prioritized opportunity heat map by ROI potential</li>
+          <li>Process bottleneck signature analysis</li>
+        </ul>
+        <div class="pillar-cta">
+          <a href="assess.html" class="btn btn-ghost" style="width:100%;justify-content:center;">Launch Assessment →</a>
+        </div>
+      </div>
+
+      <div class="pillar p2">
+        <div class="pillar-step">02</div>
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-num">Step 02 · Deploy</div>
+        <h3>Asset Library</h3>
+        <p>A curated catalog of 40+ pre-built AI agents, automation accelerators, and process templates — mapped directly to your identified maturity gaps. Each asset comes with IBM-validated deployment playbooks, integration guides, and expected outcome benchmarks.</p>
+        <ul class="pillar-list">
+          <li>40+ pre-built agents across Finance, HR, Procurement</li>
+          <li>Gap-matched asset recommendations</li>
+          <li>Connectors for SAP, Oracle, Workday, Coupa, Ariba</li>
+          <li>IBM watsonx Orchestrate native deployment</li>
+          <li>Deployment playbooks with timeline estimates</li>
+        </ul>
+        <div class="pillar-cta">
+          <a href="assets.html" class="btn btn-ghost" style="width:100%;justify-content:center;">Explore Asset Library →</a>
+        </div>
+      </div>
+
+      <div class="pillar p3">
+        <div class="pillar-step">03</div>
+        <div class="pillar-icon">📊</div>
+        <div class="pillar-num">Step 03 · Measure</div>
+        <h3>ROI Tracker</h3>
+        <p>Real-time ROI dashboard that tracks deployed asset performance against industry benchmarks and IBM Client Zero proof points. Every KPI is visible, every improvement is measured, and every dollar of value is attributed — giving you the business case for continued investment.</p>
+        <ul class="pillar-list">
+          <li>Live KPI dashboard per domain and process</li>
+          <li>IBM benchmark comparisons with quartile ranking</li>
+          <li>Financial ROI calculator with actuals vs. targets</li>
+          <li>Executive value narrative generator</li>
+          <li>Continuous improvement signal tracking</li>
+        </ul>
+        <div class="pillar-cta">
+          <a href="roi.html" class="btn btn-ghost" style="width:100%;justify-content:center;">View ROI Tracker →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Journey Timeline -->
+    <div class="journey" data-reveal>
+      <div class="journey-title">
+        <h3>The Accelerated Value Journey</h3>
+        <p style="font-size:13px;color:var(--text-2);margin-top:4px;">From assessment to sustained ROI — compressed from 18 months to as few as 12 weeks</p>
+      </div>
+      <div class="journey-steps">
+        <div class="j-step">
+          <div class="j-dot cyan">01</div>
+          <div class="j-name">Assess</div>
+          <div class="j-desc">Domain maturity diagnostic &amp; gap mapping</div>
+          <div class="j-time">Week 1–2</div>
+        </div>
+        <div class="j-step">
+          <div class="j-dot gold">02</div>
+          <div class="j-name">Prioritize</div>
+          <div class="j-desc">ROI-ranked opportunity heat map</div>
+          <div class="j-time">Week 2–3</div>
+        </div>
+        <div class="j-step">
+          <div class="j-dot blue">03</div>
+          <div class="j-name">Select Assets</div>
+          <div class="j-desc">Gap-matched agent &amp; accelerator selection</div>
+          <div class="j-time">Week 3–4</div>
+        </div>
+        <div class="j-step">
+          <div class="j-dot purple">04</div>
+          <div class="j-name">Deploy</div>
+          <div class="j-desc">Rapid asset deployment with playbooks</div>
+          <div class="j-time">Week 4–10</div>
+        </div>
+        <div class="j-step">
+          <div class="j-dot green">05</div>
+          <div class="j-name">Measure &amp; Scale</div>
+          <div class="j-desc">Live ROI tracking &amp; continuous expansion</div>
+          <div class="j-time">Week 10–12+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Asset Preview Grid -->
+    <div data-reveal>
+      <div class="assets-header">
+        <h3>Featured Assets from the Library</h3>
+        <p style="font-size:13px;color:var(--text-2);margin-top:4px;">Pre-built, IBM-validated agents ready for immediate deployment against your gap areas</p>
+      </div>
+      <div class="asset-domains">
+        <button class="asset-filter-btn active" onclick="filterAssets('all',this)">All Domains</button>
+        <button class="asset-filter-btn" onclick="filterAssets('finance',this)">💰 Finance</button>
+        <button class="asset-filter-btn" onclick="filterAssets('hr',this)">👥 HR</button>
+        <button class="asset-filter-btn" onclick="filterAssets('procurement',this)">🔗 Procurement</button>
+      </div>
+      <div class="asset-grid" id="assetGrid"></div>
+      <div style="text-align:center;margin-top:2rem;">
+        <a href="assets.html" class="btn btn-ghost">View Full Asset Library (40+ Assets) →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── CTA SECTION ─────────────────────────────────────────────── -->
+<section id="cta" class="section-sm">
+  <div class="container">
+    <div class="cta-inner" data-reveal>
+      <span class="badge badge-gold" style="margin-bottom:1rem;">🎯 Start Your Transformation</span>
+      <h2>Assess. Deploy.<br/>Measure Value.</h2>
+      <p>Select your domain focus and begin your maturity assessment. Within 15 minutes, you'll have a prioritized list of assets to deploy and a projected ROI model based on IBM Client Zero benchmarks.</p>
+      <div class="cta-domains">
+        <button class="cta-domain" onclick="selectDomain(this,'finance')">
+          <span class="cd-icon">💰</span>Finance
+        </button>
+        <button class="cta-domain" onclick="selectDomain(this,'hr')">
+          <span class="cd-icon">👥</span>HR
+        </button>
+        <button class="cta-domain" onclick="selectDomain(this,'procurement')">
+          <span class="cd-icon">🔗</span>Procurement
+        </button>
+        <button class="cta-domain" onclick="selectDomain(this,'all')">
+          <span class="cd-icon">🌐</span>All Domains
+        </button>
+      </div>
+      <div class="cta-actions">
+        <a href="assess.html" class="btn btn-primary" id="ctaAssessBtn">Begin Assessment →</a>
+        <a href="assets.html" class="btn btn-ghost">Browse Asset Library</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.75rem;">
+          <div class="nav-logo">IBM</div>
+          <span style="font-size:14px;font-weight:600;color:var(--text-0)">Agentic AI Value Platform</span>
+        </div>
+        <p>Bridging the last mile of AI deployment with process-mining-led maturity assessment, pre-built IBM assets, and continuous ROI measurement across Finance, HR, and Procurement.</p>
+        <div style="margin-top:1rem;font-size:11px;color:var(--text-2);">Built on IBM watsonx · IBM Consulting Enterprise Advantage</div>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="assess.html">Maturity Assessment</a>
+        <a href="assets.html">Asset Library</a>
+        <a href="roi.html">ROI Tracker</a>
+        <a href="#success">Client Zero Story</a>
+      </div>
+      <div class="footer-col">
+        <h4>Domains</h4>
+        <a href="assess.html?domain=finance">Finance</a>
+        <a href="assess.html?domain=hr">Human Resources</a>
+        <a href="assess.html?domain=procurement">Procurement</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#problem">The AI Gap</a>
+        <a href="#platform">Deployment Journey</a>
+        <a href="#">IBM IBV Reports</a>
+        <a href="#">watsonx Orchestrate</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 IBM Corporation · Agentic AI Value Platform</p>
+      <p class="footer-source">
+        Sources: IBM Client Zero case studies · IBM watsonx Orchestrate product pages · Bloomberg/IBM AI Transformation Story · Hackettgroup 2024 Digital Awards · IBM Canada Newsroom
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- ───────── SCRIPTS ─────────────────────────────────────────────────── -->
+<script>
+/* ── PARTICLE CANVAS ─────────────────────────────────────────────────── */
+(function(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles=[];
+  const resize=()=>{ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; };
+  resize();
+  window.addEventListener('resize',resize);
+
+  for(let i=0;i<55;i++) particles.push({
+    x:Math.random()*W, y:Math.random()*H,
+    r:Math.random()*1.5+0.3,
+    vx:(Math.random()-.5)*0.25, vy:(Math.random()-.5)*0.25,
+    a:Math.random()*0.4+0.05
+  });
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(51,177,255,${p.a})`;
+      ctx.fill();
+    });
+    // draw connections
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          ctx.beginPath();
+          ctx.strokeStyle=`rgba(51,177,255,${0.07*(1-d/120)})`;
+          ctx.lineWidth=0.5;
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ── COUNTER ANIMATION ───────────────────────────────────────────────── */
+function animateCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=parseFloat(el.dataset.target);
+    const suffix=el.dataset.suffix||'';
+    const prefix=el.dataset.prefix||'';
+    const isDecimal=target%1!==0;
+    let start=0, duration=1800, startTime=null;
+    function step(t){
+      if(!startTime)startTime=t;
+      const progress=Math.min((t-startTime)/duration,1);
+      const ease=1-Math.pow(1-progress,3);
+      const val=start+(target-start)*ease;
+      el.textContent=prefix+(isDecimal?val.toFixed(1):Math.floor(val))+suffix;
+      if(progress<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+/* ── INTERSECTION OBSERVER ───────────────────────────────────────────── */
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('revealed'); }
+  });
+},{threshold:0.1});
+document.querySelectorAll('[data-reveal]').forEach(el=>revealObs.observe(el));
+
+let countersRun=false;
+const counterObs = new IntersectionObserver((entries)=>{
+  if(entries[0].isIntersecting&&!countersRun){ countersRun=true; animateCounters(); }
+},{threshold:0.3});
+const heroStats=document.querySelector('.hero-stats');
+if(heroStats) counterObs.observe(heroStats);
+
+/* ── DOMAIN TABS ─────────────────────────────────────────────────────── */
+function switchDomain(domain, btn){
+  document.querySelectorAll('.domain-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.domain-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel=document.getElementById('panel-'+domain);
+  if(panel){ panel.classList.add('active'); panel.querySelectorAll('[data-reveal]').forEach(el=>{el.classList.add('revealed');}); }
+}
+
+/* ── ASSET DATA ──────────────────────────────────────────────────────── */
+const assets=[
+  {domain:'finance',icon:'📄',name:'Invoice Processing Agent',desc:'Automated 3-way matching, exception handling, and payment scheduling. Integrates with SAP, Oracle.',metrics:'25% cost reduction · 32% faster cycle'},
+  {domain:'finance',icon:'📊',name:'FP&A Forecasting Agent',desc:'AI-generated variance analysis, budget narratives, and predictive financial modeling.',metrics:'33% faster cycles · 57% error reduction'},
+  {domain:'finance',icon:'💳',name:'Collections & DSO Agent',desc:'Intelligent payment reminders, credit risk scoring, and dispute resolution automation.',metrics:'43% uncollectibles ↓ · 32% DSO ↓'},
+  {domain:'finance',icon:'📋',name:'Close Cycle Accelerator',desc:'Automated accruals, journal entries, and reconciliation with exception-only human review.',metrics:'33% faster close · 2% error improvement'},
+  {domain:'hr',icon:'🤖',name:'AskHR Virtual Agent',desc:'Multi-domain HR AI handling benefits, payroll, career, and compliance queries with 94% containment.',metrics:'94% auto-resolved · 75% ticket ↓'},
+  {domain:'hr',icon:'🎯',name:'Recruitment Screening Agent',desc:'AI-powered resume screening, candidate ranking, and interview scheduling automation.',metrics:'60% screening time ↓ · 3× throughput'},
+  {domain:'hr',icon:'📝',name:'Payroll Query Resolver',desc:'Automated payroll discrepancy detection, query resolution, and compliance verification.',metrics:'90% auto-resolved · <0.1% error rate'},
+  {domain:'hr',icon:'🎓',name:'Learning & Skills Agent',desc:'AI-driven skills gap analysis, personalized learning path recommendations, and completion tracking.',metrics:'40% L&D admin time ↓ · Higher engagement'},
+  {domain:'procurement',icon:'🔗',name:'PO Automation Agent',desc:'End-to-end purchase order creation, approval routing, and supplier notification — 90% touchless.',metrics:'90% automated · $315M IBM savings'},
+  {domain:'procurement',icon:'🏢',name:'Supplier Risk Monitor',desc:'Real-time supplier risk scoring using Dun & Bradstreet data, compliance flagging, and remediation alerts.',metrics:'100K+ hrs saved · Proactive risk mgmt'},
+  {domain:'procurement',icon:'📃',name:'Contract Intelligence Agent',desc:'AI-powered contract review, obligation extraction, renewal alerts, and compliance monitoring.',metrics:'70% review time ↓ · 99% coverage'},
+  {domain:'procurement',icon:'💰',name:'Spend Analytics Engine',desc:'Category spend clustering, maverick spend detection, and savings opportunity identification.',metrics:'15.6% productivity ↑ · Full visibility'},
+];
+
+let currentFilter='all';
+function renderAssets(filter){
+  const grid=document.getElementById('assetGrid');
+  const filtered=filter==='all'?assets:assets.filter(a=>a.domain===filter);
+  grid.innerHTML=filtered.map(a=>`
+    <div class="asset-card">
+      <div class="asset-card-top">
+        <span class="asset-icon">${a.icon}</span>
+        <span class="badge badge-${a.domain==='finance'?'gold':a.domain==='hr'?'cyan':'green'}">${a.domain}</span>
+      </div>
+      <div class="asset-name">${a.name}</div>
+      <div class="asset-desc">${a.desc}</div>
+      <div class="asset-metrics">
+        <div class="asset-m" style="font-size:11px;color:var(--text-2)">${a.metrics}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterAssets(filter, btn){
+  currentFilter=filter;
+  document.querySelectorAll('.asset-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAssets(filter);
+}
+
+renderAssets('all');
+
+/* ── CTA DOMAIN SELECTION ────────────────────────────────────────────── */
+function selectDomain(el, domain){
+  document.querySelectorAll('.cta-domain').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn=document.getElementById('ctaAssessBtn');
+  btn.href=`assess.html?domain=${domain}`;
+  const labels={finance:'Finance',hr:'Human Resources',procurement:'Procurement',all:'All Domains'};
+  btn.textContent=`Begin ${labels[domain]||''} Assessment →`;
+}
+
+/* ── SMOOTH NAV ACTIVE ───────────────────────────────────────────────── */
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  const pos=window.scrollY+80;
+  sections.forEach(s=>{
+    if(pos>=s.offsetTop&&pos<s.offsetTop+s.offsetHeight){
+      navLinks.forEach(a=>{ a.classList.toggle('active',a.getAttribute('href')==='#'+s.id); });
+    }
+  });
+},{passive:true});
+</script>
+</body>
+</html>

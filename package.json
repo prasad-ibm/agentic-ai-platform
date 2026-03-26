@@ -1,0 +1,31 @@
+{
+  "name": "agentic-ai-platform",
+  "version": "1.0.0",
+  "description": "IBM Agentic AI Value Platform — Maturity Assessment, Asset Deployment & ROI Tracking",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "ibm",
+    "ai",
+    "agentic",
+    "bpo",
+    "maturity-assessment",
+    "roi"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "uuid": "^13.0.0"
+  }
+}

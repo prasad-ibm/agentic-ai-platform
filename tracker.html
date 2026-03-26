@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deployment Tracker · Agentic AI Value Platform</title>
+  <link rel="stylesheet" href="/ibm-theme.css"/>
+  <style>
+    :root{--bg-0:#161616;--bg-1:#262626;--bg-2:#393939;--bg-card:#262626;--bg-card-h:#333333;--blue:#0f62fe;--blue-l:#4589ff;--cyan:#33b1ff;--gold:#f1c21b;--green:#42be65;--red:#ff8389;--purple:#be95ff;--text-0:#f4f4f4;--text-1:#c6c6c6;--text-2:#8d8d8d;--border:#393939;--border-b:#4589ff;--radius:0px;--radius-lg:2px;--shadow:0 2px 6px rgba(0,0,0,0.3);--transition:0.15s ease;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.6;overflow-x:hidden;}
+    a{color:#78a9ff;text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg-0);} ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+    input,select,textarea{font-family:inherit;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#161616;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;}
+    .btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{background:var(--blue-l);}
+    .btn-ghost{background:transparent;color:#78a9ff;border:1px solid var(--border-b);} .btn-ghost:hover{background:rgba(69,137,255,0.12);}
+    .btn-green{background:var(--green);color:#000;font-weight:700;} .btn-green:hover{background:#5cd87a;}
+    .btn-sm{padding:6px 14px;font-size:12px;}
+    .btn-danger{background:rgba(250,77,86,0.1);color:var(--red);border:1px solid rgba(250,77,86,0.3);}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+    .badge-planned{background:rgba(241,194,27,0.1);color:var(--gold);border:1px solid rgba(241,194,27,0.2);}
+    .badge-in_progress{background:rgba(69,137,255,0.12);color:var(--cyan);border:1px solid rgba(69,137,255,0.3);}
+    .badge-live{background:rgba(66,190,101,0.1);color:var(--green);border:1px solid rgba(66,190,101,0.2);}
+    .badge-completed{background:rgba(165,110,255,0.1);color:var(--purple);border:1px solid rgba(165,110,255,0.2);}
+    .container{max-width:1400px;margin:0 auto;padding:0 2rem;}
+    .form-group{margin-bottom:1rem;}
+    .form-label{display:block;font-size:12px;font-weight:600;color:var(--text-1);margin-bottom:5px;}
+    .form-label.req::after{content:' *';color:var(--red);}
+    .form-input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;color:var(--text-0);font-size:13px;transition:var(--transition);}
+    .form-input:focus{outline:none;border-color:var(--border-b);}
+    .form-input::placeholder{color:var(--text-2);}
+    select.form-input option{background:var(--bg-1);}
+    textarea.form-input{resize:vertical;min-height:80px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+    .form-hint{font-size:11px;color:var(--text-2);margin-top:3px;}
+    .divider{height:1px;background:var(--border);margin:1.25rem 0;}
+
+    /* PAGE LAYOUT */
+    .page-wrap{padding-top:48px;display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+    .sidebar{background:var(--bg-1);border-right:1px solid var(--border);padding:1.5rem;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;display:flex;flex-direction:column;gap:0;}
+    .main{padding:2rem;overflow-y:auto;}
+    .sec-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;padding-top:1rem;}
+    .sec-title:first-child{padding-top:0;}
+    .client-select-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;}
+    .client-select{width:100%;background:transparent;border:none;color:var(--text-0);font-family:inherit;font-size:13px;padding:9px 12px;cursor:pointer;}
+    .client-select option{background:var(--bg-card);}
+
+    /* KPI CARDS */
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .kpi-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;position:relative;overflow:hidden;}
+    .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+    .kpi-card.kc1::before{background:var(--cyan);}
+    .kpi-card.kc2::before{background:var(--gold);}
+    .kpi-card.kc3::before{background:var(--green);}
+    .kpi-card.kc4::before{background:var(--purple);}
+    .kpi-val{font-size:1.8rem;font-weight:700;line-height:1;}
+    .kpi-lbl{font-size:11px;color:var(--text-2);margin-top:4px;}
+
+    /* KANBAN */
+    .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .kanban-col{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;min-height:400px;}
+    .kanban-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .kanban-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+    .kanban-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;}
+    .kh-planned .kanban-title{color:var(--gold);} .kh-planned .kanban-count{background:rgba(241,194,27,0.15);color:var(--gold);}
+    .kh-in_progress .kanban-title{color:var(--cyan);} .kh-in_progress .kanban-count{background:rgba(69,137,255,0.15);color:var(--cyan);}
+    .kh-live .kanban-title{color:var(--green);} .kh-live .kanban-count{background:rgba(66,190,101,0.15);color:var(--green);}
+    .kh-completed .kanban-title{color:var(--purple);} .kh-completed .kanban-count{background:rgba(165,110,255,0.15);color:var(--purple);}
+    .kanban-items{padding:12px;display:flex;flex-direction:column;gap:8px;}
+    .project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;cursor:pointer;transition:var(--transition);}
+    .project-card:hover{border-color:var(--border-b);transform:translateY(-1px);box-shadow:var(--shadow);}
+    .pc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px;}
+    .pc-name{font-size:13px;font-weight:600;line-height:1.3;flex:1;}
+    .pc-domain{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:600;flex-shrink:0;}
+    .pc-domain.finance{background:rgba(241,194,27,0.12);color:var(--gold);}
+    .pc-domain.hr{background:rgba(69,137,255,0.12);color:var(--cyan);}
+    .pc-domain.procurement{background:rgba(66,190,101,0.12);color:var(--green);}
+    .pc-asset{font-size:11px;color:var(--text-2);margin-bottom:8px;}
+    .pc-sponsor{font-size:11px;color:var(--text-2);}
+    .pc-progress{margin-top:8px;}
+    .pc-pct{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:3px;}
+    .pc-bar{height:3px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .pc-bar-fill{height:100%;border-radius:2px;}
+    .pc-roi{display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+    .pc-roi-item{text-align:center;}
+    .pc-roi-val{font-size:11px;font-weight:700;}
+    .pc-roi-lbl{font-size:9px;color:var(--text-2);}
+
+    /* WIZARD MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem;}
+    .modal-overlay.open{display:flex;}
+    .wizard{background:var(--bg-1);border:1px solid var(--border-b);border-radius:12px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
+    .wizard-header{padding:1.5rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .wizard-steps{display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .wstep{flex:1;padding:10px;text-align:center;font-size:11px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;transition:var(--transition);cursor:default;}
+    .wstep.active{color:var(--text-0);border-bottom-color:var(--blue);}
+    .wstep.done{color:var(--green);}
+    .wizard-body{padding:1.5rem;flex:1;overflow-y:auto;}
+    .wizard-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:1rem;justify-content:flex-end;flex-shrink:0;}
+
+    /* UPDATE MODAL */
+    .update-modal{background:var(--bg-1);border:1px solid var(--border-b);border-radius:12px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;padding:1.5rem;}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .modal-close{background:var(--bg-2);border:none;color:var(--text-1);cursor:pointer;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+
+    /* ROI TABLE */
+    .roi-table{width:100%;border-collapse:collapse;font-size:13px;}
+    .roi-table th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);border-bottom:1px solid var(--border);background:var(--bg-1);}
+    .roi-table td{padding:10px 12px;border-bottom:1px solid var(--border);}
+    .roi-table tr:hover td{background:var(--bg-card-h, #1f3060);}
+    .progress-ring{display:inline-flex;align-items:center;gap:6px;}
+    .ring-track{width:48px;height:4px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .ring-fill{height:100%;border-radius:2px;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:600;z-index:999;transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{background:rgba(66,190,101,0.2);border:1px solid var(--green);color:var(--green);}
+    .toast.error{background:rgba(250,77,86,0.2);border:1px solid var(--red);color:var(--red);}
+
+    @media(max-width:1100px){.kanban{grid-template-columns:1fr 1fr;}.kpi-row{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){.page-wrap{grid-template-columns:1fr;}.sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}.kanban{grid-template-columns:1fr;}.form-grid,.form-grid-3{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand"><div class="nav-logo">IBM</div><div class="nav-sep"></div><span class="nav-title">Deployment Tracker</span></div>
+  <div style="display:flex;gap:0.75rem;align-items:center;">
+    <span id="clientLabel" style="font-size:12px;color:var(--text-2);"></span>
+    <a href="assess.html" class="btn btn-ghost btn-sm">← Assessment</a>
+    <a href="roi.html" class="btn btn-ghost btn-sm">ROI Tracker</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <button class="btn btn-green btn-sm" onclick="openWizard()">+ Add Project</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sec-title">Client</div>
+    <div class="client-select-wrap">
+      <select class="client-select" id="clientSelect" onchange="selectClient(this.value)">
+        <option value="">— Select Client —</option>
+      </select>
+    </div>
+
+    <div class="sec-title">Filter by Domain</div>
+    <div id="domainFilters" style="display:flex;flex-direction:column;gap:4px;"></div>
+
+    <div class="sec-title" style="margin-top:1.5rem;">Filter by Status</div>
+    <div id="statusFilters" style="display:flex;flex-direction:column;gap:4px;"></div>
+
+    <div style="margin-top:auto;padding-top:1.5rem;border-top:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;">IBM Client Zero</div>
+      <div style="font-size:11px;color:var(--text-2);line-height:1.6;">$3.5B productivity gains · 3.9M hrs saved · 90% PO automation · $315M procurement savings</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="mainContent">
+    <div style="text-align:center;padding:4rem;color:var(--text-2);">
+      <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+      <h3 style="margin-bottom:0.5rem;color:var(--text-1);">Select a Client to Begin</h3>
+      <p>Choose a client from the sidebar or create a new one on the Assessment page to start tracking deployments.</p>
+      <a href="assess.html" class="btn btn-primary" style="margin-top:1.5rem;">Go to Assessment →</a>
+    </div>
+  </div>
+</div>
+
+<!-- WIZARD MODAL -->
+<div class="modal-overlay" id="wizardModal" onclick="closeWizardOnBg(event)">
+  <div class="wizard" id="wizardContent">
+    <div class="wizard-header">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);">New Deployment Project</div>
+          <h3 id="wizardTitle" style="margin-top:4px;">Project Details</h3>
+        </div>
+        <button class="modal-close" onclick="closeWizard()">✕</button>
+      </div>
+    </div>
+    <!-- Step indicators -->
+    <div class="wizard-steps" id="wizardSteps">
+      <div class="wstep active" data-step="1">1 · Project</div>
+      <div class="wstep" data-step="2">2 · Asset & Domain</div>
+      <div class="wstep" data-step="3">3 · Timeline & Sponsor</div>
+      <div class="wstep" data-step="4">4 · ROI & KPIs</div>
+    </div>
+    <div class="wizard-body" id="wizardBody"></div>
+    <div class="wizard-footer" id="wizardFooter"></div>
+  </div>
+</div>
+
+<!-- UPDATE MODAL -->
+<div class="modal-overlay" id="updateModal" onclick="closeUpdateOnBg(event)">
+  <div class="update-modal">
+    <div class="modal-header">
+      <h3 id="updateModalTitle">Update Project</h3>
+      <button class="modal-close" onclick="closeUpdateModal()">✕</button>
+    </div>
+    <div id="updateModalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '';
+let currentClient = null;
+let projects = [];
+let domainFilter = 'all';
+let statusFilter = 'all';
+let wizardStep = 1;
+let wizardData = {};
+let editProjectId = null;
+
+const DOMAIN_COLORS = {finance:'var(--gold)',hr:'var(--cyan)',procurement:'var(--green)'};
+const STATUS_COLORS  = {planned:'var(--gold)',in_progress:'var(--cyan)',live:'var(--green)',completed:'var(--purple)'};
+const STATUS_LABELS  = {planned:'Planned',in_progress:'In Progress',live:'Live',completed:'Completed'};
+
+const ASSETS_BY_DOMAIN = {
+  finance:['Invoice Processing Agent','FP&A Forecasting Agent','Collections & DSO Agent','Close Cycle Accelerator','Tax Document Agent','Conversational Finance BI'],
+  hr:['AskHR Virtual Agent','AI Recruitment Screener','Payroll Automation Agent','Learning & Skills Agent','Workforce Intelligence Dashboard','HR Compliance Monitor'],
+  procurement:['PO Automation Agent','Supplier Risk Monitor','Contract Intelligence Agent','Sourcing & RFx Agent','Spend Analytics Engine','Inventory & Order Agent']
+};
+
+/* ── CLIENT ──────────────────────────────────────────────────────────── */
+async function loadClients(){
+  try{
+    const res=await fetch(`${API}/api/clients`);
+    const clients=await res.json();
+    const sel=document.getElementById('clientSelect');
+    sel.innerHTML='<option value="">— Select Client —</option>';
+    clients.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o);});
+    const params=new URLSearchParams(window.location.search);
+    const cid=params.get('client');
+    if(cid){sel.value=cid;selectClient(cid);}
+  }catch(e){console.error(e);}
+}
+
+async function selectClient(id){
+  if(!id){currentClient=null;document.getElementById('clientLabel').textContent='';document.getElementById('mainContent').innerHTML=`<div style="text-align:center;padding:4rem;color:var(--text-2);"><div style="font-size:2rem;margin-bottom:1rem;">📋</div><p>Select a client to view their deployment tracker.</p></div>`;return;}
+  const sel=document.getElementById('clientSelect');
+  currentClient={id,name:sel.options[sel.selectedIndex].textContent};
+  document.getElementById('clientLabel').textContent='📁 '+currentClient.name;
+  await loadProjects();
+  renderSidebarFilters();
+}
+
+/* ── PROJECTS ─────────────────────────────────────────────────────────── */
+async function loadProjects(){
+  if(!currentClient)return;
+  try{
+    const res=await fetch(`${API}/api/projects?client_id=${currentClient.id}`);
+    projects=await res.json();
+    renderAll();
+  }catch(e){toast('Error loading projects','error');}
+}
+
+function renderAll(){
+  renderKPIs();
+  renderKanban();
+  renderROITable();
+}
+
+function renderKPIs(){
+  const filtered=filterProjects();
+  const totalInv=filtered.reduce((s,p)=>s+(p.investment||0),0);
+  const totalROI=filtered.reduce((s,p)=>s+(p.projected_roi||0),0);
+  const totalSav=filtered.reduce((s,p)=>s+(p.actual_savings||0),0);
+  const live=filtered.filter(p=>p.status==='live'||p.status==='completed').length;
+  const fmt=n=>n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':'$'+Math.round(n);
+
+  const main=document.getElementById('mainContent');
+  if(!main.querySelector('.kpi-row')){
+    main.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div><h2 style="font-size:1.4rem;font-weight:700;">Deployment Pipeline</h2><p style="font-size:13px;color:var(--text-2);margin-top:2px;">${currentClient.name} · ${projects.length} project${projects.length!==1?'s':''}</p></div>
+        <button class="btn btn-green btn-sm" onclick="openWizard()">+ Add Project</button>
+      </div>
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="kanban" id="kanban"></div>
+      <div style="margin-top:2rem;">
+        <h3 style="font-size:15px;margin-bottom:1rem;">📊 ROI Tracking Table</h3>
+        <div style="overflow-x:auto;"><table class="roi-table" id="roiTable"></table></div>
+      </div>`;
+  }
+
+  document.getElementById('kpiRow').innerHTML=`
+    <div class="kpi-card kc1"><div class="kpi-val" style="color:var(--cyan)">${filtered.length}</div><div class="kpi-lbl">Total Projects</div></div>
+    <div class="kpi-card kc2"><div class="kpi-val" style="color:var(--gold)">${fmt(totalInv)}</div><div class="kpi-lbl">Total Investment</div></div>
+    <div class="kpi-card kc3"><div class="kpi-val" style="color:var(--green)">${fmt(totalROI)}</div><div class="kpi-lbl">Projected Annual ROI</div></div>
+    <div class="kpi-card kc4"><div class="kpi-val" style="color:var(--purple)">${fmt(totalSav)}</div><div class="kpi-lbl">Actual Savings to Date</div></div>`;
+}
+
+function filterProjects(){
+  return projects.filter(p=>{
+    if(domainFilter!=='all'&&p.domain!==domainFilter)return false;
+    if(statusFilter!=='all'&&p.status!==statusFilter)return false;
+    return true;
+  });
+}
+
+function renderKanban(){
+  const kanban=document.getElementById('kanban');
+  if(!kanban)return;
+  const statuses=['planned','in_progress','live','completed'];
+  kanban.innerHTML=statuses.map(status=>{
+    const items=filterProjects().filter(p=>p.status===status);
+    return`<div class="kanban-col">
+      <div class="kanban-header kh-${status}">
+        <span class="kanban-title">${STATUS_LABELS[status]}</span>
+        <span class="kanban-count">${items.length}</span>
+      </div>
+      <div class="kanban-items">
+        ${items.map(p=>projectCard(p)).join('')}
+        ${!items.length?`<div style="text-align:center;padding:2rem;color:var(--text-2);font-size:12px;">No projects</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function projectCard(p){
+  const dc=DOMAIN_COLORS[p.domain]||'var(--text-2)';
+  const fmt=n=>n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':'$'+Math.round(n);
+  const barColor=p.status==='planned'?'var(--gold)':p.status==='in_progress'?'var(--cyan)':p.status==='live'?'var(--green)':'var(--purple)';
+  return`<div class="project-card" onclick="openUpdateModal('${p.id}')">
+    <div class="pc-top">
+      <div class="pc-name">${p.project_name}</div>
+      <div class="pc-domain ${p.domain}">${p.domain}</div>
+    </div>
+    ${p.asset_name?`<div class="pc-asset">⚡ ${p.asset_name}</div>`:''}
+    ${p.sponsor?`<div class="pc-sponsor">👤 ${p.sponsor}</div>`:''}
+    <div class="pc-progress">
+      <div class="pc-pct"><span>Progress</span><span style="color:${barColor}">${p.progress||0}%</span></div>
+      <div class="pc-bar"><div class="pc-bar-fill" style="width:${p.progress||0}%;background:${barColor};"></div></div>
+    </div>
+    <div class="pc-roi">
+      <div class="pc-roi-item"><div class="pc-roi-val" style="color:var(--gold)">${fmt(p.investment||0)}</div><div class="pc-roi-lbl">Invested</div></div>
+      <div class="pc-roi-item"><div class="pc-roi-val" style="color:var(--cyan)">${fmt(p.projected_roi||0)}</div><div class="pc-roi-lbl">Proj. ROI</div></div>
+      <div class="pc-roi-item"><div class="pc-roi-val" style="color:var(--green)">${fmt(p.actual_savings||0)}</div><div class="pc-roi-lbl">Actual Savings</div></div>
+    </div>
+  </div>`;
+}
+
+function renderROITable(){
+  const table=document.getElementById('roiTable');
+  if(!table)return;
+  const fmt=n=>n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':'$'+Math.round(n);
+  const items=filterProjects();
+  table.innerHTML=`
+    <thead><tr>
+      <th>Project</th><th>Domain</th><th>Status</th><th>Sponsor</th><th>Progress</th>
+      <th>Investment</th><th>Proj. ROI</th><th>Actual Savings</th><th>KPI Target</th><th>KPI Actual</th><th>Actions</th>
+    </tr></thead>
+    <tbody>${items.map(p=>`<tr>
+      <td style="font-weight:600;">${p.project_name}</td>
+      <td><span style="font-size:11px;font-weight:600;color:${DOMAIN_COLORS[p.domain]||'var(--text-2)'}">${p.domain}</span></td>
+      <td><span class="badge badge-${p.status}">${STATUS_LABELS[p.status]||p.status}</span></td>
+      <td style="font-size:12px;color:var(--text-1);">${p.sponsor||'—'}</td>
+      <td>
+        <div class="progress-ring">
+          <div class="ring-track"><div class="ring-fill" style="width:${p.progress||0}%;background:${STATUS_COLORS[p.status]||'var(--cyan)'}"></div></div>
+          <span style="font-size:11px;font-weight:700;color:${STATUS_COLORS[p.status]||'var(--cyan)'}">${p.progress||0}%</span>
+        </div>
+      </td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--gold);">${fmt(p.investment||0)}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--cyan);">${fmt(p.projected_roi||0)}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--green);">${fmt(p.actual_savings||0)}</td>
+      <td style="font-size:11px;color:var(--text-1);">${p.kpi_target||'—'}</td>
+      <td style="font-size:11px;color:${p.kpi_actual?'var(--green)':'var(--text-2)'};">${p.kpi_actual||'—'}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm btn-ghost" style="padding:4px 10px;margin-right:4px;" onclick="event.stopPropagation();openUpdateModal('${p.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" style="padding:4px 10px;" onclick="event.stopPropagation();deleteProject('${p.id}')">Del</button>
+      </td>
+    </tr>`).join('')}
+    ${!items.length?`<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-2);">No projects yet. Click "+ Add Project" to begin.</td></tr>`:''}
+    </tbody>`;
+}
+
+function renderSidebarFilters(){
+  const domains=['all','finance','hr','procurement'];
+  document.getElementById('domainFilters').innerHTML=domains.map(d=>`
+    <button class="btn btn-sm btn-ghost" style="justify-content:flex-start;${domainFilter===d?'border-color:var(--blue-l);color:var(--blue-l);background:rgba(69,137,255,0.12);':''}"
+      onclick="setFilter('domain','${d}')">${d==='all'?'All Domains':d.charAt(0).toUpperCase()+d.slice(1)}</button>`).join('');
+
+  const statuses=['all','planned','in_progress','live','completed'];
+  document.getElementById('statusFilters').innerHTML=statuses.map(s=>`
+    <button class="btn btn-sm btn-ghost" style="justify-content:flex-start;${statusFilter===s?'border-color:var(--blue-l);color:var(--blue-l);background:rgba(69,137,255,0.12);':''}"
+      onclick="setFilter('status','${s}')">${s==='all'?'All Statuses':STATUS_LABELS[s]||s}</button>`).join('');
+}
+
+function setFilter(type,val){
+  if(type==='domain')domainFilter=val;
+  else statusFilter=val;
+  renderSidebarFilters();
+  renderAll();
+}
+
+/* ── WIZARD ──────────────────────────────────────────────────────────── */
+function openWizard(){
+  if(!currentClient){toast('Please select a client first','error');return;}
+  wizardStep=1; wizardData={};
+  document.getElementById('wizardModal').classList.add('open');
+  renderWizardStep();
+}
+function closeWizard(){document.getElementById('wizardModal').classList.remove('open');}
+function closeWizardOnBg(e){if(e.target.id==='wizardModal')closeWizard();}
+
+const WIZARD_STEPS=[
+  {title:'Project Details',sub:'Name and describe the deployment project'},
+  {title:'Asset & Domain',sub:'Select the AI asset and business domain'},
+  {title:'Timeline & Sponsor',sub:'Set dates and assign project ownership'},
+  {title:'ROI & KPIs',sub:'Define investment, expected return, and success metrics'},
+];
+
+function renderWizardStep(){
+  const s=wizardStep;
+  const step=WIZARD_STEPS[s-1];
+  document.getElementById('wizardTitle').textContent=step.title;
+  document.querySelectorAll('.wstep').forEach((el,i)=>{
+    el.className='wstep'+(i+1<s?' done':i+1===s?' active':'');
+  });
+
+  const body=document.getElementById('wizardBody');
+  const footer=document.getElementById('wizardFooter');
+
+  if(s===1){
+    body.innerHTML=`
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:1.25rem;">${step.sub}</p>
+      <div class="form-group"><label class="form-label req">Project Name</label><input class="form-input" id="w_name" value="${wizardData.project_name||''}" placeholder="e.g. AP Invoice Automation — Phase 1"/></div>
+      <div class="form-group"><label class="form-label">Project Description</label><textarea class="form-input" id="w_notes" placeholder="Brief description of scope, objectives, and expected outcomes">${wizardData.notes||''}</textarea></div>
+      <div class="form-group"><label class="form-label req">Initial Status</label>
+        <select class="form-input" id="w_status">
+          <option value="planned" ${wizardData.status==='planned'?'selected':''}>📋 Planned</option>
+          <option value="in_progress" ${wizardData.status==='in_progress'?'selected':''}>🔄 In Progress</option>
+          <option value="live" ${wizardData.status==='live'?'selected':''}>✅ Live</option>
+          <option value="completed" ${wizardData.status==='completed'?'selected':''}>🏆 Completed</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Initial Progress (%)</label>
+        <input class="form-input" id="w_progress" type="number" min="0" max="100" value="${wizardData.progress||0}"/></div>`;
+    footer.innerHTML=`<button class="btn btn-ghost" onclick="closeWizard()">Cancel</button><button class="btn btn-primary" onclick="wizardNext()">Next: Asset & Domain →</button>`;
+  } else if(s===2){
+    body.innerHTML=`
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:1.25rem;">${step.sub}</p>
+      <div class="form-group"><label class="form-label req">Business Domain</label>
+        <select class="form-input" id="w_domain" onchange="updateAssets(this.value)">
+          <option value="">— Select Domain —</option>
+          <option value="finance" ${wizardData.domain==='finance'?'selected':''}>💰 Finance</option>
+          <option value="hr" ${wizardData.domain==='hr'?'selected':''}>👥 Human Resources</option>
+          <option value="procurement" ${wizardData.domain==='procurement'?'selected':''}>🔗 Procurement</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">AI Asset / Accelerator</label>
+        <select class="form-input" id="w_asset">
+          <option value="">— Select Domain First —</option>
+          ${wizardData.domain?ASSETS_BY_DOMAIN[wizardData.domain].map(a=>`<option value="${a}" ${wizardData.asset_name===a?'selected':''}>${a}</option>`).join(''):''}
+        </select>
+      </div>
+      <div style="background:rgba(51,177,255,0.06);border:1px solid rgba(69,137,255,0.2);border-radius:8px;padding:1rem;margin-top:1rem;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:0.5rem;">IBM Client Zero Benchmark</div>
+        <div id="benchHint" style="font-size:12px;color:var(--text-1);">${wizardData.domain?getDomainBenchmark(wizardData.domain):'Select a domain to see IBM benchmark metrics.'}</div>
+      </div>`;
+    footer.innerHTML=`<button class="btn btn-ghost" onclick="wizardStep--;renderWizardStep()">← Back</button><button class="btn btn-primary" onclick="wizardNext()">Next: Timeline →</button>`;
+  } else if(s===3){
+    body.innerHTML=`
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:1.25rem;">${step.sub}</p>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="w_start" value="${wizardData.start_date||''}"/></div>
+        <div class="form-group"><label class="form-label">Target Go-Live Date</label><input class="form-input" type="date" id="w_target" value="${wizardData.target_date||''}"/></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:1rem;">Project Sponsor</div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label req">Sponsor Name</label><input class="form-input" id="w_sponsor" value="${wizardData.sponsor||''}" placeholder="e.g. John Smith"/></div>
+        <div class="form-group"><label class="form-label">Sponsor Email</label><input class="form-input" type="email" id="w_sponsor_email" value="${wizardData.sponsor_email||''}" placeholder="john@company.com"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Sponsor Title / Role</label><input class="form-input" id="w_sponsor_role" value="${wizardData.sponsor_role||''}" placeholder="e.g. CFO, VP Finance"/></div>`;
+    footer.innerHTML=`<button class="btn btn-ghost" onclick="wizardStep--;renderWizardStep()">← Back</button><button class="btn btn-primary" onclick="wizardNext()">Next: ROI & KPIs →</button>`;
+  } else if(s===4){
+    body.innerHTML=`
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:1.25rem;">${step.sub}</p>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Total Investment ($)</label><input class="form-input" type="number" id="w_investment" value="${wizardData.investment||''}" placeholder="e.g. 250000"/><div class="form-hint">Total project cost including implementation, licences, integration</div></div>
+        <div class="form-group"><label class="form-label">Projected Annual ROI ($)</label><input class="form-input" type="number" id="w_roi" value="${wizardData.projected_roi||''}" placeholder="e.g. 750000"/><div class="form-hint">Expected annual value based on IBM benchmarks</div></div>
+      </div>
+      <div class="form-group"><label class="form-label">Actual Savings to Date ($)</label><input class="form-input" type="number" id="w_savings" value="${wizardData.actual_savings||0}" placeholder="0"/></div>
+      <div class="divider"></div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:1rem;">Success KPIs</div>
+      <div class="form-group"><label class="form-label">KPI Target</label><input class="form-input" id="w_kpi_target" value="${wizardData.kpi_target||''}" placeholder="e.g. Reduce invoice processing time by 32%, achieve 90% touchless POs"/></div>
+      <div class="form-group"><label class="form-label">KPI Actual (if live)</label><input class="form-input" id="w_kpi_actual" value="${wizardData.kpi_actual||''}" placeholder="e.g. 28% reduction achieved (month 1)"/></div>
+      <div style="background:rgba(66,190,101,0.06);border:1px solid rgba(66,190,101,0.2);border-radius:8px;padding:1rem;margin-top:1rem;" id="roiPreview"></div>`;
+    footer.innerHTML=`<button class="btn btn-ghost" onclick="wizardStep--;renderWizardStep()">← Back</button><button class="btn btn-green" onclick="saveProject()">💾 Create Project</button>`;
+    updateROIPreview();
+  }
+}
+
+function updateAssets(domain){
+  wizardData.domain=domain;
+  const sel=document.getElementById('w_asset');
+  sel.innerHTML=ASSETS_BY_DOMAIN[domain]?ASSETS_BY_DOMAIN[domain].map(a=>`<option value="${a}">${a}</option>`).join(''):'<option>—</option>';
+  const hint=document.getElementById('benchHint');
+  if(hint)hint.textContent=getDomainBenchmark(domain);
+}
+
+function getDomainBenchmark(d){
+  return{finance:'IBM Finance: 25% cost-per-invoice reduction · 33% faster close cycle · 57% forecast error reduction · 43% uncollectibles reduction.',
+    hr:'IBM AskHR: 94% query containment · 75% ticket reduction · 40% HR ops cost reduction · $1B cumulative savings.',
+    procurement:'IBM Procurement: 90% touchless POs · $315M saved over 3 years · 30% logistics cost reduction.'}[d]||'';
+}
+
+function updateROIPreview(){
+  const inv=parseFloat(document.getElementById('w_investment')?.value)||0;
+  const roi=parseFloat(document.getElementById('w_roi')?.value)||0;
+  const preview=document.getElementById('roiPreview');
+  if(!preview)return;
+  const multiple=inv>0?roi/inv:0;
+  const payback=roi>0?Math.round(inv/roi*12):0;
+  preview.innerHTML=`
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:0.75rem;">ROI Preview</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;text-align:center;">
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--green)">${multiple>0?multiple.toFixed(1)+'×':'—'}</div><div style="font-size:10px;color:var(--text-2);">ROI Multiple</div></div>
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--cyan)">${payback>0?payback+'mo':'—'}</div><div style="font-size:10px;color:var(--text-2);">Payback Period</div></div>
+      <div><div style="font-size:1.4rem;font-weight:700;color:var(--gold)">${roi>0?'$'+(roi>=1000000?(roi/1000000).toFixed(1)+'M':(roi/1000).toFixed(0)+'K'):'—'}</div><div style="font-size:10px;color:var(--text-2);">Annual Value</div></div>
+    </div>`;
+}
+
+function wizardNext(){
+  if(wizardStep===1){
+    const name=document.getElementById('w_name').value.trim();
+    if(!name){toast('Project name is required','error');return;}
+    wizardData.project_name=name;
+    wizardData.notes=document.getElementById('w_notes').value;
+    wizardData.status=document.getElementById('w_status').value;
+    wizardData.progress=parseInt(document.getElementById('w_progress').value)||0;
+  } else if(wizardStep===2){
+    const domain=document.getElementById('w_domain').value;
+    if(!domain){toast('Please select a domain','error');return;}
+    wizardData.domain=domain;
+    wizardData.asset_name=document.getElementById('w_asset').value;
+  } else if(wizardStep===3){
+    const sponsor=document.getElementById('w_sponsor').value.trim();
+    if(!sponsor){toast('Project sponsor name is required','error');return;}
+    wizardData.start_date=document.getElementById('w_start').value;
+    wizardData.target_date=document.getElementById('w_target').value;
+    wizardData.sponsor=sponsor;
+    wizardData.sponsor_email=document.getElementById('w_sponsor_email').value;
+    wizardData.sponsor_role=document.getElementById('w_sponsor_role')?.value;
+  }
+  wizardStep++;
+  renderWizardStep();
+}
+
+async function saveProject(){
+  wizardData.investment=parseFloat(document.getElementById('w_investment').value)||0;
+  wizardData.projected_roi=parseFloat(document.getElementById('w_roi').value)||0;
+  wizardData.actual_savings=parseFloat(document.getElementById('w_savings').value)||0;
+  wizardData.kpi_target=document.getElementById('w_kpi_target').value;
+  wizardData.kpi_actual=document.getElementById('w_kpi_actual').value;
+  wizardData.client_id=currentClient.id;
+  try{
+    await fetch(`${API}/api/projects`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(wizardData)});
+    toast('Project created: '+wizardData.project_name,'success');
+    closeWizard();
+    await loadProjects();
+  }catch(e){toast('Error creating project','error');}
+}
+
+/* ── UPDATE MODAL ────────────────────────────────────────────────────── */
+function openUpdateModal(id){
+  const p=projects.find(x=>x.id===id);
+  if(!p)return;
+  editProjectId=id;
+  const fmt=n=>n||0;
+  document.getElementById('updateModalTitle').textContent=p.project_name;
+  document.getElementById('updateModalBody').innerHTML=`
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-input" id="u_status">
+        <option value="planned" ${p.status==='planned'?'selected':''}>📋 Planned</option>
+        <option value="in_progress" ${p.status==='in_progress'?'selected':''}>🔄 In Progress</option>
+        <option value="live" ${p.status==='live'?'selected':''}>✅ Live</option>
+        <option value="completed" ${p.status==='completed'?'selected':''}>🏆 Completed</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Progress (%)</label>
+      <input class="form-input" type="range" id="u_progress" min="0" max="100" value="${p.progress||0}" oninput="document.getElementById('u_prog_val').textContent=this.value+'%'"/>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-top:2px;"><span>0%</span><span id="u_prog_val" style="color:var(--cyan);font-weight:700;">${p.progress||0}%</span><span>100%</span></div>
+    </div>
+    <div class="form-group"><label class="form-label">Actual Savings to Date ($)</label>
+      <input class="form-input" type="number" id="u_savings" value="${fmt(p.actual_savings)}"/></div>
+    <div class="form-group"><label class="form-label">KPI Actual</label>
+      <input class="form-input" id="u_kpi_actual" value="${p.kpi_actual||''}" placeholder="e.g. 28% cycle time reduction achieved"/></div>
+    <div class="form-group"><label class="form-label">Notes / Update</label>
+      <textarea class="form-input" id="u_notes">${p.notes||''}</textarea></div>
+    <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+      <button class="btn btn-green" style="flex:1;justify-content:center;" onclick="updateProject()">💾 Save Update</button>
+      <button class="btn btn-ghost" onclick="closeUpdateModal()">Cancel</button>
+    </div>`;
+  document.getElementById('updateModal').classList.add('open');
+}
+function closeUpdateModal(){document.getElementById('updateModal').classList.remove('open');}
+function closeUpdateOnBg(e){if(e.target.id==='updateModal')closeUpdateModal();}
+
+async function updateProject(){
+  const body={
+    status:document.getElementById('u_status').value,
+    progress:parseInt(document.getElementById('u_progress').value)||0,
+    actual_savings:parseFloat(document.getElementById('u_savings').value)||0,
+    kpi_actual:document.getElementById('u_kpi_actual').value,
+    notes:document.getElementById('u_notes').value
+  };
+  try{
+    await fetch(`${API}/api/projects/${editProjectId}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    toast('Project updated','success');
+    closeUpdateModal();
+    await loadProjects();
+  }catch(e){toast('Error updating project','error');}
+}
+
+async function deleteProject(id){
+  if(!confirm('Delete this project? This cannot be undone.'))return;
+  try{
+    await fetch(`${API}/api/projects/${id}`,{method:'DELETE'});
+    toast('Project deleted','success');
+    await loadProjects();
+  }catch(e){toast('Error deleting project','error');}
+}
+
+/* ── TOAST ────────────────────────────────────────────────────────────── */
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+/* ── INIT ─────────────────────────────────────────────────────────────── */
+loadClients();
+</script>
+</body>
+</html>

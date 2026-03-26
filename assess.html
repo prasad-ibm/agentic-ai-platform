@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maturity Assessment · Agentic AI Value Platform</title>
+  <link rel="stylesheet" href="/ibm-theme.css"/>
+  <style>
+    :root{--bg-0:#161616;--bg-1:#262626;--bg-2:#393939;--bg-card:#262626;--bg-card-h:#333333;--blue:#0f62fe;--blue-l:#4589ff;--cyan:#33b1ff;--gold:#f1c21b;--green:#42be65;--red:#ff8389;--purple:#be95ff;--text-0:#f4f4f4;--text-1:#c6c6c6;--text-2:#8d8d8d;--border:#393939;--border-b:#4589ff;--radius:0px;--radius-lg:2px;--shadow:0 2px 6px rgba(0,0,0,0.3);--transition:0.15s ease;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.6;overflow-x:hidden;}
+    a{color:#78a9ff;text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg-0);} ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+    input,select,textarea{font-family:inherit;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#161616;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;white-space:nowrap;}
+    .btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{background:var(--blue-l);}
+    .btn-ghost{background:transparent;color:#78a9ff;border:1px solid var(--border-b);} .btn-ghost:hover{background:rgba(69,137,255,0.12);}
+    .btn-green{background:var(--green);color:#000;font-weight:700;} .btn-green:hover{background:#5cd87a;}
+    .btn-sm{padding:6px 14px;font-size:12px;}
+    .btn-danger{background:rgba(250,77,86,0.15);color:var(--red);border:1px solid rgba(250,77,86,0.3);}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+    .badge-cyan{background:rgba(69,137,255,0.12);color:var(--cyan);border:1px solid rgba(69,137,255,0.3);}
+    .badge-gold{background:rgba(241,194,27,0.1);color:var(--gold);border:1px solid rgba(241,194,27,0.2);}
+    .badge-green{background:rgba(66,190,101,0.1);color:var(--green);border:1px solid rgba(66,190,101,0.2);}
+    .badge-red{background:rgba(250,77,86,0.1);color:var(--red);border:1px solid rgba(250,77,86,0.2);}
+    .badge-purple{background:rgba(165,110,255,0.1);color:var(--purple);border:1px solid rgba(165,110,255,0.2);}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;}
+
+    /* LAYOUT */
+    .assess-wrap{padding-top:48px;display:grid;grid-template-columns:280px 1fr;min-height:100vh;}
+    .sidebar{background:var(--bg-1);border-right:1px solid var(--border);padding:1.5rem;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;display:flex;flex-direction:column;gap:0;}
+    .main{padding:2rem;overflow-y:auto;}
+    .sec-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;padding-top:1rem;}
+    .sec-title:first-child{padding-top:0;}
+
+    /* SIDEBAR NAV */
+    .snav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;color:var(--text-1);border:none;background:none;font-family:inherit;width:100%;text-align:left;transition:var(--transition);margin-bottom:2px;}
+    .snav-item:hover{color:var(--text-0);background:var(--bg-2);}
+    .snav-item.active{color:var(--text-0);background:var(--bg-2);border-left:2px solid var(--blue);background:rgba(69,137,255,0.12);border:1px solid rgba(69,137,255,0.2);}
+    .snav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+    /* CLIENT SELECTOR */
+    .client-select-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .client-select{width:100%;background:transparent;border:none;color:var(--text-0);font-family:inherit;font-size:13px;padding:9px 12px;cursor:pointer;}
+    .client-select:focus{outline:none;}
+    .client-select option{background:var(--bg-card);}
+
+    /* PROGRESS */
+    .prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-bottom:4px;}
+    .prog-bar{height:3px;background:var(--bg-2);border-radius:2px;overflow:hidden;margin-bottom:10px;}
+    .prog-fill{height:100%;border-radius:2px;transition:width 0.4s ease;}
+
+    /* SCORE CARD */
+    .score-card{background:var(--bg-0);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem;text-align:center;margin-top:1rem;}
+    .score-big{font-size:2.2rem;font-weight:700;line-height:1;}
+    .score-lbl{font-size:10px;color:var(--text-2);margin-top:4px;}
+
+    /* FORM FIELDS */
+    .form-group{margin-bottom:1rem;}
+    .form-label{display:block;font-size:12px;font-weight:600;color:var(--text-1);margin-bottom:6px;}
+    .form-input{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;color:var(--text-0);font-size:13px;transition:var(--transition);}
+    .form-input:focus{outline:none;border-color:var(--border-b);background:var(--bg-card-h, #1f3060);}
+    .form-input::placeholder{color:var(--text-2);}
+    select.form-input option{background:var(--bg-1);}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+
+    /* TABS */
+    .tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem;}
+    .tab-btn{padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text-2);border-bottom:2px solid transparent;transition:var(--transition);background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
+    .tab-btn:hover{color:var(--text-0);}
+    .tab-btn.active{color:var(--text-0);border-bottom-color:var(--blue);}
+    .tab-panel{display:none;} .tab-panel.active{display:block;}
+
+    /* DOMAIN TABS */
+    .domain-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;}
+    .dtab{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-1);font-family:inherit;transition:var(--transition);}
+    .dtab:hover,.dtab.active{border-color:var(--blue-l);color:var(--blue-l);background:rgba(69,137,255,0.12);}
+
+    /* QUESTIONS */
+    .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;transition:var(--transition);}
+    .q-card.answered{border-color:rgba(66,190,101,0.3);}
+    .q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:1rem;}
+    .q-num{width:26px;height:26px;border-radius:50%;background:var(--bg-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--text-2);flex-shrink:0;}
+    .q-num.done{background:rgba(66,190,101,0.15);border-color:var(--green);color:var(--green);}
+    .q-dim{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:3px;}
+    .q-text{font-size:14px;font-weight:600;line-height:1.4;}
+    .q-sub{font-size:11px;color:var(--text-2);}
+    .options{display:flex;flex-direction:column;gap:6px;}
+    .opt{padding:9px 14px;border-radius:var(--radius);background:var(--bg-1);border:1px solid var(--border);color:var(--text-1);font-size:12px;font-family:inherit;cursor:pointer;text-align:left;display:flex;align-items:flex-start;gap:10px;transition:var(--transition);line-height:1.4;}
+    .opt:hover{border-color:var(--cyan);color:var(--text-0);}
+    .opt.sel{border-color:var(--green);background:rgba(66,190,101,0.08);color:var(--text-0);}
+    .opt-l{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:2px;background:var(--bg-2);flex-shrink:0;margin-top:2px;}
+    .opt.sel .opt-l{background:rgba(66,190,101,0.2);color:var(--green);}
+
+    /* RADAR CHART */
+    .radar-wrap{display:flex;justify-content:center;padding:1rem 0;}
+    canvas.radar{max-width:340px;max-height:340px;}
+
+    /* RESULTS */
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+    .dim-bars{display:flex;flex-direction:column;gap:10px;}
+    .dim-bar-row{display:flex;align-items:center;gap:10px;}
+    .dim-bar-lbl{font-size:12px;color:var(--text-1);width:150px;flex-shrink:0;}
+    .dim-bar-track{flex:1;height:5px;background:var(--bg-2);border-radius:3px;overflow:hidden;}
+    .dim-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+    .dim-bar-val{font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace;width:30px;text-align:right;flex-shrink:0;}
+    .gap-item{display:flex;align-items:flex-start;gap:12px;padding:1rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:0.75rem;transition:var(--transition);}
+    .gap-item:hover{border-color:var(--border-b);}
+    .gap-pri{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+    .gap-pri.high{background:rgba(250,77,86,0.15);color:var(--red);}
+    .gap-pri.med{background:rgba(241,194,27,0.15);color:var(--gold);}
+    .gap-pri.low{background:rgba(66,190,101,0.15);color:var(--green);}
+    .gap-info{flex:1;}
+    .gap-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+    .gap-desc{font-size:11px;color:var(--text-2);margin-bottom:5px;}
+    .gap-asset{font-size:11px;color:var(--cyan);}
+    .gap-roi{text-align:right;flex-shrink:0;}
+    .gap-roi-v{font-size:1rem;font-weight:700;color:var(--green);}
+    .gap-roi-l{font-size:10px;color:var(--text-2);}
+
+    /* AGGREGATED VIEW */
+    .agg-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem;}
+    .agg-domain{font-size:13px;font-weight:700;margin-bottom:0.5rem;}
+    .agg-stakes{display:flex;flex-direction:column;gap:6px;}
+    .stake-row{display:flex;align-items:center;gap:12px;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);}
+    .stake-row:last-child{border-bottom:none;}
+    .stake-name{font-weight:600;flex:1;}
+    .stake-role{color:var(--text-2);flex:1;}
+    .stake-score{font-weight:700;font-family:'IBM Plex Mono',monospace;width:32px;text-align:center;}
+
+    /* NOTIFICATION */
+    .toast{position:fixed;bottom:2rem;right:2rem;padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:600;z-index:999;transform:translateY(100px);opacity:0;transition:all 0.3s ease;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{background:rgba(66,190,101,0.2);border:1px solid var(--green);color:var(--green);}
+    .toast.error{background:rgba(250,77,86,0.2);border:1px solid var(--red);color:var(--red);}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;display:none;align-items:center;justify-content:center;padding:2rem;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg-1);border:1px solid var(--border-b);border-radius:12px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;padding:2rem;}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .modal-close{background:var(--bg-2);border:none;color:var(--text-1);font-size:1.1rem;cursor:pointer;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;}
+
+    /* MATURITY LEGEND */
+    .level-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+    .ll{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-2);}
+    .ll-dot{width:8px;height:8px;border-radius:50%;}
+
+    @media(max-width:900px){.assess-wrap{grid-template-columns:1fr;}.sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}.results-grid{grid-template-columns:1fr;}.form-grid,.form-grid-3{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand"><div class="nav-logo">IBM</div><div class="nav-sep"></div><span class="nav-title">Maturity Assessment</span></div>
+  <div style="display:flex;gap:0.75rem;align-items:center;">
+    <span id="clientLabel" style="font-size:12px;color:var(--text-2);"></span>
+    <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
+    <a href="tracker.html" class="btn btn-ghost btn-sm">Deployment Tracker</a>
+    <button class="btn btn-primary btn-sm" onclick="openNewClientModal()">+ New Client</button>
+  </div>
+</nav>
+
+<div class="assess-wrap">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sec-title">Client</div>
+    <div class="client-select-wrap" style="margin-bottom:1rem;">
+      <select class="client-select" id="clientSelect" onchange="selectClient(this.value)">
+        <option value="">— Select Client —</option>
+      </select>
+    </div>
+
+    <div class="sec-title">Modules</div>
+    <button class="snav-item active" onclick="switchTab('assess',this)"><span class="snav-dot" style="background:var(--cyan)"></span>Assessment</button>
+    <button class="snav-item" onclick="switchTab('results',this)"><span class="snav-dot" style="background:var(--gold)"></span>Results & Radar</button>
+    <button class="snav-item" onclick="switchTab('aggregate',this)"><span class="snav-dot" style="background:var(--purple)"></span>Stakeholder Aggregate</button>
+
+    <div class="sec-title" style="margin-top:1rem;">Domain Progress</div>
+    <div id="domainProgress"></div>
+
+    <div class="score-card" id="scoreCard" style="display:none;">
+      <div class="score-big" id="scoreCardVal">—</div>
+      <div class="score-lbl" id="scoreCardLbl">Current Score</div>
+    </div>
+
+    <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--border);">
+      <button class="btn btn-green" style="width:100%;justify-content:center;" onclick="saveAssessment()">💾 Save Assessment</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- ── ASSESSMENT TAB ── -->
+    <div class="tab-panel active" id="tab-assess">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <span class="badge badge-cyan" style="margin-bottom:0.5rem;">Step 1 · Maturity Assessment</span>
+          <h2 style="font-size:1.6rem;font-weight:700;">AI Readiness Assessment</h2>
+          <p style="font-size:13px;color:var(--text-2);margin-top:4px;">Complete the stakeholder profile below, then answer all questions per domain. Results are saved per stakeholder and aggregated across your team.</p>
+        </div>
+      </div>
+
+      <!-- Stakeholder Profile -->
+      <div class="card" style="margin-bottom:1.5rem;border-color:rgba(51,177,255,0.2);">
+        <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem;">👤 Stakeholder Profile</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="stName" placeholder="e.g. Sarah Johnson" /></div>
+          <div class="form-group"><label class="form-label">Role / Title *</label><input class="form-input" id="stRole" placeholder="e.g. CFO, CHRO, CPO" /></div>
+          <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="stEmail" type="email" placeholder="sarah@company.com" /></div>
+          <div class="form-group"><label class="form-label">Domain Focus *</label>
+            <select class="form-input" id="stDomain" onchange="switchDomain(this.value)">
+              <option value="hr">👥 Human Resources</option>
+              <option value="finance">💰 Finance</option>
+              <option value="procurement">🔗 Procurement</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Question Tabs -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div class="domain-tabs" id="domainTabs">
+          <button class="dtab active" onclick="switchDomain('hr',this)" data-domain="hr">👥 HR</button>
+          <button class="dtab" onclick="switchDomain('finance',this)" data-domain="finance">💰 Finance</button>
+          <button class="dtab" onclick="switchDomain('procurement',this)" data-domain="procurement">🔗 Procurement</button>
+        </div>
+        <div class="level-legend">
+          <div class="ll"><div class="ll-dot" style="background:var(--red)"></div>L1</div>
+          <div class="ll"><div class="ll-dot" style="background:#f97316"></div>L2</div>
+          <div class="ll"><div class="ll-dot" style="background:var(--gold)"></div>L3</div>
+          <div class="ll"><div class="ll-dot" style="background:var(--cyan)"></div>L4</div>
+          <div class="ll"><div class="ll-dot" style="background:var(--green)"></div>L5</div>
+        </div>
+      </div>
+
+      <div id="questionsContainer"></div>
+
+      <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;">
+        <button class="btn btn-green" onclick="saveAssessment()" style="flex:1;justify-content:center;">💾 Save Assessment to Database</button>
+        <button class="btn btn-primary" onclick="goToResults()" style="flex:1;justify-content:center;">View My Results →</button>
+      </div>
+    </div>
+
+    <!-- ── RESULTS TAB ── -->
+    <div class="tab-panel" id="tab-results">
+      <div style="margin-bottom:1.5rem;">
+        <span class="badge badge-gold" style="margin-bottom:0.5rem;">Step 2 · Results & Radar</span>
+        <h2 style="font-size:1.6rem;font-weight:700;">Maturity Results</h2>
+        <p style="font-size:13px;color:var(--text-2);margin-top:4px;">Your capability radar, dimension scores, and prioritised gap areas with recommended assets.</p>
+      </div>
+
+      <div id="resultsContent">
+        <div style="text-align:center;padding:3rem;color:var(--text-2);">
+          <div style="font-size:3rem;margin-bottom:1rem;">📊</div>
+          <p>Complete the assessment questions first, then view your radar here.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="switchTab('assess',document.querySelector('.snav-item'))">Go to Assessment →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AGGREGATE TAB ── -->
+    <div class="tab-panel" id="tab-aggregate">
+      <div style="margin-bottom:1.5rem;">
+        <span class="badge badge-purple" style="margin-bottom:0.5rem;">Step 3 · Stakeholder Aggregate</span>
+        <h2 style="font-size:1.6rem;font-weight:700;">Aggregated Assessment View</h2>
+        <p style="font-size:13px;color:var(--text-2);margin-top:4px;">Consolidated maturity view across all stakeholder assessments for the selected client.</p>
+      </div>
+      <div id="aggregateContent">
+        <div style="text-align:center;padding:3rem;color:var(--text-2);">
+          <div style="font-size:3rem;margin-bottom:1rem;">👥</div>
+          <p>Select a client and load saved assessments to see the aggregate view.</p>
+          <button class="btn btn-primary" style="margin-top:1rem;" onclick="loadAggregate()">Load Aggregate →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CLIENT MODAL -->
+<div class="modal-overlay" id="newClientModal" onclick="closeModal(event,'newClientModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add New Client</h3>
+      <button class="modal-close" onclick="document.getElementById('newClientModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Client / Organisation Name *</label><input class="form-input" id="newClientName" placeholder="e.g. Acme Corporation" /></div>
+    <div class="form-group"><label class="form-label">Industry</label>
+      <select class="form-input" id="newClientIndustry">
+        <option value="">— Select Industry —</option>
+        <option>Banking & Financial Services</option><option>Healthcare & Life Sciences</option>
+        <option>Manufacturing</option><option>Retail & Consumer Goods</option>
+        <option>Technology</option><option>Government & Public Sector</option>
+        <option>Energy & Utilities</option><option>Telecommunications</option>
+        <option>Insurance</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Organisation Size</label>
+      <select class="form-input" id="newClientSize">
+        <option value="">— Select Size —</option>
+        <option value="smb">SMB (&lt; 1,000 employees)</option>
+        <option value="mid">Mid-Market (1,000–10,000)</option>
+        <option value="enterprise">Enterprise (10,000–50,000)</option>
+        <option value="global">Global (50,000+)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:1rem;">
+      <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="createClient()">Create Client</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('newClientModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '';  // same-origin
+
+/* ── STATE ───────────────────────────────────────────────────────────── */
+let currentClient = null;
+let currentDomain = 'hr';
+let answers = {};      // { qid: score }
+let allAnswers = {};   // { domain: { qid: score } }
+
+/* ── QUESTION DATA ───────────────────────────────────────────────────── */
+const DOMAINS = {
+  hr: {
+    label:'Human Resources', color:'var(--cyan)', icon:'👥',
+    dimensions:['Query Resolution','Payroll & Benefits','Talent Acquisition','Employee Lifecycle','Workforce Analytics','Policy & Compliance'],
+    questions:[
+      {id:'hr1',dim:'Query Resolution',text:'How are employee HR queries currently handled?',sub:'Volume, resolution time, satisfaction',options:[
+        'All queries handled manually by HR staff — high email/call volume',
+        'Basic FAQ portal exists but most queries still need human follow-up',
+        'Chatbot handles common queries; complex ones escalated',
+        'AI agent resolves 60-80% of queries autonomously',
+        'AI agent (like AskHR) resolves 90%+ queries with continuous self-improvement'
+      ]},
+      {id:'hr2',dim:'Payroll & Benefits',text:'What level of automation exists in payroll and benefits administration?',sub:'Error rates, processing time, audit trail',options:[
+        'Mostly manual — spreadsheets, high error rate (>5%), monthly batch',
+        'Payroll system exists but significant manual data entry',
+        'Automated payroll runs, some benefits self-service; exceptions manual',
+        'High automation, real-time eligibility checks, <1% error rate',
+        'Fully automated end-to-end including compliance and multi-country'
+      ]},
+      {id:'hr3',dim:'Talent Acquisition',text:'How automated is your recruitment and onboarding process?',sub:'From job posting to first day productivity',options:[
+        'Fully manual — spreadsheets, email communication',
+        'ATS in place but screening, scheduling, offers are manual',
+        'Automated screening and scheduling; offers partially automated',
+        'AI-assisted screening, predictive candidate ranking, digital onboarding',
+        'End-to-end AI from sourcing through 90-day ramp — measurable time-to-productivity'
+      ]},
+      {id:'hr4',dim:'Employee Lifecycle',text:'How do you manage employee changes (promotions, transfers, offboarding)?',sub:'Data accuracy, processing time, system updates',options:[
+        'Manual processes — forms, emails, multiple system updates by hand',
+        'HRIS exists but changes require manual input across multiple systems',
+        'Workflow automation for common changes; some system integration',
+        'Automated triggers in HRIS cascade to downstream systems',
+        'Zero-touch lifecycle management — AI orchestrates all updates automatically'
+      ]},
+      {id:'hr5',dim:'Workforce Analytics',text:'What level of people analytics and predictive capability does HR have?',sub:'Attrition prediction, skills gap, workforce planning',options:[
+        'Basic headcount reports — manual, rearview data',
+        'Standard dashboards in HRIS — no predictive capability',
+        'Regular analytics reports, some trend analysis',
+        'Predictive attrition models, skills gap dashboards, active workforce planning',
+        'Real-time AI-driven insights — scenario modeling and auto-recommendations'
+      ]},
+      {id:'hr6',dim:'Policy & Compliance',text:'How is HR policy compliance monitored and enforced?',sub:'Regulatory compliance, policy updates, audit readiness',options:[
+        'Reactive — compliance checked only when issues arise',
+        'Annual audits, manual policy distribution, no real-time monitoring',
+        'Policy management system, regular compliance reviews',
+        'Automated compliance alerts, real-time policy access integrated with HRIS',
+        'AI monitors compliance continuously, auto-flags deviations, always audit-ready'
+      ]},
+    ]
+  },
+  finance: {
+    label:'Finance', color:'var(--gold)', icon:'💰',
+    dimensions:['Invoice & P2P','Order-to-Cash','Record-to-Report','FP&A & Planning','Tax & Compliance','Finance Analytics'],
+    questions:[
+      {id:'fin1',dim:'Invoice & P2P',text:'What is the automation level for invoice processing and accounts payable?',sub:'Cost per invoice, cycle time, exception rate',options:[
+        'Fully manual invoice processing — paper or PDF by email, manual entry',
+        'Basic OCR/scanning in place; significant manual validation remains',
+        'Automated matching for standard invoices; exceptions manual (20-30%)',
+        'AI-powered 3-way match, automated exception handling, <10% exception rate',
+        'Touchless P2P — AI handles 90%+ invoices, real-time supplier portal'
+      ]},
+      {id:'fin2',dim:'Order-to-Cash',text:'How automated is your order-to-cash process from invoicing to cash collection?',sub:'DSO, collection efficiency, dispute resolution speed',options:[
+        'Manual invoicing, manual follow-up, no credit scoring, high DSO',
+        'ERP-generated invoices, manual collections follow-up, basic aging reports',
+        'Automated reminders, basic credit scoring, dispute tracking in system',
+        'AI-powered collections prioritisation, automated dunning, predictive DSO',
+        'Fully autonomous O2C — AI manages collections, credit, disputes'
+      ]},
+      {id:'fin3',dim:'Record-to-Report',text:'What is the maturity of your financial close and reporting process?',sub:'Days to close, error rate, manual journal entries',options:[
+        'Close takes 10+ days — heavy manual journal entries, spreadsheet reconciliations',
+        'Close takes 7-10 days — some automation but significant manual rework',
+        'Close takes 5-7 days — standard entries automated, exceptions manual',
+        'Close takes 3-5 days — AI-assisted reconciliation, minimal rework',
+        'Close in <3 days — automated JEs, AI reconciliation, continuous close underway'
+      ]},
+      {id:'fin4',dim:'FP&A & Planning',text:'How advanced is your financial planning, budgeting, and forecasting capability?',sub:'Forecast accuracy, cycle time, scenario modelling',options:[
+        'Annual budget only — spreadsheet-based, slow, no rolling forecast',
+        'Quarterly forecasts in EPM tool, mostly manual driver assumptions',
+        'Rolling forecast, automated data aggregation, standard variance analysis',
+        'AI-assisted forecasting, driver-based models, automated variance commentary',
+        'Real-time predictive FP&A — NL query of financial data, AI-generated insights'
+      ]},
+      {id:'fin5',dim:'Tax & Compliance',text:'How is tax processing and regulatory compliance managed?',sub:'Document management, filing accuracy, audit readiness',options:[
+        'Entirely manual — spreadsheets, high dependency on external advisors',
+        'Tax software in place but data preparation is highly manual',
+        'Automated data extraction, some tax workflow automation',
+        'AI-assisted document classification, automated provision calculations',
+        'Digital workers for tax prep — achieving ~100K hrs saved annually (IBM benchmark)'
+      ]},
+      {id:'fin6',dim:'Finance Analytics',text:'What is the level of self-service analytics for finance decision-makers?',sub:'Data freshness, accessibility, insight generation speed',options:[
+        'Reports produced manually by IT — days to get answers',
+        'Standard BI dashboards — pre-built, limited flexibility, T+1 data',
+        'Self-service BI available — finance teams build their own reports',
+        'Near-real-time data, embedded analytics in ERP/EPM, anomaly alerts',
+        'Conversational BI — leaders ask natural language questions, get instant insights'
+      ]},
+    ]
+  },
+  procurement: {
+    label:'Procurement', color:'var(--green)', icon:'🔗',
+    dimensions:['PO Automation','Supplier Management','Contract Lifecycle','Sourcing & RFx','Spend Visibility','Risk & Compliance'],
+    questions:[
+      {id:'pro1',dim:'PO Automation',text:'What percentage of purchase orders are processed in a touchless, automated manner?',sub:'From approved requisition to PO issuance without manual intervention',options:[
+        '<20% — mostly manual PO creation, significant data entry, approval backlogs',
+        '20-50% — system-generated POs for catalog items, manual for off-catalog',
+        '50-70% — automated for preferred suppliers, exceptions require manual handling',
+        '70-90% — AI-assisted PO creation, smart approval routing, low exception rate',
+        '>90% touchless — IBM benchmark achieved — AI manages full PO lifecycle'
+      ]},
+      {id:'pro2',dim:'Supplier Management',text:'How do you manage supplier onboarding, performance, and risk monitoring?',sub:'Onboarding cycle time, data accuracy, real-time risk signals',options:[
+        'Manual onboarding (45+ days), spreadsheet tracking, reactive risk management',
+        'Supplier portal in place, validation and risk checks are periodic/manual',
+        'Automated onboarding workflow, quarterly performance reviews, basic risk scoring',
+        'AI-powered risk monitoring using external data, real-time alerts',
+        'Continuous AI surveillance — proactive risk flags, automated remediation workflows'
+      ]},
+      {id:'pro3',dim:'Contract Lifecycle',text:'What is the maturity of contract authoring, approval, and obligation management?',sub:'Cycle time, compliance, renewal management',options:[
+        'Contracts managed in email/shared drives — no CLM, high risk of missed renewals',
+        'Basic CLM system for storage — authoring and approval still largely manual',
+        'Workflow-enabled approval, standard templates, renewal alerts',
+        'AI-assisted contract review, obligation extraction, automated compliance monitoring',
+        'Fully intelligent CLM — AI drafts, reviews, negotiates, and tracks 100% of contracts'
+      ]},
+      {id:'pro4',dim:'Sourcing & RFx',text:'How digitised and automated is your strategic sourcing and RFx process?',sub:'RFP creation, supplier selection, bid analysis speed and quality',options:[
+        'Fully manual — Word/Excel RFPs, email-based responses, manual scoring',
+        'e-Sourcing tool in place — some automation but analysis is manual',
+        'Automated RFx events, digital bid submission, structured scoring',
+        'AI-assisted RFP generation, automated bid analysis, supplier recommendation',
+        'AI-driven sourcing — end-to-end from need identification through award recommendation'
+      ]},
+      {id:'pro5',dim:'Spend Visibility',text:'What is the quality and coverage of spend analytics and category intelligence?',sub:'Data accuracy, coverage, granularity, real-time access',options:[
+        'No systematic spend visibility — reports produced ad-hoc from ERP',
+        'Basic spend reports, limited categorisation, monthly reporting cycle',
+        'Spend cube with category classification, quarterly category reviews',
+        'Real-time spend dashboards, maverick spend detection, savings pipeline tracking',
+        'AI-powered spend intelligence — predictive analytics, autonomous savings identification'
+      ]},
+      {id:'pro6',dim:'Risk & Compliance',text:'How is procurement policy compliance and supply chain risk managed?',sub:'Policy enforcement, regulatory compliance, ESG risk, supply disruption monitoring',options:[
+        'No formal compliance program — policy adherence checked only during audits',
+        'Policy documentation exists, training done annually, manual spot-checks',
+        'Automated policy controls in procurement system, regular compliance reports',
+        'Real-time compliance monitoring, ESG tracking, supply disruption early warning',
+        'AI-driven compliance — continuous monitoring, predictive risk, automated remediation'
+      ]},
+    ]
+  }
+};
+
+const GAPS = {
+  hr:{
+    'Query Resolution':{name:'HR Query Automation Gap',desc:'Manual HR queries consuming HR team bandwidth.',asset:'AskHR Virtual Agent (watsonx Orchestrate)',roi:'40-75%'},
+    'Payroll & Benefits':{name:'Payroll Automation Gap',desc:'Manual payroll drives error rates and compliance risk.',asset:'Payroll Query Resolver + Benefits Automation Agent',roi:'20-40%'},
+    'Talent Acquisition':{name:'Recruitment Efficiency Gap',desc:'Manual screening creates bottlenecks and poor candidate experience.',asset:'AI Recruitment Screening Agent',roi:'30-60%'},
+    'Employee Lifecycle':{name:'Lifecycle Event Automation Gap',desc:'Manual lifecycle events create data errors and compliance risk.',asset:'Employee Lifecycle Orchestration Agent',roi:'25-50%'},
+    'Workforce Analytics':{name:'People Analytics Maturity Gap',desc:'Without predictive analytics, attrition and skills gaps are reactive.',asset:'Workforce Intelligence Dashboard + Attrition Predictor',roi:'15-35%'},
+    'Policy & Compliance':{name:'Compliance Monitoring Gap',desc:'Reactive compliance creates audit risk and regulatory exposure.',asset:'Policy Compliance Monitor (AI-powered)',roi:'20-40%'},
+  },
+  finance:{
+    'Invoice & P2P':{name:'Invoice Automation Gap',desc:'Manual invoice processing drives high cost-per-invoice ($12-25).',asset:'Invoice Processing Agent (SAP/Oracle connected)',roi:'25-80%'},
+    'Order-to-Cash':{name:'DSO Reduction Opportunity',desc:'Manual collections inflate DSO and lock working capital.',asset:'Collections & DSO Optimisation Agent',roi:'30-45%'},
+    'Record-to-Report':{name:'Close Cycle Compression Gap',desc:'Long close cycles reduce decision-making speed.',asset:'Close Cycle Accelerator + Journal Entry Automation',roi:'20-35%'},
+    'FP&A & Planning':{name:'Planning Intelligence Gap',desc:'Manual FP&A creates slow, inaccurate forecasts.',asset:'FP&A Forecasting Agent (watsonx EPM)',roi:'25-40%'},
+    'Tax & Compliance':{name:'Tax Processing Automation Gap',desc:'Manual tax prep is labor-intensive — IBM saved ~100K hrs/year.',asset:'Tax Document Processing Agent',roi:'30-50%'},
+    'Finance Analytics':{name:'Self-Service Analytics Gap',desc:'Finance leaders wait days for reports.',asset:'Conversational Finance BI Agent',roi:'15-30%'},
+  },
+  procurement:{
+    'PO Automation':{name:'PO Touchless Processing Gap',desc:'Low PO automation drives high cost-per-PO and approval delays.',asset:'PO Automation Agent (Coupa/Ariba/SAP connected)',roi:'30-60%'},
+    'Supplier Management':{name:'Supplier Risk Intelligence Gap',desc:'Reactive supplier management creates supply disruption risk.',asset:'Supplier Risk Monitor (D&B integrated)',roi:'25-45%'},
+    'Contract Lifecycle':{name:'Contract Compliance Gap',desc:'Manual contract management creates renewal risk and maverick spend.',asset:'Contract Intelligence Agent (CLM-integrated)',roi:'20-40%'},
+    'Sourcing & RFx':{name:'Sourcing Efficiency Gap',desc:'Manual RFx processes are slow and limit sourcing scope.',asset:'AI Sourcing & RFx Automation Agent',roi:'20-35%'},
+    'Spend Visibility':{name:'Spend Intelligence Gap',desc:'Limited visibility enables maverick spend.',asset:'Spend Analytics & Category Intelligence Engine',roi:'15-30%'},
+    'Risk & Compliance':{name:'Procurement Compliance Gap',desc:'Policy non-compliance creates audit exposure.',asset:'Procurement Compliance Monitor',roi:'10-25%'},
+  }
+};
+
+/* ── LEVEL COLORS ────────────────────────────────────────────────────── */
+function lc(l){return['var(--red)','#f97316','var(--gold)','var(--cyan)','var(--green)'][(l-1)]||'var(--text-2)';}
+function ml(s){
+  if(s<1.5)return'L1 — Initial / Ad-Hoc';
+  if(s<2.5)return'L2 — Developing';
+  if(s<3.5)return'L3 — Defined';
+  if(s<4.5)return'L4 — Advanced';
+  return'L5 — Optimised';
+}
+
+/* ── CLIENTS ────────────────────────────────────────────────────────── */
+async function loadClients(){
+  try{
+    const res = await fetch(`${API}/api/clients`);
+    const clients = await res.json();
+    const sel = document.getElementById('clientSelect');
+    sel.innerHTML = '<option value="">— Select Client —</option>';
+    clients.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=c.name+(c.industry?` · ${c.industry}`:''); sel.appendChild(o); });
+    if(currentClient){ sel.value = currentClient.id; }
+  } catch(e){ console.error(e); }
+}
+
+function selectClient(id){
+  if(!id){ currentClient=null; document.getElementById('clientLabel').textContent=''; return; }
+  const sel = document.getElementById('clientSelect');
+  const opt = sel.options[sel.selectedIndex];
+  currentClient = { id, name: opt.textContent };
+  document.getElementById('clientLabel').textContent = '📁 '+opt.textContent;
+}
+
+async function createClient(){
+  const name = document.getElementById('newClientName').value.trim();
+  const industry = document.getElementById('newClientIndustry').value;
+  const size = document.getElementById('newClientSize').value;
+  if(!name){ toast('Client name is required','error'); return; }
+  try{
+    const res = await fetch(`${API}/api/clients`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,industry,size})});
+    const data = await res.json();
+    currentClient = { id: data.id, name };
+    document.getElementById('newClientModal').classList.remove('open');
+    document.getElementById('newClientName').value='';
+    await loadClients();
+    document.getElementById('clientSelect').value = data.id;
+    document.getElementById('clientLabel').textContent = '📁 '+name;
+    toast('Client created: '+name,'success');
+  } catch(e){ toast('Error creating client','error'); }
+}
+
+/* ── QUESTIONS ────────────────────────────────────────────────────────── */
+function switchDomain(domain, btn){
+  currentDomain = domain;
+  // Sync select and tabs
+  document.getElementById('stDomain').value = domain;
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else { const b=document.querySelector(`.dtab[data-domain="${domain}"]`); if(b)b.classList.add('active'); }
+  allAnswers[currentDomain] = allAnswers[currentDomain]||{};
+  answers = allAnswers[currentDomain];
+  renderQuestions(domain);
+  updateProgress();
+  updateDomainProgress();
+}
+
+function renderQuestions(domain){
+  const d = DOMAINS[domain];
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+  d.questions.forEach((q,i)=>{
+    const ans = answers[q.id];
+    const div = document.createElement('div');
+    div.className = `q-card${ans!==undefined?' answered':''}`;
+    div.id = 'qcard-'+q.id;
+    div.innerHTML=`
+      <div class="q-header">
+        <div class="q-num ${ans!==undefined?'done':''}" id="qn-${q.id}">${ans!==undefined?'✓':String(i+1).padStart(2,'0')}</div>
+        <div><div class="q-dim">${q.dim}</div><div class="q-text">${q.text}</div><div class="q-sub">${q.sub}</div></div>
+      </div>
+      <div class="options">
+        ${q.options.map((o,oi)=>`
+          <button class="opt ${ans===oi+1?'sel':''}" onclick="selectOpt('${q.id}',${oi+1},this)">
+            <span class="opt-l" style="color:${lc(oi+1)}">L${oi+1}</span><span>${o}</span>
+          </button>`).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function selectOpt(qid,score,btn){
+  answers[qid]=score;
+  allAnswers[currentDomain]=answers;
+  const card=document.getElementById('qcard-'+qid);
+  card.classList.add('answered');
+  card.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const n=document.getElementById('qn-'+qid);
+  n.textContent='✓'; n.classList.add('done');
+  updateProgress();
+  updateDomainProgress();
+  updateScoreCard();
+}
+
+function updateProgress(){
+  const d=DOMAINS[currentDomain];
+  const done=d.questions.filter(q=>answers[q.id]!==undefined).length;
+  const pct=Math.round(done/d.questions.length*100);
+  // handled in updateDomainProgress
+}
+
+function updateDomainProgress(){
+  const container=document.getElementById('domainProgress');
+  container.innerHTML=Object.entries(DOMAINS).map(([dk,d])=>{
+    const ans=allAnswers[dk]||{};
+    const done=d.questions.filter(q=>ans[q.id]!==undefined).length;
+    const pct=Math.round(done/d.questions.length*100);
+    return`<div style="margin-bottom:10px;">
+      <div class="prog-row"><span style="color:${d.color};font-size:11px;font-weight:600;">${d.icon} ${d.label}</span><span>${pct}%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${d.color};"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function updateScoreCard(){
+  const d=DOMAINS[currentDomain];
+  const ans=answers;
+  const scores=d.questions.map(q=>ans[q.id]).filter(s=>s!==undefined);
+  if(!scores.length){ document.getElementById('scoreCard').style.display='none'; return; }
+  const avg=scores.reduce((a,b)=>a+b,0)/scores.length;
+  document.getElementById('scoreCard').style.display='block';
+  document.getElementById('scoreCardVal').textContent=avg.toFixed(1);
+  document.getElementById('scoreCardVal').style.color=lc(Math.round(avg));
+  document.getElementById('scoreCardLbl').textContent=ml(avg);
+}
+
+/* ── SAVE ASSESSMENT ─────────────────────────────────────────────────── */
+async function saveAssessment(){
+  if(!currentClient){ toast('Please select or create a client first','error'); return; }
+  const name=document.getElementById('stName').value.trim();
+  const role=document.getElementById('stRole').value.trim();
+  const email=document.getElementById('stEmail').value.trim();
+  if(!name||!role){ toast('Stakeholder name and role are required','error'); return; }
+
+  const domain=currentDomain;
+  const d=DOMAINS[domain];
+  const ans=allAnswers[domain]||{};
+  const dimScores={};
+  d.dimensions.forEach(dim=>{
+    const qs=d.questions.filter(q=>q.dim===dim);
+    const answered=qs.filter(q=>ans[q.id]!==undefined);
+    if(answered.length) dimScores[dim]=answered.reduce((s,q)=>s+ans[q.id],0)/answered.length;
+  });
+  const scores=Object.values(dimScores).filter(s=>s>0);
+  const overall=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+
+  try{
+    await fetch(`${API}/api/assessments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      client_id:currentClient.id, stakeholder_name:name, stakeholder_role:role, stakeholder_email:email,
+      domain, answers:ans, scores:dimScores, overall_score:overall, maturity_level:ml(overall)
+    })});
+    toast('Assessment saved for '+name,'success');
+  } catch(e){ toast('Error saving assessment','error'); }
+}
+
+/* ── RESULTS ─────────────────────────────────────────────────────────── */
+function goToResults(){
+  switchTab('results',null);
+  generateResults();
+}
+
+function generateResults(){
+  const domain=currentDomain;
+  const d=DOMAINS[domain];
+  const ans=allAnswers[domain]||{};
+  const color=d.color;
+
+  const dimScores={};
+  d.dimensions.forEach(dim=>{
+    const qs=d.questions.filter(q=>q.dim===dim);
+    const answered=qs.filter(q=>ans[q.id]!==undefined);
+    dimScores[dim]=answered.length?answered.reduce((s,q)=>s+ans[q.id],0)/answered.length:0;
+  });
+  const vals=Object.values(dimScores).filter(s=>s>0);
+  const overall=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;
+
+  const gaps=Object.entries(dimScores).filter(([,s])=>s>0&&s<4).sort(([,a],[,b])=>a-b)
+    .map(([dim,score])=>{
+      const g=GAPS[domain][dim]; if(!g)return'';
+      const pri=score<2?'high':score<3?'med':'low';
+      return`<div class="gap-item">
+        <div class="gap-pri ${pri}">${pri==='high'?'🔴':pri==='med'?'🟡':'🟢'}</div>
+        <div class="gap-info">
+          <div class="gap-name">${g.name}</div>
+          <div class="gap-desc">${g.desc}</div>
+          <div class="gap-asset">→ ${g.asset}</div>
+        </div>
+        <div class="gap-roi"><div class="gap-roi-v">${g.roi}</div><div class="gap-roi-l">ROI potential</div></div>
+      </div>`;
+    }).join('');
+
+  document.getElementById('resultsContent').innerHTML=`
+    <div class="results-grid">
+      <div class="card">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:1rem;">📡 Capability Radar — ${d.label}</div>
+        <div class="radar-wrap"><canvas class="radar" id="radarCanvas" width="320" height="320"></canvas></div>
+        <div style="text-align:center;margin-top:0.5rem;">
+          <div style="font-size:2rem;font-weight:700;color:${color};">${overall>0?overall.toFixed(1):'—'}</div>
+          <div style="font-size:13px;font-weight:600;color:${color};margin-bottom:4px;">${ml(overall)}</div>
+          <div style="font-size:12px;color:var(--text-2);">Overall Maturity Score / 5.0</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:1rem;">📊 Dimension Scores</div>
+        <div class="dim-bars">
+          ${Object.entries(dimScores).map(([dim,score])=>`
+            <div class="dim-bar-row">
+              <div class="dim-bar-lbl">${dim}</div>
+              <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${score>0?score/5*100:0}%;background:${color};"></div></div>
+              <div class="dim-bar-val" style="color:${lc(Math.round(score))}">${score>0?score.toFixed(1):'—'}</div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:1.5rem;padding:1rem;background:rgba(15,98,254,0.08);border:1px solid rgba(69,137,255,0.2);border-radius:6px;">
+          <div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;">vs IBM Client Zero Benchmark</div>
+          <div style="font-size:12px;color:var(--text-1);">${{
+            hr:'IBM AskHR operates at L5 — 94% containment, 40% cost reduction, 99% adoption.',
+            finance:'IBM Finance at L4-5 — 33% faster close, 25% P2P cost reduction, 57% forecast error ↓.',
+            procurement:'IBM Procurement at L5 — 90% PO automation, $315M savings, 30% logistics cost ↓.'
+          }[domain]}</div>
+        </div>
+      </div>
+    </div>
+    ${gaps?`<div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <h3>🔍 Prioritised Gap Areas & Asset Recommendations</h3>
+        <span class="badge badge-cyan">Ranked by ROI Potential</span>
+      </div>
+      ${gaps}
+      <div style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:rgba(66,190,101,0.08);border:1px solid rgba(66,190,101,0.2);border-radius:8px;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <span style="font-size:1.2rem;">🚀</span>
+        <p style="font-size:13px;color:var(--text-1);flex:1;">Ready to deploy assets against these gaps? Save this assessment and open the Deployment Tracker to start tracking progress and ROI.</p>
+        <a href="tracker.html${currentClient?'?client='+currentClient.id:''}" class="btn btn-green btn-sm">Open Deployment Tracker →</a>
+      </div>
+    </div>`:''}
+  `;
+
+  // Draw radar
+  setTimeout(()=>drawRadar('radarCanvas',Object.values(dimScores),d.dimensions,color),100);
+}
+
+/* ── RADAR CHART ─────────────────────────────────────────────────────── */
+function drawRadar(canvasId,values,labels,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const cx=W/2, cy=H/2, r=Math.min(W,H)/2-40;
+  const n=labels.length;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid rings
+  for(let ring=1;ring<=5;ring++){
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const angle=-Math.PI/2+(2*Math.PI/n)*i;
+      const rr=r*ring/5;
+      const x=cx+Math.cos(angle)*rr, y=cy+Math.sin(angle)*rr;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=`rgba(255,255,255,${ring===5?0.12:0.06})`;
+    ctx.lineWidth=1;
+    ctx.stroke();
+    // Ring label
+    ctx.fillStyle='rgba(255,255,255,0.25)';
+    ctx.font='9px IBM Plex Mono,monospace';
+    ctx.textAlign='center';
+    ctx.fillText(ring,cx,cy-r*ring/5+3);
+  }
+
+  // Spokes
+  for(let i=0;i<n;i++){
+    const angle=-Math.PI/2+(2*Math.PI/n)*i;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(angle)*r, cy+Math.sin(angle)*r);
+    ctx.strokeStyle='rgba(255,255,255,0.08)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+    // Labels
+    const lx=cx+Math.cos(angle)*(r+24);
+    const ly=cy+Math.sin(angle)*(r+24);
+    ctx.fillStyle='rgba(255,255,255,0.6)';
+    ctx.font='10px IBM Plex Sans,sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    const words=labels[i].split(' ');
+    words.forEach((w,wi)=>ctx.fillText(w,lx,ly+(wi-(words.length-1)/2)*12));
+  }
+
+  // IBM benchmark (L4 = 80%)
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const angle=-Math.PI/2+(2*Math.PI/n)*i;
+    const x=cx+Math.cos(angle)*r*0.8, y=cy+Math.sin(angle)*r*0.8;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.strokeStyle='rgba(241,194,27,0.3)';
+  ctx.setLineDash([4,4]);
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Data polygon
+  const filled=values.filter(v=>v>0).length>0;
+  if(filled){
+    ctx.beginPath();
+    values.forEach((v,i)=>{
+      const angle=-Math.PI/2+(2*Math.PI/n)*i;
+      const rv=r*(v||0)/5;
+      const x=cx+Math.cos(angle)*rv, y=cy+Math.sin(angle)*rv;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    const hexColor=color.includes('var(--cyan)')||color.includes('cyan')?'51,177,255':
+                   color.includes('gold')?'241,194,27':'66,190,101';
+    ctx.fillStyle=`rgba(${hexColor},0.15)`;
+    ctx.fill();
+    ctx.strokeStyle=color;
+    ctx.lineWidth=2;
+    ctx.stroke();
+
+    // Data points
+    values.forEach((v,i)=>{
+      const angle=-Math.PI/2+(2*Math.PI/n)*i;
+      const rv=r*(v||0)/5;
+      const x=cx+Math.cos(angle)*rv, y=cy+Math.sin(angle)*rv;
+      ctx.beginPath();
+      ctx.arc(x,y,4,0,Math.PI*2);
+      ctx.fillStyle=color;
+      ctx.fill();
+    });
+  }
+
+  // Legend
+  ctx.fillStyle='rgba(241,194,27,0.7)';
+  ctx.fillRect(cx-60,H-14,16,2);
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.font='9px IBM Plex Sans,sans-serif';
+  ctx.textAlign='left';
+  ctx.textBaseline='middle';
+  ctx.fillText('IBM Benchmark (L4)',cx-40,H-12);
+}
+
+/* ── AGGREGATE VIEW ──────────────────────────────────────────────────── */
+async function loadAggregate(){
+  if(!currentClient){ toast('Please select a client first','error'); return; }
+  try{
+    const res=await fetch(`${API}/api/assessments/aggregate/${currentClient.id}`);
+    const data=await res.json();
+    if(!data.domains||!data.domains.length){
+      document.getElementById('aggregateContent').innerHTML=`<div style="text-align:center;padding:3rem;color:var(--text-2);"><div style="font-size:2rem;margin-bottom:1rem;">📭</div><p>No saved assessments found for this client yet.</p></div>`;
+      return;
+    }
+    renderAggregate(data);
+  } catch(e){ toast('Error loading aggregate data','error'); }
+}
+
+function renderAggregate(data){
+  const html=data.domains.map(d=>{
+    const domData=DOMAINS[d.domain];
+    if(!domData)return'';
+    const color=domData.color;
+    const canvasId='radarAgg-'+d.domain;
+    return`
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+          <div>
+            <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${color};">${domData.icon} ${domData.label}</div>
+            <div style="font-size:1.3rem;font-weight:700;margin-top:4px;">Overall: <span style="color:${color};">${d.overallAvg.toFixed(1)}</span>/5.0 — ${ml(d.overallAvg)}</div>
+          </div>
+          <span class="badge badge-${d.domain==='hr'?'cyan':d.domain==='finance'?'gold':'green'}">${d.stakeholders.length} stakeholder${d.stakeholders.length>1?'s':''}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:280px 1fr;gap:1.5rem;align-items:start;">
+          <div>
+            <canvas id="${canvasId}" width="280" height="280"></canvas>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;">Dimension Averages</div>
+            ${Object.entries(d.avgScores).map(([dim,score])=>`
+              <div class="dim-bar-row" style="margin-bottom:8px;">
+                <div class="dim-bar-lbl">${dim}</div>
+                <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${score/5*100}%;background:${color};"></div></div>
+                <div class="dim-bar-val" style="color:${lc(Math.round(score))}">${score.toFixed(1)}</div>
+              </div>`).join('')}
+            <div style="margin-top:1rem;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;">Stakeholder Responses</div>
+            <div class="agg-stakes">
+              ${d.stakeholders.map(s=>`
+                <div class="stake-row">
+                  <div class="stake-name">${s.name}</div>
+                  <div class="stake-role">${s.role}</div>
+                  <div class="stake-score" style="color:${lc(Math.round(s.overall))}">${s.overall.toFixed(1)}</div>
+                  <div style="font-size:10px;color:var(--text-2);">${ml(s.overall)}</div>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  document.getElementById('aggregateContent').innerHTML=html;
+  // Draw radars after render
+  setTimeout(()=>{
+    data.domains.forEach(d=>{
+      const domData=DOMAINS[d.domain];
+      if(!domData)return;
+      drawRadar('radarAgg-'+d.domain,Object.values(d.avgScores),domData.dimensions,domData.color);
+    });
+  },100);
+}
+
+/* ── TAB SWITCH ──────────────────────────────────────────────────────── */
+function switchTab(tab, btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(tab==='aggregate')loadAggregate();
+}
+
+/* ── MODAL ────────────────────────────────────────────────────────────── */
+function openNewClientModal(){ document.getElementById('newClientModal').classList.add('open'); }
+function closeModal(e,id){ if(e.target.id===id)document.getElementById(id).classList.remove('open'); }
+
+/* ── TOAST ─────────────────────────────────────────────────────────────── */
+function toast(msg,type='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className=`toast ${type} show`;
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+/* ── INIT ─────────────────────────────────────────────────────────────── */
+(function(){
+  loadClients();
+  allAnswers={hr:{},finance:{},procurement:{}};
+  answers=allAnswers.hr;
+  renderQuestions('hr');
+  updateDomainProgress();
+  const params=new URLSearchParams(window.location.search);
+  const domain=params.get('domain');
+  if(domain&&DOMAINS[domain]){
+    currentDomain=domain;
+    answers=allAnswers[domain];
+    document.getElementById('stDomain').value=domain;
+    document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+    const dtab=document.querySelector(`.dtab[data-domain="${domain}"]`);
+    if(dtab)dtab.classList.add('active');
+    renderQuestions(domain);
+  }
+})();
+</script>
+</body>
+</html>

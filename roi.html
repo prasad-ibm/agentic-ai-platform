@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ROI Tracker · Agentic AI Value Platform</title>
+  <link rel="stylesheet" href="/ibm-theme.css"/>
+  <style>
+    :root{--bg-0:#161616;--bg-1:#262626;--bg-2:#393939;--bg-card:#262626;--bg-card-h:#333333;--blue:#0f62fe;--blue-l:#4589ff;--cyan:#33b1ff;--gold:#f1c21b;--green:#42be65;--green-d:#24a148;--red:#ff8389;--purple:#be95ff;--text-0:#f4f4f4;--text-1:#c6c6c6;--text-2:#8d8d8d;--border:#393939;--border-b:#4589ff;--radius:0px;--radius-lg:2px;--shadow:0 2px 6px rgba(0,0,0,0.3);--transition:0.15s ease;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.6;}
+    a{color:#78a9ff;text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:var(--bg-0);} ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#161616;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;color:var(--text-0);}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;}
+    .btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{background:var(--blue-l);}
+    .btn-ghost{background:transparent;color:#78a9ff;border:1px solid var(--border-b);} .btn-ghost:hover{background:rgba(69,137,255,0.12);}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+    .badge-gold{background:rgba(241,194,27,0.1);color:var(--gold);border:1px solid rgba(241,194,27,0.25);}
+    .badge-green{background:rgba(66,190,101,0.1);color:var(--green);border:1px solid rgba(66,190,101,0.25);}
+    .badge-cyan{background:rgba(69,137,255,0.12);color:var(--cyan);border:1px solid rgba(69,137,255,0.3);}
+    .container{max-width:1280px;margin:0 auto;padding:0 2rem;}
+    .divider{height:1px;background:var(--border);margin:2rem 0;}
+
+    /* PAGE */
+    .page-header{padding:88px 0 2rem;background:linear-gradient(180deg,rgba(241,194,27,0.06),transparent);border-bottom:1px solid var(--border);}
+    .ph-grid{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;}
+    .summary-kpis{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    .skpi{text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.5rem;}
+    .skpi-val{font-size:1.8rem;font-weight:700;line-height:1;}
+    .skpi-lbl{font-size:10px;color:var(--text-2);margin-top:4px;letter-spacing:0.5px;}
+
+    .roi-layout{display:grid;grid-template-columns:360px 1fr;gap:0;min-height:calc(100vh - 48px);}
+    .roi-sidebar{background:var(--bg-1);border-right:1px solid var(--border);padding:2rem 1.5rem;overflow-y:auto;}
+    .roi-main{padding:2rem;}
+    .sidebar-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:1rem;}
+
+    /* CALCULATOR */
+    .calc-section{margin-bottom:2rem;}
+    .calc-label{font-size:12px;font-weight:600;color:var(--text-1);margin-bottom:6px;display:flex;justify-content:space-between;}
+    .calc-val{color:var(--blue-l);font-family:'IBM Plex Mono',monospace;}
+    input[type=range]{width:100%;accent-color:var(--blue);margin-bottom:4px;}
+    .calc-hints{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);}
+    select.calc-select{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;color:var(--text-0);font-family:inherit;font-size:13px;margin-bottom:1rem;}
+    select.calc-select:focus{outline:none;border-color:var(--border-b);}
+
+    /* ROI RESULTS */
+    .roi-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .rs-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;position:relative;overflow:hidden;}
+    .rs-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .rs-card.c1::before{background:var(--cyan);}
+    .rs-card.c2::before{background:var(--gold);}
+    .rs-card.c3::before{background:var(--green);}
+    .rs-card.c4::before{background:var(--purple);}
+    .rs-val{font-size:2rem;font-weight:700;line-height:1;margin-bottom:4px;}
+    .rs-lbl{font-size:11px;color:var(--text-2);}
+
+    /* BENCHMARK TABLE */
+    .bench-table{width:100%;border-collapse:collapse;font-size:13px;}
+    .bench-table th{text-align:left;padding:10px 12px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);border-bottom:1px solid var(--border);background:var(--bg-1);}
+    .bench-table td{padding:12px 12px;border-bottom:1px solid var(--border);}
+    .bench-table tr:hover td{background:var(--bg-card-h);}
+    .bench-table tr:last-child td{border-bottom:none;}
+    .metric-name{font-weight:600;color:var(--text-0);}
+    .metric-current{font-family:'IBM Plex Mono',monospace;color:var(--red);}
+    .metric-target{font-family:'IBM Plex Mono',monospace;color:var(--gold);}
+    .metric-ibm{font-family:'IBM Plex Mono',monospace;color:var(--green);}
+    .metric-gap{font-family:'IBM Plex Mono',monospace;font-size:11px;}
+    .prog-cell{width:100px;}
+    .mini-bar{height:4px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .mini-bar-fill{height:100%;border-radius:2px;}
+
+    /* DEPLOYMENT TRACKER */
+    .tracker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+    .tracker-col{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .tc-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .tc-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+    .tc-count{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;}
+    .tc-items{padding:12px;display:flex;flex-direction:column;gap:8px;min-height:200px;}
+    .tc-item{background:var(--bg-1);border:1px solid var(--border);border-radius:6px;padding:10px 12px;cursor:grab;}
+    .tc-item:hover{border-color:var(--border-b);}
+    .tc-item-name{font-size:12px;font-weight:600;margin-bottom:4px;}
+    .tc-item-domain{font-size:10px;color:var(--text-2);}
+    .tc-item-progress{margin-top:8px;}
+    .tc-item-pct{font-size:10px;color:var(--text-2);margin-bottom:3px;display:flex;justify-content:space-between;}
+    .tc-bar{height:3px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .tc-bar-fill{height:100%;border-radius:2px;}
+
+    /* VALUE CHART */
+    .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;}
+    .chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    canvas{width:100%;}
+    .chart-legend{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    .cl-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-1);}
+    .cl-dot{width:10px;height:10px;border-radius:50%;}
+
+    @media(max-width:1024px){.roi-layout{grid-template-columns:1fr;}.roi-sidebar{border-right:none;border-bottom:1px solid var(--border);}.roi-summary{grid-template-columns:1fr 1fr;}.tracker-grid{grid-template-columns:1fr;}}
+    @media(max-width:640px){.roi-summary{grid-template-columns:1fr;}.ph-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand"><div class="nav-logo">IBM</div><div class="nav-sep"></div><span class="nav-title">ROI Tracker</span></div>
+  <div style="display:flex;gap:0.75rem;">
+    <a href="index.html" class="btn btn-ghost" style="padding:8px 16px;">← Home</a>
+    <a href="assets.html" class="btn btn-primary" style="padding:8px 16px;">Asset Library</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="ph-grid">
+      <div>
+        <span class="badge badge-gold" style="margin-bottom:0.75rem;">📊 Live Value Dashboard</span>
+        <h1 style="font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:700;margin-bottom:0.5rem;">ROI Tracker & Benchmark Dashboard</h1>
+        <p style="font-size:13px;color:var(--text-1);">Track deployed asset performance against IBM Client Zero benchmarks and industry standards. Every KPI measured. Every dollar attributed.</p>
+      </div>
+      <div class="summary-kpis">
+        <div class="skpi"><div class="skpi-val" style="color:var(--green)" id="totalSavings">$0</div><div class="skpi-lbl">Projected Annual Savings</div></div>
+        <div class="skpi"><div class="skpi-val" style="color:var(--cyan)" id="roiPct">0%</div><div class="skpi-lbl">Projected ROI</div></div>
+        <div class="skpi"><div class="skpi-val" style="color:var(--gold)" id="paybackMo">0mo</div><div class="skpi-lbl">Payback Period</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="roi-layout">
+  <!-- SIDEBAR: ROI CALCULATOR -->
+  <div class="roi-sidebar">
+    <div class="sidebar-title">ROI Calculator</div>
+    <select class="calc-select" id="domainSelect" onchange="recalc()">
+      <option value="all">All Domains</option>
+      <option value="finance">Finance</option>
+      <option value="hr">HR</option>
+      <option value="procurement">Procurement</option>
+    </select>
+
+    <div class="calc-section">
+      <div class="calc-label">Annual Invoice Volume <span class="calc-val" id="invVolVal">50,000</span></div>
+      <input type="range" min="5000" max="500000" step="5000" value="50000" oninput="document.getElementById('invVolVal').textContent=Number(this.value).toLocaleString();recalc();" id="invVol"/>
+      <div class="calc-hints"><span>5K</span><span>500K</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">Current Cost Per Invoice <span class="calc-val" id="cpiVal">$14</span></div>
+      <input type="range" min="5" max="30" step="1" value="14" oninput="document.getElementById('cpiVal').textContent='$'+this.value;recalc();" id="cpiSlider"/>
+      <div class="calc-hints"><span>$5</span><span>$30</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">HR Team Size (FTEs) <span class="calc-val" id="hrFteVal">50</span></div>
+      <input type="range" min="5" max="500" step="5" value="50" oninput="document.getElementById('hrFteVal').textContent=this.value;recalc();" id="hrFte"/>
+      <div class="calc-hints"><span>5</span><span>500</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">Annual HR Transactions <span class="calc-val" id="hrTxVal">100,000</span></div>
+      <input type="range" min="10000" max="2000000" step="10000" value="100000" oninput="document.getElementById('hrTxVal').textContent=Number(this.value).toLocaleString();recalc();" id="hrTx"/>
+      <div class="calc-hints"><span>10K</span><span>2M</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">Annual PO Volume <span class="calc-val" id="poVolVal">20,000</span></div>
+      <input type="range" min="1000" max="200000" step="1000" value="20000" oninput="document.getElementById('poVolVal').textContent=Number(this.value).toLocaleString();recalc();" id="poVol"/>
+      <div class="calc-hints"><span>1K</span><span>200K</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">Avg. Cost Per PO <span class="calc-val" id="cpoPOVal">$80</span></div>
+      <input type="range" min="20" max="300" step="10" value="80" oninput="document.getElementById('cpoPOVal').textContent='$'+this.value;recalc();" id="cpoPO"/>
+      <div class="calc-hints"><span>$20</span><span>$300</span></div>
+    </div>
+
+    <div class="calc-section">
+      <div class="calc-label">Implementation Investment <span class="calc-val" id="investVal">$500K</span></div>
+      <input type="range" min="100000" max="5000000" step="100000" value="500000" oninput="document.getElementById('investVal').textContent='$'+Number(this.value/1000).toFixed(0)+'K';recalc();" id="invest"/>
+      <div class="calc-hints"><span>$100K</span><span>$5M</span></div>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1rem;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:0.75rem;">IBM Benchmark Applied</div>
+      <div style="font-size:12px;color:var(--text-1);line-height:1.7;">
+        · AP: 25% cost reduction<br/>
+        · HR: 40% ops cost reduction<br/>
+        · PO: 30% processing cost ↓<br/>
+        · R2R: 33% faster close<br/>
+        · DSO: 32% reduction<br/>
+        · Forecast: 57% error ↓
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="roi-main">
+    <!-- Summary Cards -->
+    <div class="roi-summary" id="roiSummary">
+      <div class="rs-card c1"><div class="rs-val" style="color:var(--cyan)" id="finSavings">$0</div><div class="rs-lbl">Finance Savings/yr</div></div>
+      <div class="rs-card c2"><div class="rs-val" style="color:var(--gold)" id="hrSavings">$0</div><div class="rs-lbl">HR Savings/yr</div></div>
+      <div class="rs-card c3"><div class="rs-val" style="color:var(--green)" id="proSavings">$0</div><div class="rs-lbl">Procurement Savings/yr</div></div>
+      <div class="rs-card c4"><div class="rs-val" style="color:var(--purple)" id="hoursaved">0</div><div class="rs-lbl">Hours Reclaimed/yr</div></div>
+    </div>
+
+    <!-- Value Chart -->
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:4px;">Cumulative Value Realization</div>
+          <h3 style="font-size:15px;">Investment vs. Cumulative Savings Over 36 Months</h3>
+        </div>
+        <div class="chart-legend">
+          <div class="cl-item"><div class="cl-dot" style="background:var(--cyan)"></div>Cumulative Savings</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--red)"></div>Investment Cost</div>
+          <div class="cl-item"><div class="cl-dot" style="background:var(--green)"></div>Net Value</div>
+        </div>
+      </div>
+      <canvas id="roiChart" height="220"></canvas>
+    </div>
+
+    <!-- Benchmark Table -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:4px;">Process Mining Benchmark View</div>
+          <h3 style="font-size:15px;">Your KPIs vs. Industry & IBM Client Zero Benchmarks</h3>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--red)">● Your Baseline</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gold)">● Industry Avg</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green)">● IBM Client Zero</div>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="bench-table">
+          <thead><tr>
+            <th>KPI</th><th>Domain</th><th>Your Baseline</th><th>Industry Avg</th><th>IBM Benchmark</th><th>Your Gap</th><th style="width:100px">Progress to IBM</th>
+          </tr></thead>
+          <tbody id="benchTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Deployment Tracker -->
+    <div style="margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-2);margin-bottom:4px;">Deployment Tracker</div>
+        <h3 style="font-size:15px;">Asset Deployment Pipeline</h3>
+      </div>
+      <a href="assets.html" class="btn btn-ghost" style="padding:8px 16px;font-size:12px;">+ Add Asset</a>
+    </div>
+    <div class="tracker-grid">
+      <div class="tracker-col">
+        <div class="tc-header" style="border-left:3px solid var(--gold);">
+          <span class="tc-title" style="color:var(--gold);">Planned</span>
+          <span class="tc-count" style="background:rgba(241,194,27,0.15);color:var(--gold);">4</span>
+        </div>
+        <div class="tc-items">
+          <div class="tc-item"><div class="tc-item-name">FP&A Forecasting Agent</div><div class="tc-item-domain">💰 Finance · Q2 2026</div></div>
+          <div class="tc-item"><div class="tc-item-name">Learning & Skills Agent</div><div class="tc-item-domain">👥 HR · Q2 2026</div></div>
+          <div class="tc-item"><div class="tc-item-name">Sourcing & RFx Agent</div><div class="tc-item-domain">🔗 Procurement · Q3 2026</div></div>
+          <div class="tc-item"><div class="tc-item-name">Spend Analytics Engine</div><div class="tc-item-domain">🔗 Procurement · Q3 2026</div></div>
+        </div>
+      </div>
+      <div class="tracker-col">
+        <div class="tc-header" style="border-left:3px solid var(--cyan);">
+          <span class="tc-title" style="color:var(--cyan);">In Progress</span>
+          <span class="tc-count" style="background:rgba(69,137,255,0.15);color:var(--cyan);">3</span>
+        </div>
+        <div class="tc-items">
+          <div class="tc-item">
+            <div class="tc-item-name">Invoice Processing Agent</div><div class="tc-item-domain">💰 Finance · Wk 6 of 6</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>Integration</span><span>85%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:85%;background:var(--cyan)"></div></div></div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-item-name">AskHR Virtual Agent</div><div class="tc-item-domain">👥 HR · Wk 8 of 10</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>UAT</span><span>72%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:72%;background:var(--cyan)"></div></div></div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-item-name">PO Automation Agent</div><div class="tc-item-domain">🔗 Procurement · Wk 5 of 8</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>Testing</span><span>60%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:60%;background:var(--cyan)"></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tracker-col">
+        <div class="tc-header" style="border-left:3px solid var(--green);">
+          <span class="tc-title" style="color:var(--green);">Live & Measuring</span>
+          <span class="tc-count" style="background:rgba(66,190,101,0.15);color:var(--green);">3</span>
+        </div>
+        <div class="tc-items">
+          <div class="tc-item">
+            <div class="tc-item-name">Collections & DSO Agent</div><div class="tc-item-domain">💰 Finance · Live since Jan 2026</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>DSO Reduced</span><span style="color:var(--green)">28%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:87%;background:var(--green)"></div></div></div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-item-name">Supplier Risk Monitor</div><div class="tc-item-domain">🔗 Procurement · Live since Feb 2026</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>Risk Coverage</span><span style="color:var(--green)">94%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:94%;background:var(--green)"></div></div></div>
+          </div>
+          <div class="tc-item">
+            <div class="tc-item-name">Payroll Automation Agent</div><div class="tc-item-domain">👥 HR · Live since Dec 2025</div>
+            <div class="tc-item-progress"><div class="tc-item-pct"><span>Auto-Resolved</span><span style="color:var(--green)">89%</span></div><div class="tc-bar"><div class="tc-bar-fill" style="width:89%;background:var(--green)"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IBM Proof Footer -->
+    <div style="background:linear-gradient(135deg,rgba(15,98,254,0.1),rgba(51,177,255,0.06));border:1px solid rgba(69,137,255,0.3);border-radius:var(--radius-lg);padding:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
+      <div style="font-size:1.25rem;font-weight:700;letter-spacing:2px;color:var(--blue-l);flex-shrink:0;">IBM<br/><span style="font-size:10px;letter-spacing:1px;color:var(--text-2);">CLIENT ZERO</span></div>
+      <div style="flex:1;font-size:13px;color:var(--text-1);line-height:1.6;">These benchmarks are validated against IBM's own internal AI transformation — $3.5B in productivity gains, 3.9M hours saved in 2024, achieved across Finance, HR, and Procurement at global enterprise scale.</div>
+      <div style="display:flex;gap:1.5rem;flex-shrink:0;">
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:700;color:var(--gold)">$3.5B</div><div style="font-size:10px;color:var(--text-2);">Total Gains</div></div>
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:700;color:var(--cyan)">3.9M</div><div style="font-size:10px;color:var(--text-2);">Hrs Saved</div></div>
+        <div style="text-align:center;"><div style="font-size:1.4rem;font-weight:700;color:var(--green)">94%</div><div style="font-size:10px;color:var(--text-2);">HR Auto-Res</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const benchmarks=[
+  {kpi:'Cost Per Invoice',domain:'Finance',baseline:'$14',industry:'$10',ibm:'$3.50',baseNum:14,ibmNum:3.5,lowerBetter:true},
+  {kpi:'Invoice Cycle Time (days)',domain:'Finance',baseline:'12 days',industry:'8 days',ibm:'3 days',baseNum:12,ibmNum:3,lowerBetter:true},
+  {kpi:'AP Exception Rate',domain:'Finance',baseline:'28%',industry:'18%',ibm:'<5%',baseNum:28,ibmNum:5,lowerBetter:true},
+  {kpi:'Days Sales Outstanding',domain:'Finance',baseline:'45 days',industry:'35 days',ibm:'<30 days',baseNum:45,ibmNum:30,lowerBetter:true},
+  {kpi:'Financial Close Days',domain:'Finance',baseline:'10 days',industry:'7 days',ibm:'3 days',baseNum:10,ibmNum:3,lowerBetter:true},
+  {kpi:'HR Query Auto-Resolution',domain:'HR',baseline:'20%',industry:'45%',ibm:'94%',baseNum:20,ibmNum:94,lowerBetter:false},
+  {kpi:'HR Ops Cost Reduction',domain:'HR',baseline:'0%',industry:'15%',ibm:'40%',baseNum:0,ibmNum:40,lowerBetter:false},
+  {kpi:'Payroll Error Rate',domain:'HR',baseline:'2.5%',industry:'1%',ibm:'<0.1%',baseNum:2.5,ibmNum:0.1,lowerBetter:true},
+  {kpi:'PO Touchless Processing',domain:'Procurement',baseline:'25%',industry:'55%',ibm:'90%',baseNum:25,ibmNum:90,lowerBetter:false},
+  {kpi:'Supplier Onboarding (days)',domain:'Procurement',baseline:'45 days',industry:'25 days',ibm:'10 days',baseNum:45,ibmNum:10,lowerBetter:true},
+  {kpi:'Spend Under Mgmt (%)',domain:'Procurement',baseline:'60%',industry:'75%',ibm:'95%',baseNum:60,ibmNum:95,lowerBetter:false},
+  {kpi:'Logistics Cost Reduction',domain:'Procurement',baseline:'0%',industry:'10%',ibm:'30%',baseNum:0,ibmNum:30,lowerBetter:false},
+];
+
+function renderBench(){
+  document.getElementById('benchTable').innerHTML=benchmarks.map(b=>{
+    const progress=b.lowerBetter
+      ?Math.min(100,Math.max(0,((b.baseNum-b.ibmNum)/(b.baseNum-b.ibmNum))*100))
+      :Math.min(100,(b.baseNum/b.ibmNum)*100);
+    const gap=b.lowerBetter
+      ?`${Math.round((b.baseNum-b.ibmNum)/b.baseNum*100)}% opportunity`
+      :`${Math.round((b.ibmNum-b.baseNum))}pp opportunity`;
+    const color=b.domain==='Finance'?'var(--gold)':b.domain==='HR'?'var(--cyan)':'var(--green)';
+    return `<tr>
+      <td><span class="metric-name">${b.kpi}</span></td>
+      <td><span style="font-size:11px;color:${color};font-weight:600;">${b.domain}</span></td>
+      <td><span class="metric-current">${b.baseline}</span></td>
+      <td><span class="metric-target">${b.industry}</span></td>
+      <td><span class="metric-ibm">${b.ibm}</span></td>
+      <td><span class="metric-gap" style="color:var(--text-2)">${gap}</span></td>
+      <td class="prog-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:${progress}%;background:${color}"></div></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function recalc(){
+  const invVol=parseInt(document.getElementById('invVol').value)||50000;
+  const cpi=parseInt(document.getElementById('cpiSlider').value)||14;
+  const hrFte=parseInt(document.getElementById('hrFte').value)||50;
+  const hrTx=parseInt(document.getElementById('hrTx').value)||100000;
+  const poVol=parseInt(document.getElementById('poVol').value)||20000;
+  const cpoPO=parseInt(document.getElementById('cpoPO').value)||80;
+  const invest=parseInt(document.getElementById('invest').value)||500000;
+
+  const avgSalary=80000;
+  // Finance savings: 25% cost per invoice reduction
+  const finSav=Math.round(invVol*cpi*0.25);
+  // HR savings: 40% HR ops cost reduction (based on FTE cost)
+  const hrSav=Math.round(hrFte*avgSalary*0.40*0.30); // 30% of budget is automatable
+  // Procurement savings: 30% PO cost reduction
+  const proSav=Math.round(poVol*cpoPO*0.30);
+  const totalSav=finSav+hrSav+proSav;
+  const roiPct=Math.round(((totalSav-invest)/invest)*100);
+  const payback=Math.round((invest/totalSav)*12);
+  const hoursaved=Math.round((hrTx*0.94*0.05)+(invVol*0.25*0.1));
+
+  const fmt=n=>{
+    if(n>=1000000)return '$'+Math.round(n/100000)/10+'M';
+    if(n>=1000)return '$'+Math.round(n/100)/10+'K';
+    return '$'+n;
+  };
+
+  document.getElementById('finSavings').textContent=fmt(finSav);
+  document.getElementById('hrSavings').textContent=fmt(hrSav);
+  document.getElementById('proSavings').textContent=fmt(proSav);
+  document.getElementById('totalSavings').textContent=fmt(totalSav);
+  document.getElementById('roiPct').textContent=(roiPct>0?'+':'')+roiPct+'%';
+  document.getElementById('paybackMo').textContent=Math.min(payback,36)+'mo';
+  document.getElementById('hoursaved').textContent=Number(hoursaved).toLocaleString()+'hrs';
+
+  drawChart(totalSav,invest);
+}
+
+let chartInstance=null;
+function drawChart(annualSavings,invest){
+  const canvas=document.getElementById('roiChart');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width=canvas.parentElement.clientWidth-48;
+  const H=canvas.height=220;
+  ctx.clearRect(0,0,W,H);
+
+  const months=36;
+  const savings=[],costs=[],net=[];
+  for(let m=1;m<=months;m++){
+    const rampFactor=Math.min(1,m/6);
+    const cumSav=annualSavings/12*m*rampFactor;
+    const cumCost=invest+(annualSavings*0.15/12*m);
+    savings.push(cumSav);
+    costs.push(cumCost);
+    net.push(cumSav-cumCost);
+  }
+
+  const maxVal=Math.max(...savings,...costs);
+  const padT=20,padB=30,padL=60,padR=20;
+  const cW=W-padL-padR,cH=H-padT-padB;
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=padT+cH*(1-i/4);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px IBM Plex Mono,monospace';ctx.textAlign='right';
+    const v=maxVal*i/4;ctx.fillText(v>=1000000?'$'+(v/1000000).toFixed(1)+'M':v>=1000?'$'+(v/1000).toFixed(0)+'K':'$'+v.toFixed(0),padL-4,y+3);
+  }
+
+  // X labels
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.textAlign='center';ctx.font='10px IBM Plex Mono,monospace';
+  [6,12,18,24,30,36].forEach(m=>{
+    const x=padL+(m-1)/35*cW;
+    ctx.fillText('M'+m,x,H-5);
+  });
+
+  // Draw lines
+  function drawLine(data,color,dash=[]){
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash(dash);
+    data.forEach((v,i)=>{
+      const x=padL+i/35*cW;const y=padT+cH*(1-v/maxVal);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });ctx.stroke();ctx.setLineDash([]);
+  }
+
+  // Fill area under savings
+  ctx.beginPath();ctx.fillStyle='rgba(51,177,255,0.06)';
+  savings.forEach((v,i)=>{const x=padL+i/35*cW;const y=padT+cH*(1-v/maxVal);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(W-padR,padT+cH);ctx.lineTo(padL,padT+cH);ctx.closePath();ctx.fill();
+
+  drawLine(savings,'rgba(51,177,255,0.9)');
+  drawLine(costs,'rgba(250,77,86,0.8)',[6,4]);
+  drawLine(net.map(v=>Math.max(0,v)),'rgba(66,190,101,0.9)');
+
+  // Breakeven point
+  const beM=net.findIndex(v=>v>0);
+  if(beM>=0){
+    const x=padL+beM/35*cW;
+    ctx.beginPath();ctx.strokeStyle='rgba(241,194,27,0.6)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.moveTo(x,padT);ctx.lineTo(x,padT+cH);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='var(--gold)';ctx.font='bold 10px IBM Plex Sans,sans-serif';ctx.textAlign='center';
+    ctx.fillText('Break-even M'+(beM+1),x,padT-6);
+  }
+}
+
+renderBench();
+recalc();
+window.addEventListener('resize',()=>recalc(),{passive:true});
+</script>
+</body>
+</html>
