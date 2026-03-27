@@ -250,6 +250,14 @@ app.get('/api/roi-summary/:client_id', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ── PLATFORM CONFIG (drives open vs protected mode) ────────────────────────
+app.get('/config.js', (req, res) => {
+  const protectedMode = process.env.PROTECTED_MODE === 'true';
+  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.send(`window.PLATFORM_CONFIG = { protectedMode: ${protectedMode} };`);
+});
+
 // ── CATCH-ALL → serve .html files ──────────────────────────────────────────
 app.get('/{*path}', (req, res) => {
   const exactFile = path.join(__dirname, req.path);

@@ -100,13 +100,18 @@
     @media(max-width:1024px){.roi-layout{grid-template-columns:1fr;}.roi-sidebar{border-right:none;border-bottom:1px solid var(--border);}.roi-summary{grid-template-columns:1fr 1fr;}.tracker-grid{grid-template-columns:1fr;}}
     @media(max-width:640px){.roi-summary{grid-template-columns:1fr;}.ph-grid{grid-template-columns:1fr;}}
   </style>
+  <script src="/config.js"></script>
 </head>
 <body>
 <nav>
   <div class="nav-brand"><div class="nav-logo">IBM</div><div class="nav-sep"></div><span class="nav-title">ROI Tracker</span></div>
-  <div style="display:flex;gap:0.75rem;">
+  <div style="display:flex;gap:0.75rem;align-items:center;">
     <a href="index.html" class="btn btn-ghost" style="padding:8px 16px;">← Home</a>
     <a href="assets.html" class="btn btn-primary" style="padding:8px 16px;">Asset Library</a>
+    <span id="authNavExtras" style="display:flex;align-items:center;gap:0.75rem;">
+      <span id="authProjectLabel" style="font-size:11px;color:var(--text-2);padding:3px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:2px;"></span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" style="color:var(--red);border-color:var(--red);">Sign Out</button>
+    </span>
   </div>
 </nav>
 
@@ -319,6 +324,19 @@
 </div>
 
 <script>
+// ── AUTH GUARD (only active when PROTECTED_MODE=true on the server) ──────────
+(function(){
+  const protected = window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode;
+  const navExtras = document.getElementById('authNavExtras');
+  if(!protected){ if(navExtras) navExtras.style.display='none'; return; }
+  const auth = sessionStorage.getItem('aavp_auth');
+  if(!auth){ window.location.href = 'login.html?redirect=roi.html'; return; }
+  const { projectName } = JSON.parse(auth);
+  const el = document.getElementById('authProjectLabel');
+  if(el) el.textContent = projectName;
+})();
+function logout(){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html'; }
+
 const benchmarks=[
   {kpi:'Cost Per Invoice',domain:'Finance',baseline:'$14',industry:'$10',ibm:'$3.50',baseNum:14,ibmNum:3.5,lowerBetter:true},
   {kpi:'Invoice Cycle Time (days)',domain:'Finance',baseline:'12 days',industry:'8 days',ibm:'3 days',baseNum:12,ibmNum:3,lowerBetter:true},

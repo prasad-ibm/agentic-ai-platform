@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In · Agentic AI Value Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"/>
+  <style>
+    :root {
+      --bg-0:#ffffff; --bg-1:#f4f4f4; --bg-2:#e0e0e0;
+      --blue:#0f62fe; --blue-l:#0043ce; --blue-pale:#edf5ff;
+      --cyan:#0072c3; --gold:#b28600; --green:#198038;
+      --red:#da1e28; --red-pale:rgba(218,30,40,0.08); --purple:#6929c4;
+      --text-0:#161616; --text-1:#393939; --text-2:#525252;
+      --border:#e0e0e0; --shadow:0 2px 12px rgba(0,0,0,0.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-1);color:var(--text-0);min-height:100vh;}
+    a{color:var(--blue);text-decoration:none;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#ffffff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .nav-right{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+
+    /* ── HERO / LOGIN ── */
+    .login-hero {
+      padding-top: 48px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(140deg, #f4f4f4 0%, #e8efff 60%, #f4f4f4 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-hero::before {
+      content: '';
+      position: absolute; top: 48px; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--cyan) 50%, var(--purple) 100%);
+    }
+    /* subtle grid pattern */
+    .login-hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(15,98,254,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    .login-layout {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 4rem;
+      max-width: 1060px;
+      width: 100%;
+      padding: 3rem 2rem;
+      position: relative;
+      z-index: 1;
+      align-items: center;
+    }
+
+    /* LOGIN CARD */
+    .login-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+      overflow: hidden;
+    }
+    .login-card-header {
+      background: #161616;
+      padding: 1.75rem 2rem;
+      color: white;
+    }
+    .login-ibm-logo {
+      width: 48px; height: 18px;
+      background: white; color: #161616;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      margin-bottom: 1.25rem;
+    }
+    .login-card-header h2 { font-size: 1rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .login-card-header p  { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+    .login-card-body { padding: 1.75rem 2rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 6px; }
+    .form-label .req { color: var(--red); }
+    .form-input {
+      width: 100%; background: var(--bg-1);
+      border: none; border-bottom: 2px solid var(--border);
+      padding: 10px 12px; font-family: inherit; font-size: 14px;
+      color: var(--text-0); transition: border-color 0.15s, background 0.15s; outline: none;
+    }
+    .form-input:focus { border-bottom-color: var(--blue); background: white; }
+    .form-input::placeholder { color: var(--text-2); font-size: 13px; }
+    .form-hint { font-size: 11px; color: var(--text-2); margin-top: 5px; line-height: 1.5; }
+
+    .btn-signin {
+      width: 100%; padding: 13px;
+      background: var(--blue); color: white;
+      border: none; font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+      margin-top: 0.25rem; letter-spacing: 0.3px;
+    }
+    .btn-signin:hover { background: var(--blue-l); }
+
+    .login-error {
+      display: none; margin-top: 0.75rem;
+      padding: 10px 12px;
+      background: var(--red-pale); border-left: 3px solid var(--red);
+      font-size: 12px; color: var(--red); line-height: 1.5;
+    }
+    .login-error.show { display: block; }
+
+    .login-card-footer {
+      padding: 0.9rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg-1);
+      font-size: 11px; color: var(--text-2);
+      text-align: center; line-height: 1.6;
+    }
+
+    /* PLATFORM INFO (right side) */
+    .login-info { color: var(--text-0); }
+    .info-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem;
+    }
+    .login-info h1 { font-size: 2rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.9rem; }
+    .login-info .tagline { font-size: 14px; color: var(--text-1); line-height: 1.7; margin-bottom: 2rem; max-width: 420px; }
+
+    .module-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .module-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; background: white;
+      border: 1px solid var(--border); border-radius: 2px;
+    }
+    .module-icon { width: 32px; height: 32px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .module-name { font-size: 13px; font-weight: 600; }
+    .module-desc { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .module-lock { margin-left: auto; font-size: 13px; color: var(--text-2); }
+
+    .preview-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 1.5rem; font-size: 13px; color: var(--blue); font-weight: 600;
+      cursor: pointer; border: none; background: none; font-family: inherit; padding: 0;
+    }
+    .preview-link:hover { text-decoration: underline; }
+
+    /* ── PREVIEW SECTION ── */
+    .preview-section {
+      background: var(--bg-0);
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .preview-header {
+      max-width: 1200px; margin: 0 auto 2.5rem;
+    }
+    .preview-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-2); margin-bottom: 6px; }
+    .preview-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .preview-header p  { font-size: 13px; color: var(--text-2); }
+
+    .preview-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* PANEL SHELL */
+    .panel {
+      border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; background: var(--bg-0);
+      box-shadow: var(--shadow);
+    }
+    .panel-head {
+      padding: 12px 16px; background: var(--bg-1);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ph-icon { width: 28px; height: 28px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .ph-title { font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+    .ph-sub { font-size: 10px; color: var(--text-2); margin-top: 1px; }
+    .sample-badge {
+      margin-left: auto; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--gold);
+      background: rgba(178,134,0,0.1); border: 1px solid rgba(178,134,0,0.25);
+      padding: 2px 7px; border-radius: 2px; white-space: nowrap;
+    }
+    .panel-body { padding: 1rem; }
+
+    /* ── ASSESSMENT MOCK ── */
+    .score-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .score-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 3px solid var(--blue);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .score-n { font-size: 1.25rem; font-weight: 700; line-height: 1; }
+    .score-d { font-size: 9px; color: var(--text-2); }
+    .score-info h4 { font-size: 14px; font-weight: 700; }
+    .phase-tag {
+      display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700;
+      background: rgba(15,98,254,0.1); color: var(--blue);
+      border: 1px solid rgba(15,98,254,0.3); padding: 2px 8px; border-radius: 2px;
+    }
+    .dim { margin-bottom: 9px; }
+    .dim-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+    .bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 2px; }
+    .assess-note {
+      margin-top: 1rem; padding: 10px 12px;
+      background: var(--blue-pale); border-left: 3px solid var(--blue);
+      font-size: 11px; line-height: 1.6;
+    }
+
+    /* ── DEPLOYMENT MOCK ── */
+    .d-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 1rem; }
+    .d-kpi { text-align: center; padding: 7px 4px; background: var(--bg-1); border-radius: 2px; }
+    .d-kpi-v { font-size: 1rem; font-weight: 700; }
+    .d-kpi-l { font-size: 9px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+    .kanban-mini { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .k-col-head {
+      font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding-bottom: 5px;
+      border-bottom: 2px solid; margin-bottom: 6px;
+    }
+    .k-col-head.pl { color: var(--gold); border-color: var(--gold); }
+    .k-col-head.ip { color: var(--cyan); border-color: var(--cyan); }
+    .k-col-head.lv { color: var(--green); border-color: var(--green); }
+    .k-col-head.cp { color: var(--purple); border-color: var(--purple); }
+    .mini-card { background: white; border: 1px solid var(--border); border-radius: 2px; padding: 8px; margin-bottom: 6px; }
+    .mc-name { font-size: 10px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+    .mc-dom { font-size: 9px; padding: 1px 5px; border-radius: 2px; font-weight: 600; display: inline-block; margin-bottom: 5px; }
+    .mc-dom.fi { background: rgba(178,134,0,0.1); color: var(--gold); }
+    .mc-dom.hr { background: rgba(0,114,195,0.1); color: var(--cyan); }
+    .mc-dom.pr { background: rgba(25,128,56,0.1); color: var(--green); }
+    .mc-bar { height: 2px; background: var(--bg-2); border-radius: 1px; overflow: hidden; }
+    .mc-bar-fill { height: 100%; border-radius: 1px; }
+    .deploy-footer { margin-top: 0.75rem; font-size: 11px; color: var(--text-2); text-align: center; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+
+    /* ── ROI MOCK ── */
+    .roi-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; }
+    .roi-kpi { text-align: center; padding: 10px 4px; background: var(--bg-1); border-radius: 2px; position: relative; overflow: hidden; }
+    .roi-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .roi-kpi.r1::before { background: var(--blue); }
+    .roi-kpi.r2::before { background: var(--green); }
+    .roi-kpi.r3::before { background: var(--gold); }
+    .roi-kpi-v { font-size: 1.1rem; font-weight: 700; }
+    .roi-kpi-l { font-size: 9px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+    .roi-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .roi-tbl th { text-align: left; padding: 6px 8px; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-2); border-bottom: 1px solid var(--border); background: var(--bg-1); }
+    .roi-tbl td { padding: 7px 8px; border-bottom: 1px solid var(--border); }
+    .roi-tbl tr:last-child td { border-bottom: none; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+    .roi-foot { margin-top: 0.75rem; display: flex; justify-content: space-between; font-size: 11px; color: var(--text-2); padding-top: 0.75rem; border-top: 1px solid var(--border); }
+
+    @media(max-width:960px){
+      .login-layout{grid-template-columns:1fr;}
+      .login-info{display:none;}
+      .preview-grid{grid-template-columns:1fr;}
+    }
+  </style>
+  <script src="/config.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Agentic AI Value Platform</span>
+  </div>
+  <div class="nav-right">
+    <span style="font-size:14px;">🔒</span>
+    Secure Client Access
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ LOGIN HERO ═══════════════════════════════ -->
+<div class="login-hero">
+  <div class="login-layout">
+
+    <!-- LEFT: SIGN-IN CARD -->
+    <div>
+      <div class="login-card">
+        <div class="login-card-header">
+          <div class="login-ibm-logo">IBM</div>
+          <h2>Agentic AI Value Platform</h2>
+          <p>Sign in with your project credentials to access your AI maturity assessment, deployment tracker, and ROI dashboards.</p>
+        </div>
+
+        <div class="login-card-body">
+          <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label">Project Name <span class="req">*</span></label>
+              <input id="projectName" class="form-input" type="text"
+                placeholder="e.g. GlobalBank AI Transformation" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Key <span class="req">*</span></label>
+              <input id="projectKey" class="form-input" type="password"
+                placeholder="e.g. GLBK-AI-2025-Q1" autocomplete="off"/>
+              <div class="form-hint">Your project key was provided by your IBM engagement lead. Keys are case-sensitive.</div>
+            </div>
+            <button type="submit" class="btn-signin">Access Platform →</button>
+            <div class="login-error" id="loginError">
+              Please enter both your project name and project key to continue.
+            </div>
+          </form>
+        </div>
+
+        <div class="login-card-footer">
+          🔒 Access is restricted to authorised IBM client engagements.<br/>
+          All sessions are logged and audited.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PLATFORM INFO -->
+    <div class="login-info">
+      <div class="info-tag">IBM Client Zero · Proven at Scale</div>
+      <h1>Bridge the Last Mile<br/>of AI Value</h1>
+      <p class="tagline">
+        AI is compressing software delivery and SDLC cycles dramatically — but speed alone isn't the differentiator. Picking the right use cases, deploying with precision, and measuring business value is what separates leaders from laggards.
+      </p>
+
+      <div class="module-list">
+        <div class="module-item">
+          <div class="module-icon" style="background:rgba(15,98,254,0.1);">📊</div>
+          <div>
+            <div class="module-name">AI Maturity Assessment</div>
+            <div class="module-desc">Evaluate readiness across 5 dimensions · Benchmark vs. peers</div>
+          </div>
+          <div class="module-lock">🔒</div>
+        </div>
+        <div class="module-item">
+          <div class="module-icon" style="background:rgba(0,114,195,0.1);">📋</div>
+          <div>
+            <div class="module-name">Deployment Tracker</div>
+            <div class="module-desc">Kanban board for AI use cases · Finance, HR &amp; Procurement</div>
+          </div>
+          <div class="module-lock">🔒</div>
+        </div>
+        <div class="module-item">
+          <div class="module-icon" style="background:rgba(25,128,56,0.1);">💰</div>
+          <div>
+            <div class="module-name">ROI Tracker</div>
+            <div class="module-desc">Track investment, realised savings &amp; KPI attainment</div>
+          </div>
+          <div class="module-lock">🔒</div>
+        </div>
+      </div>
+
+      <button class="preview-link" onclick="document.getElementById('previewSection').scrollIntoView({behavior:'smooth'})">
+        ↓ See a sample platform preview
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PREVIEW SECTION ═══════════════════════════════ -->
+<div class="preview-section" id="previewSection">
+  <div class="preview-header">
+    <div class="preview-tag">Illustrative Sample · Not Real Client Data</div>
+    <h2>What You'll Access After Sign In</h2>
+    <p>Sample outputs from a representative enterprise AI engagement — GlobalBank AI Transformation.</p>
+  </div>
+
+  <div class="preview-grid">
+
+    <!-- ── ASSESSMENT PANEL ── -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(15,98,254,0.1);">📊</div>
+        <div>
+          <div class="ph-title">AI Maturity Assessment</div>
+          <div class="ph-sub">GlobalBank Corp · Q1 2025</div>
+        </div>
+        <div class="sample-badge">Sample</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="score-row">
+          <div class="score-circle">
+            <div class="score-n">3.4</div>
+            <div class="score-d">/ 5.0</div>
+          </div>
+          <div class="score-info">
+            <h4>Overall Maturity</h4>
+            <div class="phase-tag">Scaling Phase</div>
+            <div style="font-size:11px;color:var(--text-2);margin-top:6px;">Top quartile · Financial sector peers</div>
+          </div>
+        </div>
+
+        <div class="dim">
+          <div class="dim-row"><span style="color:var(--text-1);">Strategy &amp; Vision</span><span style="font-weight:700;color:var(--green);">4.0</span></div>
+          <div class="bar"><div class="bar-fill" style="width:80%;background:var(--green);"></div></div>
+        </div>
+        <div class="dim">
+          <div class="dim-row"><span style="color:var(--text-1);">Technology Stack</span><span style="font-weight:700;color:var(--blue);">3.8</span></div>
+          <div class="bar"><div class="bar-fill" style="width:76%;background:var(--blue);"></div></div>
+        </div>
+        <div class="dim">
+          <div class="dim-row"><span style="color:var(--text-1);">AI Governance</span><span style="font-weight:700;color:var(--cyan);">3.5</span></div>
+          <div class="bar"><div class="bar-fill" style="width:70%;background:var(--cyan);"></div></div>
+        </div>
+        <div class="dim">
+          <div class="dim-row"><span style="color:var(--text-1);">Data Readiness</span><span style="font-weight:700;color:var(--gold);">3.2</span></div>
+          <div class="bar"><div class="bar-fill" style="width:64%;background:var(--gold);"></div></div>
+        </div>
+        <div class="dim">
+          <div class="dim-row"><span style="color:var(--text-1);">Talent &amp; Culture</span><span style="font-weight:700;color:var(--red);">2.8</span></div>
+          <div class="bar"><div class="bar-fill" style="width:56%;background:var(--red);"></div></div>
+        </div>
+
+        <div class="assess-note">
+          <strong>Priority Recommendation:</strong> Invest in Talent &amp; Data Readiness before scaling. Finance AI agents are ready to deploy now.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DEPLOYMENT PANEL ── -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(0,114,195,0.1);">📋</div>
+        <div>
+          <div class="ph-title">Deployment Tracker</div>
+          <div class="ph-sub">GlobalBank Corp · 5 Active Projects</div>
+        </div>
+        <div class="sample-badge">Sample</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="d-kpis">
+          <div class="d-kpi">
+            <div class="d-kpi-v" style="color:var(--gold);">1</div>
+            <div class="d-kpi-l">Planned</div>
+          </div>
+          <div class="d-kpi">
+            <div class="d-kpi-v" style="color:var(--cyan);">2</div>
+            <div class="d-kpi-l">In Progress</div>
+          </div>
+          <div class="d-kpi">
+            <div class="d-kpi-v" style="color:var(--green);">1</div>
+            <div class="d-kpi-l">Live</div>
+          </div>
+          <div class="d-kpi">
+            <div class="d-kpi-v" style="color:var(--purple);">1</div>
+            <div class="d-kpi-l">Done</div>
+          </div>
+        </div>
+
+        <div class="kanban-mini">
+          <!-- Planned -->
+          <div>
+            <div class="k-col-head pl">Plan</div>
+            <div class="mini-card">
+              <div class="mc-name">PO Automation Agent</div>
+              <div class="mc-dom pr">Procurement</div>
+              <div class="mc-bar"><div class="mc-bar-fill" style="width:12%;background:var(--gold);"></div></div>
+            </div>
+          </div>
+          <!-- In Progress -->
+          <div>
+            <div class="k-col-head ip">Active</div>
+            <div class="mini-card">
+              <div class="mc-name">Invoice Processing Agent</div>
+              <div class="mc-dom fi">Finance</div>
+              <div class="mc-bar"><div class="mc-bar-fill" style="width:68%;background:var(--cyan);"></div></div>
+            </div>
+            <div class="mini-card">
+              <div class="mc-name">Spend Analytics Engine</div>
+              <div class="mc-dom fi">Finance</div>
+              <div class="mc-bar"><div class="mc-bar-fill" style="width:45%;background:var(--cyan);"></div></div>
+            </div>
+          </div>
+          <!-- Live -->
+          <div>
+            <div class="k-col-head lv">Live</div>
+            <div class="mini-card">
+              <div class="mc-name">AskHR Virtual Agent</div>
+              <div class="mc-dom hr">HR</div>
+              <div class="mc-bar"><div class="mc-bar-fill" style="width:100%;background:var(--green);"></div></div>
+            </div>
+          </div>
+          <!-- Completed -->
+          <div>
+            <div class="k-col-head cp">Done</div>
+            <div class="mini-card">
+              <div class="mc-name">AI Readiness Assessment</div>
+              <div class="mc-dom fi">Finance</div>
+              <div class="mc-bar"><div class="mc-bar-fill" style="width:100%;background:var(--purple);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="deploy-footer">Projected completion: Q3 2025 · Sponsor: Sarah Chen, CFO</div>
+      </div>
+    </div>
+
+    <!-- ── ROI PANEL ── -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="ph-icon" style="background:rgba(25,128,56,0.1);">💰</div>
+        <div>
+          <div class="ph-title">ROI Tracker</div>
+          <div class="ph-sub">GlobalBank Corp · 2025 Portfolio</div>
+        </div>
+        <div class="sample-badge">Sample</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="roi-kpis">
+          <div class="roi-kpi r1">
+            <div class="roi-kpi-v" style="color:var(--blue);">$8.1M</div>
+            <div class="roi-kpi-l">Proj. ROI</div>
+          </div>
+          <div class="roi-kpi r2">
+            <div class="roi-kpi-v" style="color:var(--green);">338%</div>
+            <div class="roi-kpi-l">Return</div>
+          </div>
+          <div class="roi-kpi r3">
+            <div class="roi-kpi-v" style="color:var(--gold);">142K</div>
+            <div class="roi-kpi-l">Hrs / yr</div>
+          </div>
+        </div>
+
+        <table class="roi-tbl">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Invest.</th>
+              <th>Proj. ROI</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Invoice Agent</td>
+              <td>$480K</td>
+              <td style="font-weight:700;color:var(--green);">$2.1M</td>
+              <td><span class="dot" style="background:var(--cyan);"></span><span style="font-size:10px;">In Progress</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">AskHR Agent</td>
+              <td>$320K</td>
+              <td style="font-weight:700;color:var(--green);">$1.8M</td>
+              <td><span class="dot" style="background:var(--green);"></span><span style="font-size:10px;">Live</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">PO Automation</td>
+              <td>$560K</td>
+              <td style="font-weight:700;color:var(--text-2);">$3.2M</td>
+              <td><span class="dot" style="background:var(--gold);"></span><span style="font-size:10px;">Planned</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Spend Analytics</td>
+              <td>$280K</td>
+              <td style="font-weight:700;color:var(--text-2);">$1.0M</td>
+              <td><span class="dot" style="background:var(--cyan);"></span><span style="font-size:10px;">In Progress</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="roi-foot">
+          <span>Total Invested: <strong style="color:var(--text-0);">$1.64M</strong></span>
+          <span>Actual Savings: <strong style="color:var(--green);">$1.1M</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// If open mode (PROTECTED_MODE not set), bypass login entirely
+// If protected mode and already logged in, skip to platform
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const dest = params.get('redirect') || 'assess.html';
+  if(window.PLATFORM_CONFIG && !window.PLATFORM_CONFIG.protectedMode){
+    window.location.href = dest; return;
+  }
+  if(sessionStorage.getItem('aavp_auth')){
+    window.location.href = dest;
+  }
+})();
+
+function handleLogin(e) {
+  e.preventDefault();
+  const name = document.getElementById('projectName').value.trim();
+  const key  = document.getElementById('projectKey').value.trim();
+  const err  = document.getElementById('loginError');
+
+  if (!name || !key) {
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+
+  sessionStorage.setItem('aavp_auth', JSON.stringify({
+    projectName: name,
+    projectKey:  key,
+    loginTime:   new Date().toISOString()
+  }));
+
+  const params   = new URLSearchParams(window.location.search);
+  const redirect = params.get('redirect') || 'assess.html';
+  window.location.href = redirect;
+}
+</script>
+</body>
+</html>

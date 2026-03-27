@@ -156,6 +156,7 @@
 
     @media(max-width:900px){.assess-wrap{grid-template-columns:1fr;}.sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--border);}.results-grid{grid-template-columns:1fr;}.form-grid,.form-grid-3{grid-template-columns:1fr;}}
   </style>
+  <script src="/config.js"></script>
 </head>
 <body>
 <nav>
@@ -165,6 +166,10 @@
     <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
     <a href="tracker.html" class="btn btn-ghost btn-sm">Deployment Tracker</a>
     <button class="btn btn-primary btn-sm" onclick="openNewClientModal()">+ New Client</button>
+    <span id="authNavExtras" style="display:flex;align-items:center;gap:0.75rem;">
+      <span id="authProjectLabel" style="font-size:11px;color:var(--text-2);padding:3px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:2px;"></span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()" style="color:var(--red);border-color:var(--red);">Sign Out</button>
+    </span>
   </div>
 </nav>
 
@@ -321,6 +326,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ── AUTH GUARD (only active when PROTECTED_MODE=true on the server) ──────────
+(function(){
+  const protected = window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode;
+  const navExtras = document.getElementById('authNavExtras');
+  if(!protected){ if(navExtras) navExtras.style.display='none'; return; }
+  const auth = sessionStorage.getItem('aavp_auth');
+  if(!auth){ window.location.href = 'login.html?redirect=assess.html'; return; }
+  const { projectName } = JSON.parse(auth);
+  const el = document.getElementById('authProjectLabel');
+  if(el) el.textContent = projectName;
+})();
+function logout(){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html'; }
+
 const API = '';  // same-origin
 
 /* ── STATE ───────────────────────────────────────────────────────────── */
