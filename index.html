@@ -412,9 +412,41 @@
     /* reveal animation */
     [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
     [data-reveal].revealed { opacity: 1; transform: none; }
+
+    /* ── MOBILE RESPONSIVE ────────────────────────────────────────────────── */
+    @media(max-width:768px){
+      .grid-2{grid-template-columns:1fr;}
+      .grid-3{grid-template-columns:1fr;}
+      .grid-4{grid-template-columns:1fr 1fr;}
+      .domain-tabs{overflow-x:auto;}
+      h1{font-size:2rem;}
+      .section,.section-alt{padding:56px 0;}
+    }
+
+    /* ── MOBILE GATE ─────────────────────────────────────────────────────── */
+    #mobile-gate{position:fixed;inset:0;z-index:9999;background:#f4f4f4;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;overflow-y:auto;}
+    .mg-logo{width:64px;height:24px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:1px;color:#fff;margin:0 auto 1.5rem;}
+    .mg-icon{font-size:52px;margin-bottom:1rem;}
+    .mg-title{font-size:22px;font-weight:700;color:#161616;margin-bottom:.75rem;line-height:1.2;}
+    .mg-body{font-size:14px;color:#525252;line-height:1.6;margin-bottom:1.25rem;max-width:320px;}
+    .mg-hint{font-size:11px;color:#8d8d8d;margin-bottom:1.75rem;display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;border:1px solid #e0e0e0;padding:8px 16px;border-radius:2px;max-width:320px;}
+    .mg-btn-p{background:#0f62fe;color:#fff;border:none;padding:14px 28px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;max-width:320px;margin-bottom:10px;letter-spacing:.3px;}
+    .mg-btn-s{background:transparent;color:#0f62fe;border:1px solid #0f62fe;padding:12px 28px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;max-width:320px;}
+    @media(min-width:768px){#mobile-gate{display:none!important;}}
   </style>
 </head>
 <body>
+
+<!-- ── MOBILE GATE ─────────────────────────────────────────────────────────── -->
+<div id="mobile-gate">
+  <div class="mg-logo">IBM</div>
+  <div class="mg-icon">🖥️</div>
+  <div class="mg-title">Best on a large screen</div>
+  <div class="mg-body">The Agentic AI Value Platform features interactive dashboards, data-dense comparison views, and executive AI intelligence tools — designed for desktop and large-screen viewing.</div>
+  <div class="mg-hint"><span>📐</span> Recommended: 1280px wide or larger</div>
+  <button class="mg-btn-p" onclick="document.getElementById('mobile-gate').style.display='none'">Continue on this device →</button>
+  <button class="mg-btn-s" onclick="document.getElementById('mobile-gate').style.display='none'">View anyway</button>
+</div>
 
 <!-- ── NAVIGATION ──────────────────────────────────────────────────────────── -->
 <nav>
