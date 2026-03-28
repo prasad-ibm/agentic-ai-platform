@@ -170,6 +170,17 @@
   <script src="/config.js"></script>
 </head>
 <body>
+
+<!-- ── MOBILE GATE ─────────────────────────────── -->
+<div id="mobile-gate">
+  <div class="mg-logo">IBM</div>
+  <div class="mg-icon">🖥️</div>
+  <div class="mg-title">Best on a large screen</div>
+  <div class="mg-body">The AI Maturity Assessment features multi-domain scoring, detailed questionnaires, and benchmark comparison charts — designed for desktop and large-screen viewing.</div>
+  <div class="mg-hint"><span>📐</span> Recommended: 1280px wide or larger</div>
+  <button class="mg-btn-p" onclick="document.getElementById('mobile-gate').style.display='none'">Continue on this device →</button>
+  <button class="mg-btn-s" onclick="document.getElementById('mobile-gate').style.display='none'">View anyway</button>
+</div>
 <nav>
   <div class="nav-brand"><div class="nav-logo">IBM</div><div class="nav-sep"></div><span class="nav-title">Maturity Assessment</span></div>
   <div style="display:flex;gap:0.75rem;align-items:center;">
