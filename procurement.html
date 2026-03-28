@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Procurement Executive Dashboard · Agentic AI Value Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-card:#ffffff;
+      --blue:#0f62fe;--blue-l:#0043ce;--blue-pale:#edf5ff;--blue-mid:#4589ff;
+      --cyan:#0072c3;--gold:#b28600;--gold-pale:rgba(178,134,0,0.08);
+      --green:#198038;--green-pale:rgba(25,128,56,0.08);
+      --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+      --purple:#6929c4;--teal:#007d79;
+      --text-0:#161616;--text-1:#393939;--text-2:#525252;
+      --border:#e0e0e0;--border-b:#0f62fe;
+      --radius:0px;--radius-lg:2px;--shadow:0 1px 3px rgba(0,0,0,0.1);
+      --transition:0.15s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;overflow-x:hidden;}
+    a{color:var(--blue);text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--bg-0);}
+    ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+
+    /* ── NAV ─────────────────────────────── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#ffffff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .nav-links{display:flex;gap:4px;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;}
+    .btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--border-b);}
+    .btn-ghost:hover{background:var(--blue-pale);}
+    .btn-primary{background:var(--blue);color:#fff;}
+    .btn-primary:hover{background:var(--blue-l);}
+    .btn-sm{padding:5px 12px;font-size:11px;}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+    .badge-live{background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+    /* ── LAYOUT ──────────────────────────── */
+    .page{padding-top:48px;display:flex;flex-direction:column;min-height:100vh;}
+
+    /* ── HERO HEADER ─────────────────────── */
+    .hero{background:var(--bg-1);border-bottom:1px solid var(--border);padding:1.5rem 2rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+    .hero-brand{display:flex;align-items:center;gap:16px;}
+    .hero-logo{width:52px;height:52px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:#fff;font-size:22px;font-weight:700;color:var(--text-0);}
+    .hero-title{font-size:22px;font-weight:700;color:var(--text-0);}
+    .hero-sub{font-size:11px;color:var(--text-2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+    .hero-divider{width:1px;height:52px;background:var(--border);}
+    .hero-kpis{display:flex;gap:2rem;flex:1;flex-wrap:wrap;}
+    .hero-kpi{display:flex;flex-direction:column;align-items:flex-start;}
+    .hero-kpi-val{font-size:24px;font-weight:700;color:var(--text-0);line-height:1;}
+    .hero-kpi-lbl{font-size:10px;color:var(--text-2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-top:4px;}
+    .hero-actions{display:flex;gap:8px;align-items:center;margin-left:auto;}
+
+    /* ── TAB SWITCHER ────────────────────── */
+    .tab-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;gap:0;align-items:flex-end;}
+    .tab-item{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;}
+    .tab-item:hover{color:var(--text-0);background:var(--bg-1);}
+    .tab-item.active{color:var(--blue);border-bottom-color:var(--blue);}
+    .tab-badge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;margin-left:6px;background:var(--blue-pale);color:var(--blue);}
+
+    /* ── MAIN CONTENT ────────────────────── */
+    .main-wrap{display:flex;flex:1;min-height:0;}
+    .content-area{flex:1;padding:1.5rem 2rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.5rem;}
+    .filter-sidebar{width:220px;border-left:1px solid var(--border);background:var(--bg-1);padding:1.25rem;flex-shrink:0;overflow-y:auto;}
+
+    /* ── KPI PANELS ──────────────────────── */
+    .kpi-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .kpi-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .kpi-panel-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);font-size:14px;font-weight:700;color:var(--text-0);display:flex;align-items:center;justify-content:space-between;}
+    .kpi-panel-header .panel-tag{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:10px;}
+    .kpi-panel-body{padding:16px;}
+    .kpi-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+    .kpi-box{display:flex;flex-direction:column;gap:4px;}
+    .kpi-lbl{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;}
+    .kpi-val{font-size:26px;font-weight:700;line-height:1;color:var(--text-0);}
+    .kpi-val.red{color:var(--red);}
+    .kpi-val.blue{color:var(--blue);}
+    .kpi-val.green{color:var(--green);}
+    .kpi-trend{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:2px;}
+    .kpi-trend.up{color:var(--green);}
+    .kpi-trend.down{color:var(--red);}
+    .kpi-trend.flat{color:var(--text-2);}
+
+    /* bullet chart */
+    .bullet-chart{margin-top:4px;}
+    .bullet-lbl-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:4px;}
+    .bullet-track{height:12px;background:var(--bg-2);border-radius:2px;position:relative;overflow:visible;}
+    .bullet-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+    .bullet-marker{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--text-0);}
+    .bullet-legend{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap;}
+    .bl-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text-2);}
+    .bl-dot{width:8px;height:8px;border-radius:1px;}
+    .bl-line{width:14px;height:2px;}
+
+    /* section divider */
+    .kpi-divider{height:1px;background:var(--border);margin:12px 0;}
+
+    /* ── MINI TREND KPIs ─────────────────── */
+    .metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+    .metric-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;}
+    .metric-info{display:flex;flex-direction:column;gap:2px;}
+    .metric-name{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .metric-val{font-size:16px;font-weight:700;color:var(--text-0);}
+    .metric-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;}
+    .m-green{background:var(--green-pale);color:var(--green);}
+    .m-red{background:var(--red-pale);color:var(--red);}
+    .m-blue{background:var(--blue-pale);color:var(--blue);}
+    .m-gold{background:var(--gold-pale);color:var(--gold);}
+
+    /* ── BOTTOM SECTION ──────────────────── */
+    .bottom-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1rem;}
+    .chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .chart-card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .chart-card-title{font-size:12px;font-weight:700;color:var(--text-0);text-transform:uppercase;letter-spacing:0.5px;}
+    .chart-card-body{padding:16px;}
+
+    /* horizontal bar chart */
+    .hbar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+    .hbar-label{width:130px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;}
+    .hbar-track{flex:1;height:16px;background:var(--bg-1);border-radius:2px;overflow:hidden;position:relative;}
+    .hbar-fill{height:100%;border-radius:2px;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;}
+    .hbar-val{font-size:9px;font-weight:700;color:#fff;}
+    .hbar-ext-val{font-size:10px;font-weight:700;color:var(--text-1);margin-left:4px;}
+
+    /* donut-style ring */
+    .ring-chart{display:flex;align-items:center;justify-content:center;gap:24px;padding:8px 0;}
+    .ring-svg-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+    .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .ring-center-val{font-size:20px;font-weight:700;color:var(--text-0);}
+    .ring-center-lbl{font-size:9px;color:var(--text-2);font-weight:600;text-align:center;}
+    .ring-legend{display:flex;flex-direction:column;gap:8px;}
+    .ring-legend-item{display:flex;align-items:center;gap:6px;}
+    .ring-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .ring-legend-label{font-size:10px;color:var(--text-1);}
+    .ring-legend-val{font-size:10px;font-weight:700;color:var(--text-0);margin-left:auto;}
+
+    /* supplier table */
+    .s-table{width:100%;border-collapse:collapse;font-size:11px;}
+    .s-table th{text-align:left;padding:6px 8px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-2);border-bottom:1px solid var(--border);background:var(--bg-1);}
+    .s-table td{padding:8px 8px;border-bottom:1px solid var(--border);color:var(--text-1);}
+    .s-table tr:hover td{background:var(--bg-1);}
+    .s-table .s-name{font-weight:600;color:var(--text-0);}
+    .s-perf{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;}
+
+    /* ── FILTER SIDEBAR ──────────────────── */
+    .filter-section{margin-bottom:1.25rem;}
+    .filter-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:8px;display:block;}
+    .filter-select{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;color:var(--text-0);font-family:inherit;font-size:12px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23525252' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+    .filter-select:focus{outline:none;border-color:var(--border-b);}
+    .filter-chips{display:flex;flex-wrap:wrap;gap:4px;}
+    .chip{padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:var(--transition);}
+    .chip.active{background:var(--blue-pale);border-color:var(--blue);color:var(--blue);}
+    .chip:hover{border-color:var(--blue);color:var(--blue);}
+    .filter-date-row{display:flex;gap:4px;}
+    .filter-date-btn{flex:1;padding:5px;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:10px;font-weight:600;background:#fff;color:var(--text-2);cursor:pointer;text-align:center;transition:var(--transition);}
+    .filter-date-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .kpi-summary-mini{background:var(--blue);border-radius:var(--radius-lg);padding:12px;margin-top:1rem;color:#fff;}
+    .ksm-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.8;margin-bottom:8px;}
+    .ksm-item{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.15);}
+    .ksm-item:last-child{border-bottom:none;}
+    .ksm-name{font-size:10px;opacity:0.9;}
+    .ksm-val{font-size:11px;font-weight:700;}
+
+    /* investigate btn */
+    .investigate-bar{display:flex;justify-content:center;padding:10px 16px 12px;}
+    .btn-investigate{background:var(--blue);color:#fff;border:none;padding:8px 28px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;border-radius:var(--radius-lg);letter-spacing:0.5px;transition:var(--transition);}
+    .btn-investigate:hover{background:var(--blue-l);}
+
+    /* tab panel visibility */
+    .tab-panel{display:none;}
+    .tab-panel.active{display:contents;}
+
+    /* ── SECTION TITLE ───────────────────── */
+    .sec-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+    .sec-heading-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);}
+
+    /* AI banner */
+    .ai-banner{background:linear-gradient(135deg,var(--blue) 0%,#0043ce 100%);color:#fff;border-radius:var(--radius-lg);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+    .ai-banner-icon{font-size:20px;flex-shrink:0;}
+    .ai-banner-text{flex:1;}
+    .ai-banner-title{font-size:12px;font-weight:700;margin-bottom:2px;}
+    .ai-banner-sub{font-size:11px;opacity:0.85;}
+    .ai-banner-kpis{display:flex;gap:16px;flex-shrink:0;}
+    .ai-banner-kpi{text-align:center;}
+    .ai-banner-kpi-val{font-size:16px;font-weight:700;}
+    .ai-banner-kpi-lbl{font-size:9px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;}
+
+    @media(max-width:1100px){.kpi-panels{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.filter-sidebar{width:180px;}}
+    @media(max-width:768px){.kpi-panels{grid-template-columns:1fr;}.main-wrap{flex-direction:column;}.filter-sidebar{width:100%;border-left:none;border-top:1px solid var(--border);}.hero-kpis{gap:1rem;}.hero-divider{display:none;}}
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Procurement Executive Dashboard</span>
+  </div>
+  <div class="nav-links">
+    <a href="assess.html" class="btn btn-ghost btn-sm">Assessment</a>
+    <a href="tracker.html" class="btn btn-ghost btn-sm">Deployments</a>
+    <a href="roi.html" class="btn btn-ghost btn-sm">ROI Tracker</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <span class="badge badge-live" style="margin-left:4px;">● Live Data</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-brand">
+      <div class="hero-logo">🏭</div>
+      <div>
+        <div class="hero-title">Procurement</div>
+        <div class="hero-sub">Executive Dashboard · FY 2025</div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">1.17M</div>
+        <div class="hero-kpi-lbl"># Purchase Orders</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$2.9B</div>
+        <div class="hero-kpi-lbl">Net Order Value</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">4,823</div>
+        <div class="hero-kpi-lbl">Active Suppliers</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">12,847</div>
+        <div class="hero-kpi-lbl">Active Contracts</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val" style="color:var(--green);">$14.8M</div>
+        <div class="hero-kpi-lbl">Total Realized Value</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('exportModal').style.display='flex'">↓ Export</button>
+      <button class="btn btn-primary btn-sm">⚙ Configure</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab-item active" id="tab-before" onclick="switchTab('before')">
+      Current State
+      <span class="tab-badge">Baseline</span>
+    </div>
+    <div class="tab-item" id="tab-after" onclick="switchTab('after')">
+      With Celonis AI
+      <span class="tab-badge" style="background:var(--green-pale);color:var(--green);">+$5.6M Uplift</span>
+    </div>
+    <div class="tab-item" style="margin-left:auto;" id="tab-trends" onclick="switchTab('trends')">
+      Trend Analysis
+    </div>
+  </div>
+
+  <div class="main-wrap">
+    <!-- MAIN CONTENT -->
+    <div class="content-area">
+
+      <!-- ═══════════════ BEFORE TAB ═══════════════ -->
+      <div id="panel-before" class="tab-panel active">
+
+        <!-- KPI PANELS ROW -->
+        <div class="kpi-panels">
+
+          <!-- SPEND CONTROL -->
+          <div class="kpi-panel">
+            <div class="kpi-panel-header">
+              Spend Control
+              <span class="panel-tag" style="background:var(--red-pale);color:var(--red);">Below Target</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Spend Under Mgmt.</div>
+                  <div class="kpi-val red">13%</div>
+                  <div class="kpi-trend down">↘ -4pp vs target</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Potential Value</div>
+                  <div class="kpi-val">$8.6M</div>
+                  <div style="font-size:10px;color:var(--text-2);margin-top:2px;">unrealised</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span></div>
+                <div class="bullet-track" style="background:#f4e0e2;">
+                  <div class="bullet-fill" style="width:13%;background:var(--red);"></div>
+                  <div class="bullet-marker" style="left:17%;background:var(--text-2);"></div><!-- Best in Class -->
+                  <div class="bullet-marker" style="left:60%;background:var(--blue);"></div><!-- Target -->
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--red);"></div>Spend Under Mgmt (13%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (17%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (60%)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Maverick Spend</div>
+                    <div class="metric-val">34%</div>
+                  </div>
+                  <span class="metric-badge m-red">High</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Contract Compliance</div>
+                    <div class="metric-val">67%</div>
+                  </div>
+                  <span class="metric-badge m-gold">Mid</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">Investigate →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LABOR PRODUCTIVITY -->
+          <div class="kpi-panel">
+            <div class="kpi-panel-header">
+              Labor Productivity
+              <span class="panel-tag" style="background:var(--gold-pale);color:var(--gold);">Improving</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Touches per PO</div>
+                  <div class="kpi-val">1.2</div>
+                  <div class="kpi-trend down">↘ vs 1.0 target</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Realized Value</div>
+                  <div class="kpi-val">$280K</div>
+                  <div style="font-size:10px;color:var(--text-2);margin-top:2px;">YTD savings</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0.0</span><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:60%;background:var(--blue);"></div><!-- 1.2 / 2.0 = 60% -->
+                  <div class="bullet-marker" style="left:50%;"></div><!-- Best in Class 1.0 -->
+                  <div class="bullet-marker" style="left:75%;background:var(--blue);"></div><!-- Target 1.5 -->
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--blue);"></div>Touches per PO (1.2)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (1.0)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (1.5)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">PO Automation</div>
+                    <div class="metric-val">74%</div>
+                  </div>
+                  <span class="metric-badge m-gold">Mid</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Invoice Match Rate</div>
+                    <div class="metric-val">82%</div>
+                  </div>
+                  <span class="metric-badge m-gold">Mid</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">Investigate →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUPPLY RELIABILITY -->
+          <div class="kpi-panel">
+            <div class="kpi-panel-header">
+              Supply Reliability
+              <span class="panel-tag" style="background:var(--gold-pale);color:var(--gold);">On Track</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">On-Time In-Full</div>
+                  <div class="kpi-val">113%</div>
+                  <div class="kpi-trend flat">→ stable</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Potential Value</div>
+                  <div class="kpi-val">$20K</div>
+                  <div style="font-size:10px;color:var(--text-2);margin-top:2px;">risk exposure</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:80%;background:var(--blue);"></div>
+                  <div class="bullet-marker" style="left:70%;"></div><!-- Best in Class 88% -->
+                  <div class="bullet-marker" style="left:85%;background:var(--blue);"></div><!-- Target -->
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--blue);"></div>On-Time In-Full (113%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (88%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (95%)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Supplier Defect Rate</div>
+                    <div class="metric-val">2.3%</div>
+                  </div>
+                  <span class="metric-badge m-red">High</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Lead Time Variance</div>
+                    <div class="metric-val">8.4d</div>
+                  </div>
+                  <span class="metric-badge m-red">High</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">Investigate →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM ROW -->
+        <div class="bottom-grid">
+          <!-- Spend by Category -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Spend by Category</span>
+              <select style="font-size:11px;border:1px solid var(--border);padding:3px 6px;border-radius:2px;background:#fff;font-family:inherit;color:var(--text-2);">
+                <option>All Categories</option>
+              </select>
+            </div>
+            <div class="chart-card-body">
+              <div class="hbar-row">
+                <div class="hbar-label">Direct Materials</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:72%;background:var(--blue);"><span class="hbar-val">72%</span></div></div>
+                <div class="hbar-ext-val">$2.09B</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-label">Indirect – IT</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:12%;background:var(--cyan);"><span class="hbar-val">12%</span></div></div>
+                <div class="hbar-ext-val">$348M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-label">Indirect – Facilities</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:7%;background:var(--teal);"><span class="hbar-val">7%</span></div></div>
+                <div class="hbar-ext-val">$203M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-label">Professional Svcs</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:5%;background:var(--purple);"></div></div>
+                <div class="hbar-ext-val">$145M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-label">Logistics</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:3%;background:var(--gold);"></div></div>
+                <div class="hbar-ext-val">$87M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-label">Other</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:1%;background:var(--bg-2);"></div></div>
+                <div class="hbar-ext-val">$18M</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Suppliers -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Top Suppliers by Risk</span>
+              <span style="font-size:10px;color:var(--red);font-weight:700;">5 at risk</span>
+            </div>
+            <div class="chart-card-body" style="padding:0;">
+              <table class="s-table">
+                <thead>
+                  <tr><th>Supplier</th><th>Spend</th><th>OTIF</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="s-name">Acme Industrial</td>
+                    <td>$412M</td>
+                    <td>108%</td>
+                    <td><span class="s-perf" style="background:var(--green-pale);color:var(--green);">● Good</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-name">Nexus Supply Co</td>
+                    <td>$287M</td>
+                    <td>91%</td>
+                    <td><span class="s-perf" style="background:var(--gold-pale);color:var(--gold);">● Watch</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-name">Global Parts Ltd</td>
+                    <td>$224M</td>
+                    <td>74%</td>
+                    <td><span class="s-perf" style="background:var(--red-pale);color:var(--red);">● At Risk</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-name">TechMat Corp</td>
+                    <td>$198M</td>
+                    <td>122%</td>
+                    <td><span class="s-perf" style="background:var(--green-pale);color:var(--green);">● Good</span></td>
+                  </tr>
+                  <tr>
+                    <td class="s-name">Vertex Logistics</td>
+                    <td>$156M</td>
+                    <td>63%</td>
+                    <td><span class="s-perf" style="background:var(--red-pale);color:var(--red);">● At Risk</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ AFTER TAB ═══════════════ -->
+      <div id="panel-after" class="tab-panel">
+
+        <!-- AI UPLIFT BANNER -->
+        <div class="ai-banner">
+          <div class="ai-banner-icon">🤖</div>
+          <div class="ai-banner-text">
+            <div class="ai-banner-title">Celonis AI Impact — Projected State with Full Deployment</div>
+            <div class="ai-banner-sub">PO Automation Agent · Spend Analytics Engine · Supplier Risk Monitor · Contract Intelligence</div>
+          </div>
+          <div class="ai-banner-kpis">
+            <div class="ai-banner-kpi">
+              <div class="ai-banner-kpi-val">$5.6M</div>
+              <div class="ai-banner-kpi-lbl">Realized Value</div>
+            </div>
+            <div class="ai-banner-kpi">
+              <div class="ai-banner-kpi-val">$8.6M</div>
+              <div class="ai-banner-kpi-lbl">Pipeline Value</div>
+            </div>
+            <div class="ai-banner-kpi">
+              <div class="ai-banner-kpi-val">4</div>
+              <div class="ai-banner-kpi-lbl">AI Agents Active</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI PANELS ROW — AFTER STATE -->
+        <div class="kpi-panels">
+
+          <!-- SPEND CONTROL — AFTER -->
+          <div class="kpi-panel" style="border-top:3px solid var(--green);">
+            <div class="kpi-panel-header">
+              Spend Control
+              <span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Spend Under Mgmt.</div>
+                  <div class="kpi-val blue">17%</div>
+                  <div class="kpi-trend up">↗ +4pp vs baseline</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Realized Value</div>
+                  <div class="kpi-val green">$5.9M</div>
+                  <div style="font-size:10px;color:var(--green);margin-top:2px;font-weight:600;">+$5.9M uplift</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:17%;background:var(--blue);"></div>
+                  <div class="bullet-marker" style="left:17%;"></div>
+                  <div class="bullet-marker" style="left:60%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--blue);"></div>Spend Under Mgmt (17%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (17%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (60%)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Maverick Spend</div>
+                    <div class="metric-val">22%</div>
+                  </div>
+                  <span class="metric-badge m-green">↓ -12pp</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Contract Compliance</div>
+                    <div class="metric-val">83%</div>
+                  </div>
+                  <span class="metric-badge m-green">↑ +16pp</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">View AI Actions →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LABOR PRODUCTIVITY — AFTER -->
+          <div class="kpi-panel" style="border-top:3px solid var(--green);">
+            <div class="kpi-panel-header">
+              Labor Productivity
+              <span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Touches per PO</div>
+                  <div class="kpi-val blue">1.4</div>
+                  <div class="kpi-trend flat">→ approaching target</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Potential Value</div>
+                  <div class="kpi-val">$280K</div>
+                  <div style="font-size:10px;color:var(--green);margin-top:2px;font-weight:600;">maintained</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0.0</span><span>0.5</span><span>1.0</span><span>1.5</span><span>2.0</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:70%;background:var(--blue);"></div>
+                  <div class="bullet-marker" style="left:50%;"></div>
+                  <div class="bullet-marker" style="left:75%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--blue);"></div>Touches per PO (1.4)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (1.0)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (1.5)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">PO Automation</div>
+                    <div class="metric-val">90%</div>
+                  </div>
+                  <span class="metric-badge m-green">↑ +16pp</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Invoice Match Rate</div>
+                    <div class="metric-val">96%</div>
+                  </div>
+                  <span class="metric-badge m-green">↑ +14pp</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">View AI Actions →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUPPLY RELIABILITY — AFTER -->
+          <div class="kpi-panel" style="border-top:3px solid var(--green);">
+            <div class="kpi-panel-header">
+              Supply Reliability
+              <span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span>
+            </div>
+            <div class="kpi-panel-body">
+              <div class="kpi-row-2">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">On-Time In-Full</div>
+                  <div class="kpi-val blue">138%</div>
+                  <div class="kpi-trend flat">→ above target</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Potential Value</div>
+                  <div class="kpi-val">$20K</div>
+                  <div style="font-size:10px;color:var(--green);margin-top:2px;font-weight:600;">maintained</div>
+                </div>
+              </div>
+              <div class="bullet-chart">
+                <div class="bullet-lbl-row"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:90%;background:var(--blue);"></div>
+                  <div class="bullet-marker" style="left:70%;"></div>
+                  <div class="bullet-marker" style="left:85%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl-item"><div class="bl-dot" style="background:var(--blue);"></div>On-Time In-Full (138%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--text-2);"></div>Best In Class (88%)</div>
+                  <div class="bl-item"><div class="bl-line" style="background:var(--blue);"></div>Target (95%)</div>
+                </div>
+              </div>
+              <div class="kpi-divider"></div>
+              <div class="metric-row">
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Supplier Defect Rate</div>
+                    <div class="metric-val">1.1%</div>
+                  </div>
+                  <span class="metric-badge m-green">↓ -1.2pp</span>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-info">
+                    <div class="metric-name">Lead Time Variance</div>
+                    <div class="metric-val">4.2d</div>
+                  </div>
+                  <span class="metric-badge m-green">↓ -4.2d</span>
+                </div>
+              </div>
+              <div class="investigate-bar">
+                <button class="btn-investigate">View AI Actions →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI AGENTS DEPLOYED -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <span class="chart-card-title">AI Agents Driving This Value</span>
+            <span style="font-size:10px;color:var(--green);font-weight:700;">4 Active</span>
+          </div>
+          <div class="chart-card-body">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+              <div style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;background:var(--bg-1);">
+                <div style="font-size:18px;margin-bottom:6px;">🤖</div>
+                <div style="font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:4px;">PO Automation Agent</div>
+                <div style="font-size:10px;color:var(--text-2);">Automates 90% of routine POs end-to-end</div>
+                <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">$3.2M saved</div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;background:var(--bg-1);">
+                <div style="font-size:18px;margin-bottom:6px;">📊</div>
+                <div style="font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:4px;">Spend Analytics Engine</div>
+                <div style="font-size:10px;color:var(--text-2);">Classifies spend and identifies leakage patterns</div>
+                <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">$1.8M identified</div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;background:var(--bg-1);">
+                <div style="font-size:18px;margin-bottom:6px;">🔍</div>
+                <div style="font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:4px;">Supplier Risk Monitor</div>
+                <div style="font-size:10px;color:var(--text-2);">Flags at-risk suppliers 30 days in advance</div>
+                <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">$420K avoided</div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;background:var(--bg-1);">
+                <div style="font-size:18px;margin-bottom:6px;">📄</div>
+                <div style="font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:4px;">Contract Intelligence</div>
+                <div style="font-size:10px;color:var(--text-2);">Extracts obligations and alerts on expiry</div>
+                <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--green);">$180K recovered</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ TRENDS TAB ═══════════════ -->
+      <div id="panel-trends" class="tab-panel">
+        <div class="kpi-panels" style="grid-template-columns:repeat(4,1fr);margin-bottom:1rem;">
+          <div class="kpi-panel" style="padding:16px;border-left:3px solid var(--blue);">
+            <div class="kpi-lbl">Spend Under Mgmt · Trend</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;margin-top:10px;height:44px;">
+              <div style="flex:1;background:var(--bg-2);border-radius:2px;height:30%;"></div>
+              <div style="flex:1;background:var(--bg-2);border-radius:2px;height:40%;"></div>
+              <div style="flex:1;background:var(--blue-pale);border-radius:2px;height:35%;"></div>
+              <div style="flex:1;background:var(--blue-pale);border-radius:2px;height:50%;"></div>
+              <div style="flex:1;background:var(--blue-pale);border-radius:2px;height:45%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:60%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:80%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:90%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text-2);">
+              <span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span>
+            </div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">13% → 17% (+4pp)</div>
+          </div>
+          <div class="kpi-panel" style="padding:16px;border-left:3px solid var(--cyan);">
+            <div class="kpi-lbl">Maverick Spend · Trend</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;margin-top:10px;height:44px;">
+              <div style="flex:1;background:var(--red);border-radius:2px;height:100%;"></div>
+              <div style="flex:1;background:var(--red);border-radius:2px;height:95%;"></div>
+              <div style="flex:1;background:#f4a7ab;border-radius:2px;height:85%;"></div>
+              <div style="flex:1;background:#f4a7ab;border-radius:2px;height:75%;"></div>
+              <div style="flex:1;background:#f4a7ab;border-radius:2px;height:65%;"></div>
+              <div style="flex:1;background:var(--gold);border-radius:2px;height:55%;"></div>
+              <div style="flex:1;background:var(--gold);border-radius:2px;height:45%;"></div>
+              <div style="flex:1;background:var(--green);border-radius:2px;height:35%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text-2);">
+              <span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span>
+            </div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">34% → 22% (↓12pp)</div>
+          </div>
+          <div class="kpi-panel" style="padding:16px;border-left:3px solid var(--green);">
+            <div class="kpi-lbl">PO Automation Rate</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;margin-top:10px;height:44px;">
+              <div style="flex:1;background:var(--bg-2);border-radius:2px;height:50%;"></div>
+              <div style="flex:1;background:var(--bg-2);border-radius:2px;height:55%;"></div>
+              <div style="flex:1;background:var(--blue-pale);border-radius:2px;height:60%;"></div>
+              <div style="flex:1;background:var(--blue-pale);border-radius:2px;height:65%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:70%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:78%;"></div>
+              <div style="flex:1;background:var(--blue);border-radius:2px;height:85%;"></div>
+              <div style="flex:1;background:var(--green);border-radius:2px;height:95%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text-2);">
+              <span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span>
+            </div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">74% → 90% (+16pp)</div>
+          </div>
+          <div class="kpi-panel" style="padding:16px;border-left:3px solid var(--purple);">
+            <div class="kpi-lbl">Supplier Defect Rate</div>
+            <div style="display:flex;align-items:flex-end;gap:3px;margin-top:10px;height:44px;">
+              <div style="flex:1;background:var(--red);border-radius:2px;height:100%;"></div>
+              <div style="flex:1;background:var(--red);border-radius:2px;height:95%;"></div>
+              <div style="flex:1;background:#f4a7ab;border-radius:2px;height:80%;"></div>
+              <div style="flex:1;background:#f4a7ab;border-radius:2px;height:65%;"></div>
+              <div style="flex:1;background:var(--gold);border-radius:2px;height:50%;"></div>
+              <div style="flex:1;background:var(--gold);border-radius:2px;height:40%;"></div>
+              <div style="flex:1;background:var(--green);border-radius:2px;height:30%;"></div>
+              <div style="flex:1;background:var(--green);border-radius:2px;height:20%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text-2);">
+              <span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span>
+            </div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">2.3% → 1.1% (↓1.2pp)</div>
+          </div>
+        </div>
+
+        <!-- Monthly Savings Waterfall -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <span class="chart-card-title">Cumulative Value Realized — Monthly (FY 2025)</span>
+            <span style="font-size:11px;font-weight:700;color:var(--green);">$14.8M YTD</span>
+          </div>
+          <div class="chart-card-body">
+            <div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding-bottom:4px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$0.6M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:5%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Jan</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$1.1M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:9%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Feb</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$1.4M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:12%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Mar</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$2.0M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:17%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Apr</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$3.2M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:27%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">May</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$4.7M</div>
+                <div style="flex:1;width:100%;background:var(--blue);border-radius:2px 2px 0 0;min-height:8px;height:40%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Jun</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$6.5M</div>
+                <div style="flex:1;width:100%;background:var(--cyan);border-radius:2px 2px 0 0;min-height:8px;height:55%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Jul</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$8.3M</div>
+                <div style="flex:1;width:100%;background:var(--cyan);border-radius:2px 2px 0 0;min-height:8px;height:71%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Aug</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$10.1M</div>
+                <div style="flex:1;width:100%;background:var(--green);border-radius:2px 2px 0 0;min-height:8px;height:86%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Sep</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$11.8M</div>
+                <div style="flex:1;width:100%;background:var(--green);border-radius:2px 2px 0 0;min-height:8px;height:100%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Oct</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$13.2M</div>
+                <div style="flex:1;width:100%;background:var(--green);border-radius:2px 2px 0 0;min-height:8px;height:100%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Nov</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px;">
+                <div style="font-size:9px;color:var(--text-2);font-weight:600;">$14.8M</div>
+                <div style="flex:1;width:100%;background:var(--green);border-radius:2px 2px 0 0;min-height:8px;height:100%;"></div>
+                <div style="font-size:9px;color:var(--text-2);">Dec</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--text-2);">
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--blue);border-radius:1px;"></div>Early phase</div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--cyan);border-radius:1px;"></div>Scale-up</div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--green);border-radius:1px;"></div>At steady state</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+
+    <!-- FILTER SIDEBAR -->
+    <div class="filter-sidebar">
+      <div class="filter-section">
+        <span class="filter-label">Time Period</span>
+        <div class="filter-date-row">
+          <button class="filter-date-btn active">YTD</button>
+          <button class="filter-date-btn">Q4</button>
+          <button class="filter-date-btn">Q3</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Date Range</span>
+        <input type="date" style="width:100%;border:1px solid var(--border);padding:6px 8px;font-family:inherit;font-size:11px;border-radius:var(--radius);background:#fff;color:var(--text-0);" value="2025-01-01"/>
+        <input type="date" style="width:100%;border:1px solid var(--border);padding:6px 8px;font-family:inherit;font-size:11px;border-radius:var(--radius);background:#fff;color:var(--text-0);margin-top:4px;" value="2025-12-31"/>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Company Code</span>
+        <select class="filter-select">
+          <option>All Companies</option>
+          <option>AMER Region</option>
+          <option>EMEA Region</option>
+          <option>APAC Region</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Material Group</span>
+        <select class="filter-select">
+          <option>All Materials</option>
+          <option>Direct – Raw Mat.</option>
+          <option>Direct – Components</option>
+          <option>Indirect – IT</option>
+          <option>Indirect – MRO</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Vendor</span>
+        <select class="filter-select">
+          <option>All Vendors</option>
+          <option>Acme Industrial</option>
+          <option>Nexus Supply Co</option>
+          <option>Global Parts Ltd</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Purchasing Org</span>
+        <div class="filter-chips">
+          <span class="chip active">All</span>
+          <span class="chip">NA-01</span>
+          <span class="chip">EU-01</span>
+          <span class="chip">AP-01</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <span class="filter-label">Document Type</span>
+        <div class="filter-chips">
+          <span class="chip active">All</span>
+          <span class="chip">NB</span>
+          <span class="chip">FO</span>
+          <span class="chip">UB</span>
+        </div>
+      </div>
+
+      <!-- KPI Summary -->
+      <div class="kpi-summary-mini">
+        <div class="ksm-title">IBM Client Zero Benchmark</div>
+        <div class="ksm-item">
+          <span class="ksm-name">Productivity gains</span>
+          <span class="ksm-val">$3.5B</span>
+        </div>
+        <div class="ksm-item">
+          <span class="ksm-name">Hours saved</span>
+          <span class="ksm-val">3.9M hrs</span>
+        </div>
+        <div class="ksm-item">
+          <span class="ksm-name">PO automation</span>
+          <span class="ksm-val">90%</span>
+        </div>
+        <div class="ksm-item">
+          <span class="ksm-name">Procurement savings</span>
+          <span class="ksm-val">$315M</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab) {
+  // Update tab styles
+  ['before','after','trends'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    const panel = document.getElementById('panel-'+t);
+    if(panel) panel.classList.toggle('active', t===tab);
+  });
+}
+
+// Chip toggle
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function(){
+    // Only toggle within same group
+    const group = this.closest('.filter-chips');
+    group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Date buttons
+document.querySelectorAll('.filter-date-btn').forEach(btn => {
+  btn.addEventListener('click', function(){
+    this.closest('.filter-date-row').querySelectorAll('.filter-date-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
