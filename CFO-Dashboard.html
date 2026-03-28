@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>CFO Executive Dashboard · Agentic AI Value Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-card:#ffffff;
+      --blue:#0f62fe;--blue-l:#0043ce;--blue-pale:#edf5ff;--blue-mid:#4589ff;
+      --cyan:#0072c3;--gold:#b28600;--gold-pale:rgba(178,134,0,0.10);
+      --green:#198038;--green-pale:rgba(25,128,56,0.08);
+      --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+      --purple:#6929c4;--teal:#007d79;
+      --text-0:#161616;--text-1:#393939;--text-2:#525252;
+      --border:#e0e0e0;--border-b:#0f62fe;
+      --radius:0px;--radius-lg:2px;--shadow:0 1px 3px rgba(0,0,0,0.1);
+      --transition:0.15s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;overflow-x:hidden;}
+    a{color:var(--blue);text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--bg-0);}
+    ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#ffffff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:white;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .nav-links{display:flex;gap:4px;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--radius);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;}
+    .btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--border-b);}
+    .btn-ghost:hover{background:var(--blue-pale);}
+    .btn-primary{background:var(--blue);color:#fff;}
+    .btn-primary:hover{background:var(--blue-l);}
+    .btn-sm{padding:5px 12px;font-size:11px;}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+    .badge-live{background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+    /* LAYOUT */
+    .page{padding-top:48px;display:flex;flex-direction:column;min-height:100vh;}
+
+    /* HERO */
+    .hero{background:var(--bg-1);border-bottom:1px solid var(--border);padding:1.25rem 2rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+    .hero-brand{display:flex;align-items:center;gap:14px;}
+    .hero-icon{width:52px;height:52px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:#fff;font-size:22px;}
+    .hero-title{font-size:21px;font-weight:700;}
+    .hero-sub{font-size:11px;color:var(--text-2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+    .hero-div{width:1px;height:48px;background:var(--border);}
+    .hero-kpis{display:flex;gap:2rem;flex:1;flex-wrap:wrap;}
+    .hero-kpi{display:flex;flex-direction:column;}
+    .hero-kpi-val{font-size:22px;font-weight:700;line-height:1;}
+    .hero-kpi-lbl{font-size:10px;color:var(--text-2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-top:3px;}
+    .hero-kpi-delta{font-size:11px;font-weight:600;margin-top:2px;}
+    .d-green{color:var(--green);}
+    .d-red{color:var(--red);}
+    .d-gold{color:var(--gold);}
+    .hero-actions{display:flex;gap:8px;align-items:center;margin-left:auto;}
+
+    /* PERIOD TOGGLE */
+    .period-toggle{display:flex;border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+    .pt-btn{padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;background:#fff;color:var(--text-2);border:none;font-family:inherit;transition:var(--transition);}
+    .pt-btn.active{background:var(--blue);color:#fff;}
+
+    /* TAB BAR */
+    .tab-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;gap:0;align-items:flex-end;}
+    .tab-item{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;}
+    .tab-item:hover{color:var(--text-0);background:var(--bg-1);}
+    .tab-item.active{color:var(--blue);border-bottom-color:var(--blue);}
+    .tab-badge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;margin-left:6px;background:var(--blue-pale);color:var(--blue);}
+
+    /* MAIN */
+    .main-wrap{display:flex;flex:1;}
+    .content-area{flex:1;padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1.25rem;}
+    .sidebar{width:224px;border-left:1px solid var(--border);background:var(--bg-1);padding:1.25rem;flex-shrink:0;overflow-y:auto;}
+
+    /* TAB PANELS */
+    .tab-panel{display:none;}
+    .tab-panel.active{display:flex;flex-direction:column;gap:1.25rem;}
+
+    /* KPI PANELS */
+    .kpi-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .kpi-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);}
+    .kpi-ph{padding:13px 16px 11px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
+    .panel-tag{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:10px;}
+    .tag-green{background:var(--green-pale);color:var(--green);}
+    .tag-red{background:var(--red-pale);color:var(--red);}
+    .tag-gold{background:var(--gold-pale);color:var(--gold);}
+    .tag-blue{background:var(--blue-pale);color:var(--blue);}
+    .kpi-pb{padding:14px 16px;}
+    .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .kpi-box{display:flex;flex-direction:column;gap:3px;}
+    .kpi-lbl{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .kpi-val{font-size:24px;font-weight:700;line-height:1;color:var(--text-0);}
+    .kpi-val.red{color:var(--red);}
+    .kpi-val.blue{color:var(--blue);}
+    .kpi-val.green{color:var(--green);}
+    .kpi-val.gold{color:var(--gold);}
+    .kpi-trend{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:2px;}
+    .kpi-trend.up{color:var(--green);}
+    .kpi-trend.dn{color:var(--red);}
+    .kpi-trend.fl{color:var(--text-2);}
+    .kdiv{height:1px;background:var(--border);margin:10px 0;}
+
+    /* BULLET CHART */
+    .bullet-wrap{margin-top:4px;}
+    .bullet-lbl-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:3px;}
+    .bullet-track{height:11px;background:var(--bg-2);border-radius:2px;position:relative;overflow:visible;}
+    .bullet-fill{height:100%;border-radius:2px;}
+    .bullet-pin{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text-0);}
+    .bullet-legend{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap;}
+    .bl-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text-2);}
+    .bl-dot{width:8px;height:8px;border-radius:1px;}
+    .bl-line{width:12px;height:2px;background:var(--text-0);}
+
+    /* METRIC CARDS */
+    .metric-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+    .metric-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;}
+    .metric-name{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .metric-val{font-size:15px;font-weight:700;color:var(--text-0);}
+    .metric-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;}
+    .mb-g{background:var(--green-pale);color:var(--green);}
+    .mb-r{background:var(--red-pale);color:var(--red);}
+    .mb-b{background:var(--blue-pale);color:var(--blue);}
+    .mb-gold{background:var(--gold-pale);color:var(--gold);}
+
+    /* CHART CARDS */
+    .grid-2{display:grid;grid-template-columns:1.55fr 1fr;gap:1rem;}
+    .grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .cc-head{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .cc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+    .cc-body{padding:16px;}
+
+    /* TRAFFIC LIGHT SCORECARD */
+    .scorecard{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);}
+    .sc-head{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
+    .sc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;}
+    .sc-item{padding:16px 14px;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:flex-start;gap:6px;}
+    .sc-item:last-child{border-right:none;}
+    .sc-light{width:12px;height:12px;border-radius:50%;}
+    .sc-light.g{background:var(--green);box-shadow:0 0 6px rgba(25,128,56,0.4);}
+    .sc-light.y{background:#f1c21b;box-shadow:0 0 6px rgba(241,194,27,0.4);}
+    .sc-light.r{background:var(--red);box-shadow:0 0 6px rgba(218,30,40,0.4);}
+    .sc-metric{font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .sc-val{font-size:20px;font-weight:700;line-height:1;}
+    .sc-vs{font-size:10px;color:var(--text-2);}
+    .sc-delta{font-size:11px;font-weight:700;}
+
+    /* WATERFALL / MARGIN WALK */
+    .mwalk{padding:4px 0;}
+    .mw-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+    .mw-lbl{width:110px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;}
+    .mw-bar-wrap{flex:1;height:20px;position:relative;}
+    .mw-bar{height:100%;border-radius:1px;display:flex;align-items:center;padding:0 6px;}
+    .mw-bar-val{font-size:10px;font-weight:700;color:#fff;white-space:nowrap;}
+    .mw-spacer{background:transparent;}
+    .mw-total{background:var(--blue);}
+    .mw-up{background:var(--green);}
+    .mw-dn{background:var(--red);}
+    .mw-val{font-size:11px;font-weight:600;margin-left:6px;white-space:nowrap;}
+
+    /* HORIZONTAL BAR CHART */
+    .hbar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+    .hbar-lbl{width:90px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;}
+    .hbar-track{flex:1;height:12px;background:var(--bg-2);border-radius:2px;position:relative;}
+    .hbar-fill{height:100%;border-radius:2px;}
+    .hbar-val{width:52px;font-size:11px;font-weight:700;color:var(--text-0);flex-shrink:0;}
+
+    /* QUARTERLY TREND BARS */
+    .qbar-wrap{display:flex;align-items:flex-end;gap:6px;height:100px;padding:0 4px;}
+    .qbar-group{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+    .qbar-bars{display:flex;align-items:flex-end;gap:2px;height:80px;}
+    .qbar{width:22px;border-radius:2px 2px 0 0;position:relative;cursor:default;}
+    .qbar-lbl{font-size:9px;color:var(--text-2);font-weight:600;}
+    .qbar-val{font-size:9px;font-weight:700;color:var(--text-0);}
+
+    /* CUMULATIVE VALUE CHART */
+    .cum-bars{display:flex;align-items:flex-end;gap:5px;height:90px;padding:0 4px;}
+    .cum-bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+    .cum-bar{width:100%;border-radius:1px 1px 0 0;}
+    .cum-lbl{font-size:9px;color:var(--text-2);}
+    .cum-val{font-size:9px;font-weight:700;color:var(--text-0);}
+
+    /* MOVERS TABLE */
+    .movers-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .movers-table{width:100%;border-collapse:collapse;font-size:12px;}
+    .movers-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);padding:6px 8px;border-bottom:2px solid var(--border);text-align:left;}
+    .movers-table td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .movers-table tr:last-child td{border-bottom:none;}
+    .mover-name{font-weight:600;}
+    .delta-pill{display:inline-flex;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;}
+    .dp-g{background:var(--green-pale);color:var(--green);}
+    .dp-r{background:var(--red-pale);color:var(--red);}
+
+    /* RATIOS ROW */
+    .ratio-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .ratio-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column;gap:6px;}
+    .ratio-lbl{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;}
+    .ratio-val{font-size:28px;font-weight:700;line-height:1;}
+    .ratio-bench{font-size:10px;color:var(--text-2);}
+    .ratio-bar-wrap{height:6px;background:var(--bg-2);border-radius:3px;margin-top:4px;}
+    .ratio-bar{height:100%;border-radius:3px;}
+
+    /* CASH FLOW WATERFALL */
+    .cf-rows{display:flex;flex-direction:column;gap:5px;padding:4px 0;}
+    .cf-row{display:flex;align-items:center;gap:8px;}
+    .cf-lbl{width:130px;font-size:11px;color:var(--text-1);flex-shrink:0;}
+    .cf-bar-wrap{flex:1;height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .cf-bar{height:100%;border-radius:2px;}
+    .cf-val{width:60px;font-size:11px;font-weight:700;text-align:right;flex-shrink:0;}
+
+    /* BU VARIANCE TABLE */
+    .bu-table{width:100%;border-collapse:collapse;font-size:12px;}
+    .bu-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-2);padding:7px 10px;border-bottom:2px solid var(--border);text-align:right;}
+    .bu-table th:first-child{text-align:left;}
+    .bu-table td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right;vertical-align:middle;}
+    .bu-table td:first-child{text-align:left;font-weight:600;}
+    .bu-table tr:last-child td{border-bottom:none;font-weight:700;background:var(--bg-1);}
+    .var-pos{color:var(--green);font-weight:700;}
+    .var-neg{color:var(--red);font-weight:700;}
+    .progress-mini{width:60px;height:6px;background:var(--bg-2);border-radius:3px;display:inline-block;vertical-align:middle;margin-left:4px;}
+    .pm-fill{height:100%;border-radius:3px;}
+
+    /* AI BANNER */
+    .ai-banner{background:linear-gradient(135deg,#edf5ff 0%,#d0e2ff 100%);border:1px solid #a6c8ff;border-radius:var(--radius-lg);padding:14px 20px;display:flex;align-items:center;gap:16px;}
+    .ai-banner-icon{font-size:24px;}
+    .ai-banner-text h3{font-size:14px;font-weight:700;color:var(--blue-l);}
+    .ai-banner-text p{font-size:12px;color:var(--text-1);margin-top:2px;}
+    .ai-agent-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .ai-card{background:#fff;border:1px solid #a6c8ff;border-radius:var(--radius-lg);padding:14px;}
+    .ai-card-icon{font-size:20px;margin-bottom:8px;}
+    .ai-card-title{font-size:12px;font-weight:700;color:var(--blue-l);margin-bottom:4px;}
+    .ai-card-desc{font-size:11px;color:var(--text-2);line-height:1.4;}
+    .ai-card-impact{margin-top:8px;font-size:11px;font-weight:700;color:var(--green);}
+
+    /* SIDEBAR */
+    .sb-section{margin-bottom:1.25rem;}
+    .sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-2);margin-bottom:8px;}
+    .sb-select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:var(--radius-lg);background:#fff;font-family:inherit;font-size:12px;color:var(--text-0);cursor:pointer;}
+    .chip-group{display:flex;flex-wrap:wrap;gap:5px;}
+    .chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:var(--transition);}
+    .chip.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .sb-divider{height:1px;background:var(--border);margin:1rem 0;}
+    .benchmark-card{background:#fff;border:1px solid var(--border-b);border-radius:var(--radius-lg);padding:12px;}
+    .bm-title{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;}
+    .bm-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .bm-metric{font-size:10px;color:var(--text-2);}
+    .bm-val{font-size:11px;font-weight:700;color:var(--text-0);}
+
+    /* SECTION LABELS */
+    .section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-2);padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+    /* TREND SPARKLINE */
+    .sparkline{display:flex;align-items:flex-end;gap:2px;height:28px;}
+    .sp-bar{flex:1;border-radius:1px 1px 0 0;min-width:4px;}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Agentic AI Value Platform</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <a href="procurement.html" class="btn btn-ghost btn-sm">Procurement</a>
+    <a href="AR.html" class="btn btn-ghost btn-sm">Accounts Receivable</a>
+    <a href="assess.html" class="btn btn-ghost btn-sm">AI Assessment</a>
+    <span class="badge badge-live">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-brand">
+      <div class="hero-icon">💼</div>
+      <div>
+        <div class="hero-title">CFO Executive Dashboard</div>
+        <div class="hero-sub">Finance Performance · FY2025 YTD Q3</div>
+      </div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$2.84B</div>
+        <div class="hero-kpi-lbl">Revenue YTD</div>
+        <div class="hero-kpi-delta d-gold">▼ 2.4% vs Budget</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">42.3%</div>
+        <div class="hero-kpi-lbl">Gross Margin</div>
+        <div class="hero-kpi-delta d-gold">▼ 170bps vs Target</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$612M</div>
+        <div class="hero-kpi-lbl">EBITDA</div>
+        <div class="hero-kpi-delta d-gold">▼ 3.5% vs Budget</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$284M</div>
+        <div class="hero-kpi-lbl">Net Income</div>
+        <div class="hero-kpi-delta d-green">▲ 8.8% vs Prior Year</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$245M</div>
+        <div class="hero-kpi-lbl">Free Cash Flow</div>
+        <div class="hero-kpi-delta d-green">▲ 12.1% vs Prior Year</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <div class="period-toggle">
+        <button class="pt-btn" onclick="setPeriod('QTD',this)">QTD</button>
+        <button class="pt-btn active" onclick="setPeriod('YTD',this)">YTD</button>
+        <button class="pt-btn" onclick="setPeriod('LTM',this)">LTM</button>
+      </div>
+      <button class="btn btn-ghost btn-sm">↓ Export</button>
+      <button class="btn btn-primary btn-sm">⟳ Refresh</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('summary',this)">Executive Summary</div>
+    <div class="tab-item" onclick="switchTab('pl',this)">P&amp;L &amp; Margins</div>
+    <div class="tab-item" onclick="switchTab('cash',this)">Cash &amp; Working Capital</div>
+    <div class="tab-item" onclick="switchTab('forecast',this)">Forecast &amp; Outlook<span class="tab-badge">AI</span></div>
+  </div>
+
+  <div class="main-wrap">
+    <div class="content-area">
+
+      <!-- ═══════════════════════════════════════════ TAB 1: EXECUTIVE SUMMARY -->
+      <div class="tab-panel active" id="tab-summary">
+
+        <!-- Traffic Light Scorecard -->
+        <div class="scorecard">
+          <div class="sc-head">
+            <span>Financial Health Scorecard — FY2025 YTD Q3</span>
+            <span style="font-size:11px;font-weight:400;color:var(--text-2)">Last refreshed: Today 06:00 UTC · Data sources: SAP S/4HANA ✓ · Oracle EPM ✓ · Treasury ✓</span>
+          </div>
+          <div class="sc-grid">
+            <div class="sc-item">
+              <div class="sc-light g"></div>
+              <div class="sc-metric">Revenue</div>
+              <div class="sc-val">$2.84B</div>
+              <div class="sc-vs">Budget $2.91B</div>
+              <div class="sc-delta d-gold">▼ 2.4%</div>
+            </div>
+            <div class="sc-item">
+              <div class="sc-light y"></div>
+              <div class="sc-metric">Gross Margin</div>
+              <div class="sc-val">42.3%</div>
+              <div class="sc-vs">Target 44.0%</div>
+              <div class="sc-delta d-gold">▼ 170bps</div>
+            </div>
+            <div class="sc-item">
+              <div class="sc-light y"></div>
+              <div class="sc-metric">EBITDA</div>
+              <div class="sc-val">$612M</div>
+              <div class="sc-vs">Budget $634M</div>
+              <div class="sc-delta d-gold">▼ 3.5%</div>
+            </div>
+            <div class="sc-item">
+              <div class="sc-light g"></div>
+              <div class="sc-metric">Net Income</div>
+              <div class="sc-val">$284M</div>
+              <div class="sc-vs">PY $261M</div>
+              <div class="sc-delta d-green">▲ 8.8%</div>
+            </div>
+            <div class="sc-item">
+              <div class="sc-light r"></div>
+              <div class="sc-metric">Cash Conv. Cycle</div>
+              <div class="sc-val">72.8d</div>
+              <div class="sc-vs">Target 48d</div>
+              <div class="sc-delta d-red">▲ 24.8d over</div>
+            </div>
+            <div class="sc-item">
+              <div class="sc-light g"></div>
+              <div class="sc-metric">Free Cash Flow</div>
+              <div class="sc-val">$245M</div>
+              <div class="sc-vs">Target $220M</div>
+              <div class="sc-delta d-green">▲ 11.4%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Movers + Revenue by BU -->
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="cc-head">
+              <span class="cc-title">Revenue by Business Unit — Actual vs Budget</span>
+              <span style="font-size:10px;color:var(--text-2)">YTD Q3</span>
+            </div>
+            <div class="cc-body">
+              <div style="margin-bottom:10px;">
+                <div class="hbar-row">
+                  <div class="hbar-lbl">MDT Americas</div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill" style="width:87%;background:var(--green);"></div>
+                    <div style="position:absolute;top:0;bottom:0;left:91%;width:2px;background:var(--text-2);opacity:0.5;"></div>
+                  </div>
+                  <div class="hbar-val">$1,084M</div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-lbl">MDT EMEA</div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill" style="width:72%;background:var(--gold);"></div>
+                    <div style="position:absolute;top:0;bottom:0;left:80%;width:2px;background:var(--text-2);opacity:0.5;"></div>
+                  </div>
+                  <div class="hbar-val">$824M</div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-lbl">MDT APAC</div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill" style="width:61%;background:var(--blue);"></div>
+                    <div style="position:absolute;top:0;bottom:0;left:65%;width:2px;background:var(--text-2);opacity:0.5;"></div>
+                  </div>
+                  <div class="hbar-val">$612M</div>
+                </div>
+                <div class="hbar-row">
+                  <div class="hbar-lbl">MDT Emerging</div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill" style="width:32%;background:var(--red);"></div>
+                    <div style="position:absolute;top:0;bottom:0;left:42%;width:2px;background:var(--text-2);opacity:0.5;"></div>
+                  </div>
+                  <div class="hbar-val">$318M</div>
+                </div>
+              </div>
+              <div class="bullet-legend">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>On/above budget</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--gold)"></div>Within 10% of budget</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--red)"></div>Below budget</div>
+                <div class="bl-item"><div class="bl-line"></div>Budget pin</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="cc-head"><span class="cc-title">Top &amp; Bottom Movers — Gross Margin %</span></div>
+            <div class="cc-body">
+              <div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">▲ Top Performers</div>
+              <table class="movers-table">
+                <thead><tr><th>Business Unit</th><th>GM%</th><th>Δ vs PY</th></tr></thead>
+                <tbody>
+                  <tr><td class="mover-name">MDT Americas — Services</td><td>51.2%</td><td><span class="delta-pill dp-g">+4.1pp</span></td></tr>
+                  <tr><td class="mover-name">MDT APAC — Software</td><td>48.7%</td><td><span class="delta-pill dp-g">+3.2pp</span></td></tr>
+                  <tr><td class="mover-name">MDT EMEA — Enterprise</td><td>46.3%</td><td><span class="delta-pill dp-g">+2.8pp</span></td></tr>
+                </tbody>
+              </table>
+              <div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 6px;">▼ Bottom Performers</div>
+              <table class="movers-table">
+                <thead><tr><th>Business Unit</th><th>GM%</th><th>Δ vs PY</th></tr></thead>
+                <tbody>
+                  <tr><td class="mover-name">MDT Emerging — Hardware</td><td>28.4%</td><td><span class="delta-pill dp-r">−5.3pp</span></td></tr>
+                  <tr><td class="mover-name">MDT Americas — Mfg</td><td>31.1%</td><td><span class="delta-pill dp-r">−2.6pp</span></td></tr>
+                  <tr><td class="mover-name">MDT EMEA — Distribution</td><td>33.8%</td><td><span class="delta-pill dp-r">−1.9pp</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quarterly Trend Bars -->
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="cc-head">
+              <span class="cc-title">Quarterly Revenue — Actual vs Forecast</span>
+              <span style="font-size:10px;color:var(--text-2)">FY2025 · $M</span>
+            </div>
+            <div class="cc-body">
+              <div class="qbar-wrap" style="height:120px;">
+                <div class="qbar-group">
+                  <div class="qbar-val">$698M</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:75px;background:var(--blue);"></div>
+                    <div class="qbar" style="height:72px;background:var(--bg-2);border:1px dashed var(--border-b);"></div>
+                  </div>
+                  <div class="qbar-lbl">Q1</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val">$714M</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:78px;background:var(--blue);"></div>
+                    <div class="qbar" style="height:80px;background:var(--bg-2);border:1px dashed var(--border-b);"></div>
+                  </div>
+                  <div class="qbar-lbl">Q2</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val">$721M</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:80px;background:var(--blue);"></div>
+                    <div class="qbar" style="height:82px;background:var(--bg-2);border:1px dashed var(--border-b);"></div>
+                  </div>
+                  <div class="qbar-lbl">Q3</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val" style="color:var(--text-2)">$748M</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:58px;background:var(--bg-2);border:1px dashed var(--border);opacity:0.6;"></div>
+                    <div class="qbar" style="height:85px;background:var(--bg-2);border:1px dashed var(--border-b);"></div>
+                  </div>
+                  <div class="qbar-lbl" style="color:var(--text-2)">Q4F</div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:8px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--blue)"></div>Actual</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--bg-2);border:1px dashed var(--border-b)"></div>Forecast/Budget</div>
+                <div class="bl-item" style="color:var(--text-2)">Q4 = Forecast only</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="cc-head">
+              <span class="cc-title">Gross Margin % — Quarterly Trend</span>
+              <span style="font-size:10px;color:var(--text-2)">vs Target 44.0%</span>
+            </div>
+            <div class="cc-body">
+              <div class="qbar-wrap" style="height:120px;gap:14px;">
+                <div class="qbar-group">
+                  <div class="qbar-val">41.8%</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:70px;background:var(--gold);width:36px;"></div>
+                  </div>
+                  <div class="qbar-lbl">Q1</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val">42.1%</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:73px;background:var(--gold);width:36px;"></div>
+                  </div>
+                  <div class="qbar-lbl">Q2</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val">42.9%</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:76px;background:var(--green);width:36px;"></div>
+                  </div>
+                  <div class="qbar-lbl">Q3</div>
+                </div>
+                <div class="qbar-group">
+                  <div class="qbar-val" style="color:var(--text-2)">43.2%</div>
+                  <div class="qbar-bars">
+                    <div class="qbar" style="height:78px;background:var(--bg-2);border:1px dashed var(--border-b);width:36px;"></div>
+                  </div>
+                  <div class="qbar-lbl" style="color:var(--text-2)">Q4F</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--text-2)">
+                <div style="flex:1;height:1px;background:var(--red);opacity:0.5;"></div>
+                <span style="color:var(--red);font-weight:700;">Target 44.0%</span>
+                <div style="flex:1;height:1px;background:var(--red);opacity:0.5;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-summary -->
+
+      <!-- ═══════════════════════════════════════════ TAB 2: P&L & MARGINS -->
+      <div class="tab-panel" id="tab-pl">
+
+        <div class="kpi-panels">
+          <!-- Revenue & Growth -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Revenue &amp; Growth<span class="panel-tag tag-gold">▼ 2.4% vs Budget</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Revenue YTD</div>
+                  <div class="kpi-val gold">$2.84B</div>
+                  <div class="kpi-trend dn">▼ $70M vs Budget</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">YoY Growth</div>
+                  <div class="kpi-val green">+6.4%</div>
+                  <div class="kpi-trend up">▲ $171M vs PY</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">Revenue vs Budget (by segment)</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>Products</span><span>$1.48B / $1.54B</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:96%;background:var(--gold);"></div>
+                  <div class="bullet-pin" style="left:100%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>Services</span><span>$0.96B / $0.92B</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:100%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:96%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>Software/IP</span><span>$0.40B / $0.45B</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:89%;background:var(--red);"></div>
+                  <div class="bullet-pin" style="left:100%;"></div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:8px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>Above budget</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--gold)"></div>Near budget</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--red)"></div>Below budget</div>
+                <div class="bl-item"><div class="bl-line"></div>Budget</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gross Margin -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Gross Margin<span class="panel-tag tag-gold">▼ 170bps vs Target</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">GM % YTD</div>
+                  <div class="kpi-val gold">42.3%</div>
+                  <div class="kpi-trend dn">▼ 170bps vs 44.0%</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">GM $ YTD</div>
+                  <div class="kpi-val">$1.20B</div>
+                  <div class="kpi-trend up">▲ +120bps vs PY</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">Gross Margin % — by Segment</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>Services</span><span>51.2%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:92%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:89%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>Software/IP</span><span>48.7%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:88%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:94%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>Products</span><span>34.1%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:61%;background:var(--red);"></div>
+                  <div class="bullet-pin" style="left:73%;"></div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:8px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>Above target</div>
+                <div class="bl-item"><div class="bl-dot" style="background:var(--red)"></div>Below target</div>
+                <div class="bl-item"><div class="bl-line"></div>Best-in-class</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EBITDA & Net Income -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">EBITDA &amp; Net Income<span class="panel-tag tag-green">▲ 8.8% vs PY</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">EBITDA</div>
+                  <div class="kpi-val gold">$612M</div>
+                  <div class="kpi-trend dn">▼ $22M vs Budget</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">EBITDA Margin</div>
+                  <div class="kpi-val">21.5%</div>
+                  <div class="kpi-trend fl">→ Target 22.0%</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Net Income</div>
+                  <div class="kpi-val green">$284M</div>
+                  <div class="kpi-trend up">▲ vs PY $261M</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Net Margin</div>
+                  <div class="kpi-val">10.0%</div>
+                  <div class="kpi-trend up">▲ 0.9pp vs PY</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">EBITDA vs Budget</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>Actual $612M</span><span>Budget $634M</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:90%;background:var(--gold);"></div>
+                  <div class="bullet-pin" style="left:93%;"></div>
+                  <div class="bullet-pin" style="left:100%;background:var(--text-2);"></div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:8px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--gold)"></div>Actual</div>
+                <div class="bl-item"><div class="bl-line"></div>Budget</div>
+                <div class="bl-item"><div class="bl-line" style="background:var(--text-2)"></div>Best-in-class</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Margin Walk + Cost Breakdown -->
+        <div class="grid-2">
+          <div class="chart-card">
+            <div class="cc-head">
+              <span class="cc-title">Quarterly Gross Margin Walk — FY2025 (bps)</span>
+              <span style="font-size:10px;color:var(--text-2)">Q1 → Q3 bridge analysis</span>
+            </div>
+            <div class="cc-body">
+              <div class="mwalk">
+                <div class="mw-row">
+                  <div class="mw-lbl">Q1 GM%</div>
+                  <div class="mw-bar-wrap">
+                    <div class="mw-bar mw-total" style="width:62%;"><span class="mw-bar-val">41.8%</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--blue);font-weight:700;">41.8%</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">+ Price/Mix</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:62%;width:4%;height:20px;background:var(--green);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:10px;font-weight:700;color:#fff;">+30bps</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--green);">+30bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">+ Cost Savings</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:62%;width:3%;height:20px;background:var(--green);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:10px;font-weight:700;color:#fff;">+20bps</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--green);">+20bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">− Raw Material</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:62%;width:2%;height:20px;background:var(--red);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:9px;font-weight:700;color:#fff;">−15</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--red);">−15bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">Q2 GM%</div>
+                  <div class="mw-bar-wrap">
+                    <div class="mw-bar mw-total" style="width:63%;"><span class="mw-bar-val">42.1%</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--blue);font-weight:700;">42.1%</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">+ Volume Leverage</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:63%;width:5%;height:20px;background:var(--green);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:10px;font-weight:700;color:#fff;">+50bps</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--green);">+50bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">+ Procurement</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:63%;width:3%;height:20px;background:var(--green);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:9px;font-weight:700;color:#fff;">+30</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--green);">+30bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl">− FX Headwind</div>
+                  <div class="mw-bar-wrap">
+                    <div style="margin-left:63%;width:2%;height:20px;background:var(--red);border-radius:1px;display:flex;align-items:center;padding:0 4px;"><span style="font-size:9px;font-weight:700;color:#fff;">−20</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--red);">−20bps</div>
+                </div>
+                <div class="mw-row">
+                  <div class="mw-lbl" style="font-weight:700;">Q3 GM%</div>
+                  <div class="mw-bar-wrap">
+                    <div class="mw-bar mw-total" style="width:64.5%;"><span class="mw-bar-val" style="font-size:11px;font-weight:700;">42.9%</span></div>
+                  </div>
+                  <div class="mw-val" style="color:var(--blue);font-weight:700;font-size:13px;">42.9%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="cc-head"><span class="cc-title">Operating Cost Structure — YTD</span></div>
+            <div class="cc-body">
+              <div class="hbar-row">
+                <div class="hbar-lbl">COGS</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:58%;background:var(--blue);"></div></div>
+                <div class="hbar-val">$1.64B</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-lbl">R&amp;D</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:22%;background:var(--purple);"></div></div>
+                <div class="hbar-val">$312M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-lbl">Sales &amp; Mktg</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:18%;background:var(--teal);"></div></div>
+                <div class="hbar-val">$256M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-lbl">G&amp;A</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:10%;background:var(--cyan);"></div></div>
+                <div class="hbar-val">$142M</div>
+              </div>
+              <div class="hbar-row">
+                <div class="hbar-lbl">D&amp;A</div>
+                <div class="hbar-track"><div class="hbar-fill" style="width:8%;background:var(--bg-2);"></div></div>
+                <div class="hbar-val">$114M</div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="metric-row">
+                <div class="metric-card"><div><div class="metric-name">OpEx Ratio</div><div class="metric-val">24.4%</div></div><span class="metric-badge mb-g">▼ 1.1pp</span></div>
+                <div class="metric-card"><div><div class="metric-name">R&amp;D % Rev</div><div class="metric-val">11.0%</div></div><span class="metric-badge mb-b">On Target</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-pl -->
+
+      <!-- ═══════════════════════════════════════════ TAB 3: CASH & WORKING CAPITAL -->
+      <div class="tab-panel" id="tab-cash">
+
+        <div class="kpi-panels">
+          <!-- Cash Position -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Cash Position<span class="panel-tag tag-green">Above Target</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Cash on Hand</div>
+                  <div class="kpi-val green">$892M</div>
+                  <div class="kpi-trend up">▲ $64M vs PY</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Op. Cash Flow</div>
+                  <div class="kpi-val">$398M</div>
+                  <div class="kpi-trend up">▲ 14.2% vs PY</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Free Cash Flow</div>
+                  <div class="kpi-val blue">$245M</div>
+                  <div class="kpi-trend up">▲ 12.1% vs PY</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">CapEx</div>
+                  <div class="kpi-val">$153M</div>
+                  <div class="kpi-trend fl">→ 5.4% of Rev</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">FCF Conversion (Net Income → FCF)</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>86.3%</span><span>Target 80%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:86%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:80%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Working Capital -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Working Capital<span class="panel-tag tag-red">CCC Over Target</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Working Capital</div>
+                  <div class="kpi-val">$1.24B</div>
+                  <div class="kpi-trend fl">→ 43.7% of Rev</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Cash Conv. Cycle</div>
+                  <div class="kpi-val red">72.8d</div>
+                  <div class="kpi-trend dn">▼ Target 48d</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:8px;">CCC Components</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>DSO</span><span>44.2d / Target 38d</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:78%;background:var(--red);"></div>
+                  <div class="bullet-pin" style="left:67%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>DIO</span><span>67.3d / Target 55d</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:86%;background:var(--red);"></div>
+                  <div class="bullet-pin" style="left:70%;"></div>
+                </div>
+              </div>
+              <div class="bullet-wrap" style="margin-top:8px;">
+                <div class="bullet-lbl-row"><span>DPO (↑ is better)</span><span>38.7d / Target 45d</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:46%;background:var(--gold);"></div>
+                  <div class="bullet-pin" style="left:54%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Liquidity Ratios -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Liquidity &amp; Leverage<span class="panel-tag tag-green">Healthy</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Current Ratio</div>
+                  <div class="kpi-val green">2.1x</div>
+                  <div class="kpi-trend up">▲ Target ≥ 1.5x</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Quick Ratio</div>
+                  <div class="kpi-val green">1.4x</div>
+                  <div class="kpi-trend up">▲ Target ≥ 1.0x</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Debt / Equity</div>
+                  <div class="kpi-val">0.38x</div>
+                  <div class="kpi-trend up">▲ Low leverage</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Net Debt</div>
+                  <div class="kpi-val">$548M</div>
+                  <div class="kpi-trend fl">→ 0.9x EBITDA</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">Debt Capacity Utilization</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>Total Debt $1.44B</span><span>Facility $2.5B</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:57%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:70%;"></div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:8px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>Used $1.44B (57%)</div>
+                <div class="bl-item"><div class="bl-line"></div>Covenant limit (70%)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Liquidity Ratio Cards -->
+        <div class="ratio-row">
+          <div class="ratio-card">
+            <div class="ratio-lbl">Days Sales Outstanding</div>
+            <div class="ratio-val" style="color:var(--red);">44.2d</div>
+            <div class="ratio-bench">Target: 38d · IBM C0: 32d</div>
+            <div class="ratio-bar-wrap"><div class="ratio-bar" style="width:78%;background:var(--red);"></div></div>
+          </div>
+          <div class="ratio-card">
+            <div class="ratio-lbl">Days Inventory Outstanding</div>
+            <div class="ratio-val" style="color:var(--red);">67.3d</div>
+            <div class="ratio-bench">Target: 55d · IBM C0: 48d</div>
+            <div class="ratio-bar-wrap"><div class="ratio-bar" style="width:86%;background:var(--red);"></div></div>
+          </div>
+          <div class="ratio-card">
+            <div class="ratio-lbl">Days Payable Outstanding</div>
+            <div class="ratio-val" style="color:var(--gold);">38.7d</div>
+            <div class="ratio-bench">Target: 45d · IBM C0: 52d</div>
+            <div class="ratio-bar-wrap"><div class="ratio-bar" style="width:46%;background:var(--gold);"></div></div>
+          </div>
+          <div class="ratio-card">
+            <div class="ratio-lbl">Cash Conversion Cycle</div>
+            <div class="ratio-val" style="color:var(--red);">72.8d</div>
+            <div class="ratio-bench">Target: 48d · IBM C0: 28d</div>
+            <div class="ratio-bar-wrap"><div class="ratio-bar" style="width:90%;background:var(--red);"></div></div>
+          </div>
+        </div>
+
+        <!-- Cash Flow Waterfall -->
+        <div class="grid-2b">
+          <div class="chart-card">
+            <div class="cc-head"><span class="cc-title">Cash Flow Bridge — YTD Q3</span><span style="font-size:10px;color:var(--text-2)">$M</span></div>
+            <div class="cc-body">
+              <div class="cf-rows">
+                <div class="cf-row"><div class="cf-lbl" style="font-weight:700;">Net Income</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:72%;background:var(--blue);"></div></div><div class="cf-val" style="color:var(--blue);font-weight:700;">+$284M</div></div>
+                <div class="cf-row"><div class="cf-lbl">+ D&amp;A Add-back</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:29%;background:var(--green);"></div></div><div class="cf-val" style="color:var(--green);">+$114M</div></div>
+                <div class="cf-row"><div class="cf-lbl">+ Working Capital Δ</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:0%;background:transparent;"></div></div><div class="cf-val" style="color:var(--red);">−$42M</div></div>
+                <div class="cf-row"><div class="cf-lbl">+ Other Operating</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:11%;background:var(--green);"></div></div><div class="cf-val" style="color:var(--green);">+$42M</div></div>
+                <div class="cf-row" style="border-top:1px solid var(--border);padding-top:5px;margin-top:2px;"><div class="cf-lbl" style="font-weight:700;">Operating CF</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:100%;background:var(--blue);opacity:0.8;"></div></div><div class="cf-val" style="color:var(--blue);font-weight:700;">+$398M</div></div>
+                <div class="cf-row"><div class="cf-lbl">− CapEx</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:39%;background:var(--red);opacity:0.7;"></div></div><div class="cf-val" style="color:var(--red);">−$153M</div></div>
+                <div class="cf-row" style="border-top:1px solid var(--border);padding-top:5px;margin-top:2px;"><div class="cf-lbl" style="font-weight:700;">Free Cash Flow</div><div class="cf-bar-wrap"><div class="cf-bar" style="width:62%;background:var(--green);"></div></div><div class="cf-val" style="color:var(--green);font-weight:700;">+$245M</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="cc-head"><span class="cc-title">Accounts Payable Aging</span></div>
+            <div class="cc-body">
+              <div class="hbar-row"><div class="hbar-lbl">Current (≤30d)</div><div class="hbar-track"><div class="hbar-fill" style="width:68%;background:var(--green);"></div></div><div class="hbar-val">$312M</div></div>
+              <div class="hbar-row"><div class="hbar-lbl">31–60 days</div><div class="hbar-track"><div class="hbar-fill" style="width:18%;background:var(--gold);"></div></div><div class="hbar-val">$82M</div></div>
+              <div class="hbar-row"><div class="hbar-lbl">61–90 days</div><div class="hbar-track"><div class="hbar-fill" style="width:9%;background:var(--red);opacity:0.7;"></div></div><div class="hbar-val">$41M</div></div>
+              <div class="hbar-row"><div class="hbar-lbl">90+ days</div><div class="hbar-track"><div class="hbar-fill" style="width:5%;background:var(--red);"></div></div><div class="hbar-val">$22M</div></div>
+              <div class="kdiv"></div>
+              <div class="metric-row">
+                <div class="metric-card"><div><div class="metric-name">Total AP</div><div class="metric-val">$457M</div></div><span class="metric-badge mb-b">DPO 38.7d</span></div>
+                <div class="metric-card"><div><div class="metric-name">Overdue %</div><div class="metric-val">14.1%</div></div><span class="metric-badge mb-r">Above 10%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-cash -->
+
+      <!-- ═══════════════════════════════════════════ TAB 4: FORECAST & OUTLOOK -->
+      <div class="tab-panel" id="tab-forecast">
+
+        <div class="ai-banner">
+          <div class="ai-banner-icon">🤖</div>
+          <div class="ai-banner-text">
+            <h3>AI-Powered CFO Forecast Engine</h3>
+            <p>Predictive models running on 36-month historical data · Scenario analysis: Base / Upside / Downside · Confidence interval ±2.1%</p>
+          </div>
+          <span class="badge badge-live" style="margin-left:auto;">● AI Active</span>
+        </div>
+
+        <div class="kpi-panels">
+          <!-- Revenue Forecast -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Revenue Forecast<span class="panel-tag tag-blue">FY2025 Full Year</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">FY2025 Forecast</div>
+                  <div class="kpi-val blue">$3.59B</div>
+                  <div class="kpi-trend dn">▼ $20M vs Budget</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">Q4 Forecast</div>
+                  <div class="kpi-val">$748M</div>
+                  <div class="kpi-trend up">▲ 3.7% vs Q3</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">Scenario Range — FY2025 Revenue</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>Base $3.59B</span><span>Upside $3.74B</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:76%;background:var(--blue);"></div>
+                  <div class="bullet-pin" style="left:80%;"></div>
+                  <div class="bullet-pin" style="left:100%;background:var(--green);"></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:10px;color:var(--red);">Downside scenario: $3.41B (−5.0%)</div>
+            </div>
+          </div>
+
+          <!-- Cost Forecast -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Cost &amp; Margin Forecast<span class="panel-tag tag-green">Improving</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">FY GM% Forecast</div>
+                  <div class="kpi-val green">43.1%</div>
+                  <div class="kpi-trend up">▲ 80bps vs H1</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">FY EBITDA Fcst</div>
+                  <div class="kpi-val">$784M</div>
+                  <div class="kpi-trend up">▲ 21.8% margin</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="metric-row">
+                <div class="metric-card"><div><div class="metric-name">Cost Savings Target</div><div class="metric-val">$124M</div></div><span class="metric-badge mb-g">68% achieved</span></div>
+                <div class="metric-card"><div><div class="metric-name">FX Headwind</div><div class="metric-val">$38M</div></div><span class="metric-badge mb-r">Full year</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capital Allocation -->
+          <div class="kpi-panel">
+            <div class="kpi-ph">Capital Allocation<span class="panel-tag tag-blue">FY2025 Plan</span></div>
+            <div class="kpi-pb">
+              <div class="kpi-row">
+                <div class="kpi-box">
+                  <div class="kpi-lbl">CapEx FY Plan</div>
+                  <div class="kpi-val">$198M</div>
+                  <div class="kpi-trend fl">5.5% of Revenue</div>
+                </div>
+                <div class="kpi-box">
+                  <div class="kpi-lbl">M&amp;A Reserve</div>
+                  <div class="kpi-val blue">$320M</div>
+                  <div class="kpi-trend fl">Board approved</div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <div class="kpi-lbl" style="margin-bottom:6px;">CapEx by Category</div>
+              <div class="hbar-row" style="margin-bottom:5px;"><div style="width:80px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;">Technology</div><div class="hbar-track"><div class="hbar-fill" style="width:46%;background:var(--blue);"></div></div><div class="hbar-val">$91M</div></div>
+              <div class="hbar-row" style="margin-bottom:5px;"><div style="width:80px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;">Facilities</div><div class="hbar-track"><div class="hbar-fill" style="width:32%;background:var(--teal);"></div></div><div class="hbar-val">$63M</div></div>
+              <div class="hbar-row"><div style="width:80px;font-size:11px;color:var(--text-1);flex-shrink:0;text-align:right;">Equipment</div><div class="hbar-track"><div class="hbar-fill" style="width:22%;background:var(--cyan);"></div></div><div class="hbar-val">$44M</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BU Budget vs Actual Table -->
+        <div class="chart-card">
+          <div class="cc-head">
+            <span class="cc-title">Budget vs Actual — Business Unit Variance Analysis</span>
+            <span style="font-size:10px;color:var(--text-2)">YTD Q3 FY2025 · $M</span>
+          </div>
+          <div class="cc-body">
+            <table class="bu-table">
+              <thead>
+                <tr>
+                  <th>Business Unit</th>
+                  <th>Budget Rev</th>
+                  <th>Actual Rev</th>
+                  <th>Rev Var $</th>
+                  <th>Rev Var %</th>
+                  <th>Budget GM%</th>
+                  <th>Actual GM%</th>
+                  <th>GM Var bps</th>
+                  <th>Attainment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MDT Americas</td>
+                  <td>$1,102M</td>
+                  <td>$1,084M</td>
+                  <td class="var-neg">−$18M</td>
+                  <td class="var-neg">−1.6%</td>
+                  <td>44.8%</td>
+                  <td>45.2%</td>
+                  <td class="var-pos">+40bps</td>
+                  <td><span class="progress-mini"><span class="pm-fill" style="width:98%;background:var(--green);display:block;height:100%;border-radius:3px;"></span></span> 98%</td>
+                </tr>
+                <tr>
+                  <td>MDT EMEA</td>
+                  <td>$896M</td>
+                  <td>$824M</td>
+                  <td class="var-neg">−$72M</td>
+                  <td class="var-neg">−8.0%</td>
+                  <td>43.2%</td>
+                  <td>41.8%</td>
+                  <td class="var-neg">−140bps</td>
+                  <td><span class="progress-mini"><span class="pm-fill" style="width:92%;background:var(--gold);display:block;height:100%;border-radius:3px;"></span></span> 92%</td>
+                </tr>
+                <tr>
+                  <td>MDT APAC</td>
+                  <td>$598M</td>
+                  <td>$612M</td>
+                  <td class="var-pos">+$14M</td>
+                  <td class="var-pos">+2.3%</td>
+                  <td>41.5%</td>
+                  <td>42.9%</td>
+                  <td class="var-pos">+140bps</td>
+                  <td><span class="progress-mini"><span class="pm-fill" style="width:100%;background:var(--green);display:block;height:100%;border-radius:3px;"></span></span> 102%</td>
+                </tr>
+                <tr>
+                  <td>MDT Emerging</td>
+                  <td>$414M</td>
+                  <td>$318M</td>
+                  <td class="var-neg">−$96M</td>
+                  <td class="var-neg">−23.2%</td>
+                  <td>38.0%</td>
+                  <td>28.4%</td>
+                  <td class="var-neg">−960bps</td>
+                  <td><span class="progress-mini"><span class="pm-fill" style="width:77%;background:var(--red);display:block;height:100%;border-radius:3px;"></span></span> 77%</td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td>$3,010M</td>
+                  <td>$2,838M</td>
+                  <td class="var-neg">−$172M</td>
+                  <td class="var-neg">−5.7%</td>
+                  <td>43.6%</td>
+                  <td>42.3%</td>
+                  <td class="var-neg">−130bps</td>
+                  <td><span class="progress-mini"><span class="pm-fill" style="width:94%;background:var(--gold);display:block;height:100%;border-radius:3px;"></span></span> 94%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AI Agent Cards -->
+        <div class="ai-agent-cards">
+          <div class="ai-card">
+            <div class="ai-card-icon">📊</div>
+            <div class="ai-card-title">Revenue Forecasting AI</div>
+            <div class="ai-card-desc">ML model predicting quarterly revenue by BU and segment. Flags anomalies vs seasonal baselines. Trained on 12 quarters of actuals.</div>
+            <div class="ai-card-impact">Forecast accuracy: 97.2%</div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-card-icon">💰</div>
+            <div class="ai-card-title">Cash Flow Optimizer</div>
+            <div class="ai-card-desc">AI-driven working capital optimization — recommends payment timing, dynamic discounting, and CCC reduction levers across AP/AR/Inventory.</div>
+            <div class="ai-card-impact">Projected CCC savings: 18 days</div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-card-icon">⚠️</div>
+            <div class="ai-card-title">Risk &amp; Variance Monitor</div>
+            <div class="ai-card-desc">Continuous monitoring of budget vs actual across 200+ cost centers. Auto-escalates variances exceeding ±5% with root cause classification.</div>
+            <div class="ai-card-impact">12 variances flagged this month</div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-card-icon">🎯</div>
+            <div class="ai-card-title">Scenario Planner</div>
+            <div class="ai-card-desc">Generates base / upside / downside scenarios incorporating macro data, FX rates, commodity prices, and demand signals. Auto-updates monthly.</div>
+            <div class="ai-card-impact">3 scenarios · ±$330M range</div>
+          </div>
+        </div>
+
+        <!-- Cumulative AI Value -->
+        <div class="chart-card">
+          <div class="cc-head">
+            <span class="cc-title">Cumulative Finance AI Value Realization — Monthly ($M)</span>
+            <span style="font-size:10px;font-weight:700;color:var(--green)">Total YTD: $18.4M</span>
+          </div>
+          <div class="cc-body">
+            <div class="cum-bars">
+              <div class="cum-bar-col"><div class="cum-val">$0.4M</div><div class="cum-bar" style="height:4px;background:var(--blue);"></div><div class="cum-lbl">Jan</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$1.1M</div><div class="cum-bar" style="height:10px;background:var(--blue);"></div><div class="cum-lbl">Feb</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$2.2M</div><div class="cum-bar" style="height:20px;background:var(--blue);"></div><div class="cum-lbl">Mar</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$3.8M</div><div class="cum-bar" style="height:34px;background:var(--blue);"></div><div class="cum-lbl">Apr</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$5.9M</div><div class="cum-bar" style="height:52px;background:var(--blue);"></div><div class="cum-lbl">May</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$8.4M</div><div class="cum-bar" style="height:66px;background:var(--blue);"></div><div class="cum-lbl">Jun</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$11.2M</div><div class="cum-bar" style="height:76px;background:var(--blue);"></div><div class="cum-lbl">Jul</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$14.6M</div><div class="cum-bar" style="height:84px;background:var(--blue);"></div><div class="cum-lbl">Aug</div></div>
+              <div class="cum-bar-col"><div class="cum-val">$18.4M</div><div class="cum-bar" style="height:90px;background:var(--green);"></div><div class="cum-lbl">Sep</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-forecast -->
+
+    </div><!-- /content-area -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-section">
+        <div class="sb-label">Fiscal Period</div>
+        <select class="sb-select">
+          <option>FY2025 YTD Q3</option>
+          <option>FY2025 Q3</option>
+          <option>FY2025 Q2</option>
+          <option>FY2025 Q1</option>
+          <option>FY2024 Full Year</option>
+        </select>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Business Unit</div>
+        <div class="chip-group">
+          <div class="chip active">All BUs</div>
+          <div class="chip">Americas</div>
+          <div class="chip">EMEA</div>
+          <div class="chip">APAC</div>
+          <div class="chip">Emerging</div>
+        </div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">View By</div>
+        <div class="chip-group">
+          <div class="chip active">Actuals</div>
+          <div class="chip">Budget</div>
+          <div class="chip">Forecast</div>
+          <div class="chip">PY</div>
+        </div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">P&amp;L Segment</div>
+        <select class="sb-select">
+          <option>All Segments</option>
+          <option>Products</option>
+          <option>Services</option>
+          <option>Software / IP</option>
+        </select>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Currency</div>
+        <div class="chip-group">
+          <div class="chip active">USD</div>
+          <div class="chip">EUR</div>
+          <div class="chip">CC</div>
+        </div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="benchmark-card">
+        <div class="bm-title">IBM Client Zero Benchmark</div>
+        <div class="bm-row"><div class="bm-metric">DSO</div><div class="bm-val" style="color:var(--blue);">32d</div></div>
+        <div class="bm-row"><div class="bm-metric">DPO</div><div class="bm-val" style="color:var(--blue);">52d</div></div>
+        <div class="bm-row"><div class="bm-metric">DIO</div><div class="bm-val" style="color:var(--blue);">48d</div></div>
+        <div class="bm-row"><div class="bm-metric">CCC</div><div class="bm-val" style="color:var(--blue);">28d</div></div>
+        <div class="bm-row"><div class="bm-metric">EBITDA Margin</div><div class="bm-val" style="color:var(--blue);">24.5%</div></div>
+        <div class="bm-row"><div class="bm-metric">FCF Conversion</div><div class="bm-val" style="color:var(--blue);">92%</div></div>
+        <div class="bm-row"><div class="bm-metric">Gross Margin</div><div class="bm-val" style="color:var(--blue);">47.2%</div></div>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-section">
+        <div class="sb-label">Data Sources</div>
+        <div style="font-size:10px;color:var(--text-2);line-height:1.6;">
+          <div>✓ SAP S/4HANA</div>
+          <div>✓ Oracle EPM Cloud</div>
+          <div>✓ Treasury System</div>
+          <div>✓ Anaplan Planning</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-wrap -->
+</div><!-- /page -->
+
+<script>
+  function switchTab(id, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    el.classList.add('active');
+  }
+  function setPeriod(val, el) {
+    el.closest('.period-toggle').querySelectorAll('.pt-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', function() {
+      const grp = this.closest('.chip-group');
+      grp.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
