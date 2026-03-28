@@ -335,7 +335,8 @@
     <div class="tab-item active" onclick="switchTab('summary',this)">Executive Summary</div>
     <div class="tab-item" onclick="switchTab('pl',this)">P&amp;L &amp; Margins</div>
     <div class="tab-item" onclick="switchTab('cash',this)">Cash &amp; Working Capital</div>
-    <div class="tab-item" onclick="switchTab('forecast',this)">Forecast &amp; Outlook<span class="tab-badge">AI</span></div>
+    <div class="tab-item" onclick="switchTab('agenticai',this)">With Agentic AI<span class="tab-badge">AI</span></div>
+    <div class="tab-item" onclick="switchTab('forecast',this)">Forecast &amp; Outlook</div>
   </div>
 
   <div class="main-wrap">
@@ -1251,6 +1252,383 @@
         </div>
 
       </div><!-- /tab-forecast -->
+
+      <!-- ═══════════════════════════════════════════ TAB: WITH AGENTIC AI -->
+      <div class="tab-panel" id="tab-agenticai">
+
+        <!-- AI Impact Banner -->
+        <div style="background:linear-gradient(135deg,#001141 0%,#0043ce 60%,#0f62fe 100%);border-radius:var(--radius-lg);padding:20px 24px;display:flex;align-items:center;gap:20px;color:#fff;">
+          <div style="font-size:32px;">🤖</div>
+          <div style="flex:1;">
+            <div style="font-size:16px;font-weight:700;margin-bottom:4px;">Agentic AI Impact on CFO Office — FY2025 YTD Q3</div>
+            <div style="font-size:12px;opacity:0.85;">Projections based on IBM Client Zero deployment benchmarks · 6 AI agents active across Finance · Confidence interval ±3.2%</div>
+          </div>
+          <div style="display:flex;gap:24px;text-align:center;">
+            <div><div style="font-size:22px;font-weight:700;color:#42be65;">$47.2M</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Annual Value</div></div>
+            <div><div style="font-size:22px;font-weight:700;color:#42be65;">8.2 mo</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">Payback Period</div></div>
+            <div><div style="font-size:22px;font-weight:700;color:#42be65;">312%</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.5px;">3-Year ROI</div></div>
+          </div>
+        </div>
+
+        <!-- Before / After KPI Panels -->
+        <div class="kpi-panels">
+
+          <!-- P&L Impact -->
+          <div class="kpi-panel">
+            <div class="kpi-ph" style="background:var(--blue-pale);">P&amp;L Performance<span class="panel-tag tag-blue">AI Impact</span></div>
+            <div class="kpi-pb">
+              <!-- Revenue -->
+              <div style="margin-bottom:12px;">
+                <div class="kpi-lbl" style="margin-bottom:6px;">Revenue Attainment</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">Current State</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--gold);">$2.84B</div>
+                    <div style="font-size:10px;color:var(--red);">▼ 2.4% vs Budget</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;background:var(--green-pale);border-radius:2px;padding:8px;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">With Agentic AI</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--green);">$2.93B</div>
+                    <div style="font-size:10px;color:var(--green);">▲ +0.7% vs Budget</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--green);">+ $90M revenue recovered via AI deal intelligence &amp; pricing optimization</div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- Gross Margin -->
+              <div style="margin-bottom:12px;">
+                <div class="kpi-lbl" style="margin-bottom:6px;">Gross Margin %</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">Current State</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--gold);">42.3%</div>
+                    <div style="font-size:10px;color:var(--red);">▼ 170bps vs target</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;background:var(--green-pale);border-radius:2px;padding:8px;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">With Agentic AI</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--green);">44.8%</div>
+                    <div style="font-size:10px;color:var(--green);">▲ +80bps vs target</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--green);">+ 250bps via cost intelligence, contract compliance &amp; procurement AI</div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- EBITDA -->
+              <div>
+                <div class="kpi-lbl" style="margin-bottom:6px;">EBITDA</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">Current State</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--gold);">$612M</div>
+                    <div style="font-size:10px;color:var(--red);">▼ 3.5% vs Budget</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;background:var(--green-pale);border-radius:2px;padding:8px;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:3px;">With Agentic AI</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--green);">$684M</div>
+                    <div style="font-size:10px;color:var(--green);">▲ +11.8% / 24.0% margin</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--green);">+ $72M via automated cost control &amp; variance elimination</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Working Capital Impact -->
+          <div class="kpi-panel">
+            <div class="kpi-ph" style="background:var(--blue-pale);">Working Capital &amp; Cash<span class="panel-tag tag-blue">AI Impact</span></div>
+            <div class="kpi-pb">
+              <!-- CCC -->
+              <div style="margin-bottom:10px;">
+                <div class="kpi-lbl" style="margin-bottom:4px;">Cash Conversion Cycle</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--red-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">Current</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--red);">72.8d</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--green-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">With AI</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--green);">38.4d</div>
+                  </div>
+                </div>
+                <div style="margin-top:4px;font-size:11px;font-weight:700;color:var(--green);text-align:center;">▼ 34.4 days reduction · Beats IBM C0 target of 48d</div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- DSO -->
+              <div class="metric-row" style="margin-bottom:8px;">
+                <div class="metric-card">
+                  <div><div class="metric-name">DSO</div>
+                  <div style="font-size:13px;font-weight:700;"><span style="color:var(--red);text-decoration:line-through;">44.2d</span> → <span style="color:var(--green);">28.6d</span></div></div>
+                  <span class="metric-badge mb-g">−15.6d</span>
+                </div>
+                <div class="metric-card">
+                  <div><div class="metric-name">DPO</div>
+                  <div style="font-size:13px;font-weight:700;"><span style="color:var(--gold);text-decoration:line-through;">38.7d</span> → <span style="color:var(--green);">51.2d</span></div></div>
+                  <span class="metric-badge mb-g">+12.5d</span>
+                </div>
+              </div>
+              <div class="metric-row" style="margin-bottom:12px;">
+                <div class="metric-card">
+                  <div><div class="metric-name">DIO</div>
+                  <div style="font-size:13px;font-weight:700;"><span style="color:var(--red);text-decoration:line-through;">67.3d</span> → <span style="color:var(--green);">49.8d</span></div></div>
+                  <span class="metric-badge mb-g">−17.5d</span>
+                </div>
+                <div class="metric-card">
+                  <div><div class="metric-name">Free Cash Flow</div>
+                  <div style="font-size:13px;font-weight:700;"><span style="color:var(--text-0);text-decoration:line-through;">$245M</span> → <span style="color:var(--green);">$318M</span></div></div>
+                  <span class="metric-badge mb-g">+$73M</span>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- Bullet chart CCC -->
+              <div class="kpi-lbl" style="margin-bottom:6px;">CCC vs Benchmarks</div>
+              <div class="bullet-wrap">
+                <div class="bullet-lbl-row"><span>With AI: 38.4d</span><span>Current: 72.8d</span></div>
+                <div class="bullet-track" style="height:14px;">
+                  <div class="bullet-fill" style="width:38%;background:var(--green);"></div>
+                  <div class="bullet-pin" style="left:48%;background:var(--blue);"></div>
+                  <div class="bullet-pin" style="left:73%;background:var(--red);"></div>
+                </div>
+              </div>
+              <div class="bullet-legend" style="margin-top:6px;">
+                <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>AI State (38.4d)</div>
+                <div class="bl-item"><div class="bl-line" style="background:var(--blue)"></div>IBM C0 Target (48d)</div>
+                <div class="bl-item"><div class="bl-line" style="background:var(--red)"></div>Current (72.8d)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget Attainment Impact -->
+          <div class="kpi-panel">
+            <div class="kpi-ph" style="background:var(--blue-pale);">Budget Attainment &amp; Forecast<span class="panel-tag tag-blue">AI Impact</span></div>
+            <div class="kpi-pb">
+              <!-- Budget attainment -->
+              <div style="margin-bottom:12px;">
+                <div class="kpi-lbl" style="margin-bottom:6px;">Overall Budget Attainment</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--red-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">Current</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--red);">94%</div>
+                    <div style="font-size:10px;color:var(--red);">−$172M vs budget</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--green-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">With AI</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--green);">101%</div>
+                    <div style="font-size:10px;color:var(--green);">+$30M vs budget</div>
+                  </div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- Forecast accuracy -->
+              <div style="margin-bottom:12px;">
+                <div class="kpi-lbl" style="margin-bottom:4px;">Forecast Accuracy</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:2px;">Current</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--gold);">81.4%</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;background:var(--green-pale);border-radius:2px;padding:8px;">
+                    <div style="font-size:10px;color:var(--text-2);margin-bottom:2px;">With AI</div>
+                    <div style="font-size:20px;font-weight:700;color:var(--green);">97.2%</div>
+                  </div>
+                </div>
+              </div>
+              <div class="kdiv"></div>
+              <!-- Month-end close -->
+              <div>
+                <div class="kpi-lbl" style="margin-bottom:4px;">Month-End Close Cycle</div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--red-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">Current</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--red);">8.4 days</div>
+                  </div>
+                  <div style="font-size:18px;color:var(--text-2);">→</div>
+                  <div style="flex:1;text-align:center;padding:8px;background:var(--green-pale);border-radius:2px;">
+                    <div style="font-size:10px;color:var(--text-2);">With AI</div>
+                    <div style="font-size:22px;font-weight:700;color:var(--green);">2.1 days</div>
+                  </div>
+                </div>
+                <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--green);">75% faster close via automated reconciliations &amp; journal entry AI</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Agents Section -->
+        <div class="section-label">Finance AI Agents — Active Deployment</div>
+        <div class="ai-agent-cards" style="grid-template-columns:repeat(3,1fr);">
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">📈</div>
+            <div class="ai-card-title" style="font-size:13px;">Revenue Intelligence Agent</div>
+            <div class="ai-card-desc">Monitors pipeline health across all BUs in real-time. Flags at-risk deals 6 weeks early, recommends pricing actions, and optimizes discount approval workflows to protect margin. Integrated with CRM &amp; CPQ.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Revenue recovered</span><span style="font-weight:700;color:var(--green);">+$90M YTD</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Deals at-risk flagged early</span><span style="font-weight:700;color:var(--green);">147 deals</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Avg margin improvement</span><span style="font-weight:700;color:var(--green);">+1.8pp</span></div>
+            </div>
+          </div>
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">💎</div>
+            <div class="ai-card-title" style="font-size:13px;">Margin Optimization Agent</div>
+            <div class="ai-card-desc">Continuously analyzes cost drivers across COGS, SG&amp;A, and R&amp;D. Identifies procurement savings opportunities, flags contract non-compliance, and automates cost allocations across 200+ cost centers.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">GM improvement</span><span style="font-weight:700;color:var(--green);">+250bps</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Cost savings identified</span><span style="font-weight:700;color:var(--green);">$38.4M</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Cost centers automated</span><span style="font-weight:700;color:var(--green);">218 / 224</span></div>
+            </div>
+          </div>
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">💧</div>
+            <div class="ai-card-title" style="font-size:13px;">Treasury &amp; Liquidity Agent</div>
+            <div class="ai-card-desc">Optimizes daily cash positioning across 38 bank accounts, automates AP payment timing for maximum DPO, accelerates AR collections for DSO reduction, and manages FX hedging recommendations.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">CCC reduction</span><span style="font-weight:700;color:var(--green);">−34.4 days</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">FCF uplift</span><span style="font-weight:700;color:var(--green);">+$73M YTD</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">FX risk mitigated</span><span style="font-weight:700;color:var(--green);">$24M exposure</span></div>
+            </div>
+          </div>
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">🔐</div>
+            <div class="ai-card-title" style="font-size:13px;">Financial Close Agent</div>
+            <div class="ai-card-desc">Automates journal entry creation, intercompany reconciliation, and variance explanations. Reduces manual effort in close by 78%. Integrates with SAP S/4HANA and Oracle EPM for straight-through processing.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Close cycle reduction</span><span style="font-weight:700;color:var(--green);">8.4d → 2.1d</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Manual effort saved</span><span style="font-weight:700;color:var(--green);">78% reduction</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Auto-reconciled entries</span><span style="font-weight:700;color:var(--green);">94.2%</span></div>
+            </div>
+          </div>
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">🎯</div>
+            <div class="ai-card-title" style="font-size:13px;">Budget &amp; Planning Agent</div>
+            <div class="ai-card-desc">Generates rolling forecasts updated weekly from actuals. Identifies budget variance root causes automatically, pushes alerts to BU finance leads, and runs what-if scenario modeling on demand.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Forecast accuracy</span><span style="font-weight:700;color:var(--green);">81% → 97.2%</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Variances auto-explained</span><span style="font-weight:700;color:var(--green);">91% of flags</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Planning cycle time</span><span style="font-weight:700;color:var(--green);">−62% faster</span></div>
+            </div>
+          </div>
+          <div class="ai-card" style="border-color:#a6c8ff;padding:18px;">
+            <div class="ai-card-icon">🛡️</div>
+            <div class="ai-card-title" style="font-size:13px;">Risk &amp; Compliance Agent</div>
+            <div class="ai-card-desc">Monitors 500+ control points for financial risk, fraud signals, and SOX compliance. Auto-generates audit-ready evidence packages, flags policy exceptions in real time, and tracks remediation status.</div>
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Controls monitored</span><span style="font-weight:700;color:var(--green);">500+ / 24×7</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Audit prep time saved</span><span style="font-weight:700;color:var(--green);">−68%</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;"><span style="color:var(--text-2);">Fraud signals detected</span><span style="font-weight:700;color:var(--green);">$4.2M prevented</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BU Attainment: Before vs After -->
+        <div class="chart-card">
+          <div class="cc-head">
+            <span class="cc-title">Business Unit Attainment — Current State vs With Agentic AI</span>
+            <span style="font-size:10px;color:var(--text-2)">Revenue % of Budget · YTD Q3</span>
+          </div>
+          <div class="cc-body">
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;margin-bottom:8px;">
+              <div></div>
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);text-align:center;">Current State</div>
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--blue);text-align:center;">With Agentic AI</div>
+            </div>
+            <!-- Americas -->
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;text-align:right;padding-right:8px;">MDT Americas</div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:98%;height:100%;background:var(--gold);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--gold);font-weight:700;margin-top:2px;text-align:right;">98% · $1,084M</div>
+              </div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;text-align:right;">103% · $1,135M <span style="color:var(--green)">▲+$51M</span></div>
+              </div>
+            </div>
+            <!-- EMEA -->
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;text-align:right;padding-right:8px;">MDT EMEA</div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:92%;height:100%;background:var(--gold);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--gold);font-weight:700;margin-top:2px;text-align:right;">92% · $824M</div>
+              </div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:99%;height:100%;background:var(--green);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;text-align:right;">99% · $887M <span style="color:var(--green)">▲+$63M</span></div>
+              </div>
+            </div>
+            <!-- APAC -->
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;text-align:right;padding-right:8px;">MDT APAC</div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;text-align:right;">102% · $612M</div>
+              </div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px;text-align:right;">107% · $640M <span style="color:var(--green)">▲+$28M</span></div>
+              </div>
+            </div>
+            <!-- Emerging -->
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;align-items:center;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:600;text-align:right;padding-right:8px;">MDT Emerging</div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:77%;height:100%;background:var(--red);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--red);font-weight:700;margin-top:2px;text-align:right;">77% · $318M</div>
+              </div>
+              <div>
+                <div style="height:16px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:95%;height:100%;background:var(--gold);border-radius:2px;"></div></div>
+                <div style="font-size:10px;color:var(--gold);font-weight:700;margin-top:2px;text-align:right;">95% · $393M <span style="color:var(--green)">▲+$75M</span></div>
+              </div>
+            </div>
+            <!-- Total -->
+            <div style="display:grid;grid-template-columns:130px 1fr 1fr;gap:8px;align-items:center;padding-top:8px;border-top:2px solid var(--border);">
+              <div style="font-size:12px;font-weight:700;text-align:right;padding-right:8px;">Total</div>
+              <div>
+                <div style="height:18px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:94%;height:100%;background:var(--gold);border-radius:2px;"></div></div>
+                <div style="font-size:11px;color:var(--gold);font-weight:700;margin-top:2px;text-align:right;">94% · $2,838M</div>
+              </div>
+              <div>
+                <div style="height:18px;background:var(--bg-2);border-radius:2px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:2px;"></div></div>
+                <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:2px;text-align:right;">101% · $3,055M <span>▲+$217M vs current</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cumulative AI Value Realization -->
+        <div class="chart-card">
+          <div class="cc-head">
+            <span class="cc-title">Cumulative CFO AI Value Realization — Monthly ($M)</span>
+            <span style="font-size:11px;font-weight:700;color:var(--green)">Total YTD: $47.2M · On track for $68M full year</span>
+          </div>
+          <div class="cc-body">
+            <div style="display:flex;align-items:flex-end;gap:5px;height:110px;padding:0 4px;">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$1.2M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:8px;"></div><div style="font-size:9px;color:var(--text-2);">Jan</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$3.4M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:20px;"></div><div style="font-size:9px;color:var(--text-2);">Feb</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$6.8M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:36px;"></div><div style="font-size:9px;color:var(--text-2);">Mar</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$11.2M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:54px;"></div><div style="font-size:9px;color:var(--text-2);">Apr</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$17.4M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:70px;"></div><div style="font-size:9px;color:var(--text-2);">May</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$24.8M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:82px;"></div><div style="font-size:9px;color:var(--text-2);">Jun</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$32.1M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:90px;"></div><div style="font-size:9px;color:var(--text-2);">Jul</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-0);">$39.8M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--blue);height:97px;"></div><div style="font-size:9px;color:var(--text-2);">Aug</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--green);font-size:10px;">$47.2M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--green);height:105px;"></div><div style="font-size:9px;color:var(--text-2);">Sep</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-2);">$53.8M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--bg-2);border:1px dashed var(--border-b);height:90px;"></div><div style="font-size:9px;color:var(--text-2);">Oct</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-2);">$61.2M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--bg-2);border:1px dashed var(--border-b);height:97px;"></div><div style="font-size:9px;color:var(--text-2);">Nov</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;"><div style="font-size:9px;font-weight:700;color:var(--text-2);">$68.0M</div><div style="width:100%;border-radius:1px 1px 0 0;background:var(--bg-2);border:1px dashed var(--border-b);height:103px;"></div><div style="font-size:9px;color:var(--text-2);">Dec</div></div>
+            </div>
+            <div class="bullet-legend" style="margin-top:8px;justify-content:center;">
+              <div class="bl-item"><div class="bl-dot" style="background:var(--blue)"></div>Realized (cumulative)</div>
+              <div class="bl-item"><div class="bl-dot" style="background:var(--green)"></div>Latest actual</div>
+              <div class="bl-item"><div class="bl-dot" style="background:var(--bg-2);border:1px dashed var(--border-b)"></div>Forecast</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-agenticai -->
 
     </div><!-- /content-area -->
 
