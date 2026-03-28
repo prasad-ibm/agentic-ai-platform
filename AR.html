@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Accounts Receivable Executive Dashboard · Agentic AI Value Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-card:#ffffff;
+      --blue:#0f62fe;--blue-l:#0043ce;--blue-pale:#edf5ff;--blue-mid:#4589ff;
+      --cyan:#0072c3;--teal:#007d79;--teal-pale:rgba(0,125,121,0.08);
+      --gold:#b28600;--gold-pale:rgba(178,134,0,0.08);
+      --green:#198038;--green-pale:rgba(25,128,56,0.08);
+      --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+      --orange:#ff6b35;--orange-pale:rgba(255,107,53,0.08);
+      --purple:#6929c4;--purple-pale:rgba(105,41,196,0.08);
+      --text-0:#161616;--text-1:#393939;--text-2:#525252;
+      --border:#e0e0e0;--border-b:#0f62fe;
+      --radius:0px;--radius-lg:2px;--shadow:0 1px 3px rgba(0,0,0,0.1);
+      --transition:0.15s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;overflow-x:hidden;}
+    a{color:var(--blue);text-decoration:none;}
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--bg-0);}
+    ::-webkit-scrollbar-thumb{background:var(--bg-2);border-radius:3px;}
+
+    /* ── NAV ─────────────────────────── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:#fff;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;border-radius:var(--radius);}
+    .btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--border-b);}
+    .btn-ghost:hover{background:var(--blue-pale);}
+    .btn-primary{background:var(--blue);color:#fff;}
+    .btn-primary:hover{background:var(--blue-l);}
+    .btn-sm{padding:5px 12px;font-size:11px;}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+    .badge-live{background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+    /* ── PAGE ────────────────────────── */
+    .page{padding-top:48px;display:flex;flex-direction:column;min-height:100vh;}
+
+    /* ── HERO ─────────────────────────── */
+    .hero{background:var(--bg-1);border-bottom:1px solid var(--border);padding:1.25rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .hero-brand{display:flex;align-items:center;gap:14px;}
+    .hero-icon{width:52px;height:52px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;}
+    .hero-label{font-size:22px;font-weight:700;}
+    .hero-sub{font-size:11px;color:var(--text-2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+    .hero-div{width:1px;height:48px;background:var(--border);}
+    .hero-kpis{display:flex;gap:0;flex:1;flex-wrap:wrap;}
+    .hero-kpi{padding:0 1.5rem;border-right:1px solid var(--border);display:flex;flex-direction:column;}
+    .hero-kpi:last-child{border-right:none;}
+    .hero-kpi-val{font-size:22px;font-weight:700;line-height:1;color:var(--text-0);}
+    .hero-kpi-val.warn{color:var(--red);}
+    .hero-kpi-val.ok{color:var(--green);}
+    .hero-kpi-lbl{font-size:10px;color:var(--text-2);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-top:4px;}
+    .hero-actions{display:flex;gap:8px;margin-left:auto;}
+
+    /* ── TABS ─────────────────────────── */
+    .tab-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;gap:0;align-items:flex-end;}
+    .tab-item{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:6px;}
+    .tab-item:hover{color:var(--text-0);background:var(--bg-1);}
+    .tab-item.active{color:var(--blue);border-bottom-color:var(--blue);}
+    .tab-badge{padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;background:var(--blue-pale);color:var(--blue);}
+    .tab-badge.green{background:var(--green-pale);color:var(--green);}
+    .tab-badge.red{background:var(--red-pale);color:var(--red);}
+
+    /* ── LAYOUT ──────────────────────── */
+    .main-wrap{display:flex;flex:1;}
+    .content-area{flex:1;padding:1.5rem 2rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.25rem;}
+    .filter-sidebar{width:220px;border-left:1px solid var(--border);background:var(--bg-1);padding:1.25rem;overflow-y:auto;flex-shrink:0;}
+
+    /* ── PANELS ──────────────────────── */
+    .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .panel-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .panel-hdr-title{font-size:13px;font-weight:700;color:var(--text-0);}
+    .panel-tag{font-size:9px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:2px 7px;border-radius:10px;}
+    .panel-body{padding:14px 16px;}
+    .kpi2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+    .kbox{display:flex;flex-direction:column;gap:3px;}
+    .kbox-lbl{font-size:10px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .kbox-val{font-size:24px;font-weight:700;line-height:1.1;}
+    .kbox-val.red{color:var(--red);}
+    .kbox-val.blue{color:var(--blue);}
+    .kbox-val.green{color:var(--green);}
+    .kbox-val.teal{color:var(--teal);}
+    .kbox-note{font-size:10px;color:var(--text-2);margin-top:1px;}
+    .kbox-trend{font-size:11px;font-weight:600;margin-top:2px;}
+    .kbox-trend.up{color:var(--green);}
+    .kbox-trend.down{color:var(--red);}
+    .kbox-trend.flat{color:var(--text-2);}
+
+    /* bullet chart */
+    .bullet{margin-top:6px;}
+    .bullet-axis{display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);margin-bottom:3px;}
+    .bullet-track{height:10px;background:var(--bg-2);border-radius:2px;position:relative;}
+    .bullet-fill{height:100%;border-radius:2px;}
+    .bullet-pin{position:absolute;top:-3px;bottom:-3px;width:2px;}
+    .bullet-legend{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap;}
+    .bl{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--text-2);}
+    .bl-sq{width:7px;height:7px;border-radius:1px;}
+    .bl-ln{width:12px;height:2px;}
+
+    .divider{height:1px;background:var(--border);margin:10px 0;}
+
+    /* mini metrics */
+    .metrics2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+    .mc{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:8px 10px;display:flex;justify-content:space-between;align-items:center;}
+    .mc-info{}
+    .mc-name{font-size:9px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.4px;}
+    .mc-val{font-size:15px;font-weight:700;color:var(--text-0);margin-top:1px;}
+    .mc-badge{font-size:9px;font-weight:700;padding:2px 5px;border-radius:8px;}
+    .m-r{background:var(--red-pale);color:var(--red);}
+    .m-g{background:var(--green-pale);color:var(--green);}
+    .m-b{background:var(--blue-pale);color:var(--blue);}
+    .m-o{background:var(--gold-pale);color:var(--gold);}
+    .m-t{background:var(--teal-pale);color:var(--teal);}
+
+    .inv-bar{display:flex;justify-content:center;padding:8px 0 4px;}
+    .btn-inv{background:var(--blue);color:#fff;border:none;padding:7px 24px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;border-radius:var(--radius-lg);letter-spacing:0.3px;transition:var(--transition);}
+    .btn-inv:hover{background:var(--blue-l);}
+
+    /* ── AI BANNER ───────────────────── */
+    .ai-banner{background:linear-gradient(135deg,#0072c3 0%,#0f62fe 100%);color:#fff;border-radius:var(--radius-lg);padding:12px 16px;display:flex;align-items:center;gap:12px;}
+    .ai-banner-text{flex:1;}
+    .ai-banner-title{font-size:12px;font-weight:700;margin-bottom:2px;}
+    .ai-banner-sub{font-size:11px;opacity:.85;}
+    .ai-banner-kpis{display:flex;gap:16px;flex-shrink:0;}
+    .abk{text-align:center;}
+    .abk-val{font-size:16px;font-weight:700;}
+    .abk-lbl{font-size:9px;opacity:.8;text-transform:uppercase;letter-spacing:.5px;}
+
+    /* ── BOTTOM GRID ─────────────────── */
+    .bottom-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:1rem;}
+    .card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .card-hdr{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .card-title{font-size:11px;font-weight:700;color:var(--text-0);text-transform:uppercase;letter-spacing:.5px;}
+    .card-body{padding:14px;}
+
+    /* aging buckets */
+    .aging-bar{display:flex;height:24px;border-radius:2px;overflow:hidden;margin-bottom:8px;}
+    .aging-seg{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;transition:width .5s ease;}
+    .aging-legend{display:flex;gap:10px;flex-wrap:wrap;}
+    .aging-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-2);}
+    .aging-dot{width:10px;height:10px;border-radius:2px;}
+
+    /* hbar */
+    .hbar{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+    .hbar-lbl{width:110px;font-size:10px;color:var(--text-1);text-align:right;flex-shrink:0;}
+    .hbar-track{flex:1;height:14px;background:var(--bg-1);border-radius:2px;overflow:hidden;}
+    .hbar-fill{height:100%;border-radius:2px;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;}
+    .hbar-pct{font-size:9px;font-weight:700;color:#fff;}
+    .hbar-amt{font-size:10px;font-weight:700;color:var(--text-1);margin-left:4px;width:54px;}
+
+    /* ── ACTION VIEW TABLE ───────────── */
+    .av-filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+    .av-select{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:6px 28px 6px 10px;font-family:inherit;font-size:12px;color:var(--text-1);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23525252' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;min-width:160px;}
+    .av-select:focus{outline:none;border-color:var(--blue);}
+    .av-hdr-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;}
+    .av-kpi{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 12px;}
+    .av-kpi-val{font-size:18px;font-weight:700;color:var(--text-0);}
+    .av-kpi-val.warn{color:var(--red);}
+    .av-kpi-lbl{font-size:9px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;}
+    .cust-table{width:100%;border-collapse:collapse;font-size:11px;}
+    .cust-table th{text-align:left;padding:7px 8px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-2);border-bottom:2px solid var(--border);background:var(--bg-1);white-space:nowrap;cursor:pointer;}
+    .cust-table th:hover{color:var(--blue);}
+    .cust-table td{padding:7px 8px;border-bottom:1px solid var(--border);color:var(--text-1);white-space:nowrap;}
+    .cust-table tr:hover td{background:var(--blue-pale);}
+    .cust-name{font-weight:600;color:var(--blue);cursor:pointer;}
+    .cust-name:hover{text-decoration:underline;}
+    .prio-score{display:inline-flex;align-items:center;justify-content:center;width:28px;height:18px;border-radius:2px;font-size:10px;font-weight:700;color:#fff;}
+    .prio-high{background:var(--red);}
+    .prio-med{background:var(--gold);}
+    .prio-low{background:var(--green);}
+    .cu-bar{display:flex;align-items:center;gap:4px;width:80px;}
+    .cu-track{flex:1;height:8px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+    .cu-fill{height:100%;border-radius:2px;}
+    .cu-over{background:var(--red);}
+    .cu-warn{background:var(--gold);}
+    .cu-ok{background:var(--green);}
+    .credit-neg{color:var(--red);font-weight:600;}
+
+    /* ── FILTER SIDEBAR ──────────────── */
+    .fs-section{margin-bottom:1.1rem;}
+    .fs-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;display:block;}
+    .fs-select{width:100%;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:6px 8px;font-family:inherit;font-size:12px;color:var(--text-0);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23525252' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;}
+    .fs-select:focus{outline:none;border-color:var(--blue);}
+    .chips{display:flex;flex-wrap:wrap;gap:4px;}
+    .chip{padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:var(--transition);}
+    .chip.active{background:var(--blue-pale);border-color:var(--blue);color:var(--blue);}
+    .chip:hover{border-color:var(--blue);color:var(--blue);}
+    .date-row{display:flex;gap:4px;}
+    .date-btn{flex:1;padding:4px;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:10px;font-weight:600;background:#fff;color:var(--text-2);cursor:pointer;text-align:center;transition:var(--transition);}
+    .date-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .kpi-mini-box{background:var(--blue);border-radius:var(--radius-lg);padding:10px 12px;margin-top:.75rem;color:#fff;}
+    .kmb-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8;margin-bottom:6px;}
+    .kmb-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.15);}
+    .kmb-row:last-child{border:none;}
+    .kmb-n{font-size:10px;opacity:.9;}
+    .kmb-v{font-size:11px;font-weight:700;}
+
+    /* tab panels */
+    .tab-panel{display:none;}
+    .tab-panel.active{display:contents;}
+
+    /* trend bars */
+    .trend-mini-bars{display:flex;align-items:flex-end;gap:2px;height:40px;margin:8px 0 4px;}
+    .tmb{flex:1;border-radius:2px 2px 0 0;}
+
+    /* AI agents grid */
+    .agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .agent-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;background:var(--bg-1);}
+    .agent-icon{font-size:18px;margin-bottom:5px;}
+    .agent-name{font-size:11px;font-weight:700;color:var(--text-0);margin-bottom:3px;}
+    .agent-desc{font-size:10px;color:var(--text-2);line-height:1.4;}
+    .agent-val{font-size:11px;font-weight:700;color:var(--green);margin-top:6px;}
+
+    @media(max-width:1100px){.panels{grid-template-columns:1fr 1fr;}.bottom-grid{grid-template-columns:1fr;}.av-hdr-kpis{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:768px){.panels{grid-template-columns:1fr;}.main-wrap{flex-direction:column;}.filter-sidebar{width:100%;border-left:none;border-top:1px solid var(--border);}.av-hdr-kpis{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Accounts Receivable · Executive Dashboard</span>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center;">
+    <a href="assess.html" class="btn btn-ghost btn-sm">Assessment</a>
+    <a href="tracker.html" class="btn btn-ghost btn-sm">Deployments</a>
+    <a href="roi.html" class="btn btn-ghost btn-sm">ROI Tracker</a>
+    <a href="procurement.html" class="btn btn-ghost btn-sm">Procurement</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <span class="badge badge-live" style="margin-left:4px;">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-brand">
+      <div class="hero-icon">💰</div>
+      <div>
+        <div class="hero-label">Accounts Receivable</div>
+        <div class="hero-sub">Executive Dashboard · FY 2025</div>
+      </div>
+    </div>
+    <div class="hero-div"></div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">$496.5M</div>
+        <div class="hero-kpi-lbl">Total AR</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val warn">$213.3M</div>
+        <div class="hero-kpi-lbl">Past Due AR</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">2.2K</div>
+        <div class="hero-kpi-lbl">Open Items</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">1.1K</div>
+        <div class="hero-kpi-lbl">Customers</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val warn">49.4d</div>
+        <div class="hero-kpi-lbl">DSO</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val warn">56.6%</div>
+        <div class="hero-kpi-lbl">Collection Effectiveness</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val ok">$14.2M</div>
+        <div class="hero-kpi-lbl">Cash Collected MTD</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-ghost btn-sm">↓ Export</button>
+      <button class="btn btn-primary btn-sm">⚙ Configure</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab-item active" id="tab-action" onclick="switchTab('action')">
+      Action View
+      <span class="tab-badge red">43% Past Due</span>
+    </div>
+    <div class="tab-item" id="tab-current" onclick="switchTab('current')">
+      Current State
+      <span class="tab-badge">Baseline</span>
+    </div>
+    <div class="tab-item" id="tab-ai" onclick="switchTab('ai')">
+      With AI Agents
+      <span class="tab-badge green">+$6.8M Uplift</span>
+    </div>
+    <div class="tab-item" style="margin-left:auto;" id="tab-trends" onclick="switchTab('trends')">
+      Trend Analysis
+    </div>
+  </div>
+
+  <div class="main-wrap">
+    <div class="content-area">
+
+      <!-- ══════════ ACTION VIEW ══════════ -->
+      <div id="panel-action" class="tab-panel active">
+
+        <!-- Header KPI boxes -->
+        <div class="av-hdr-kpis">
+          <div class="av-kpi">
+            <div class="av-kpi-val">1.1K</div>
+            <div class="av-kpi-lbl">Number of Customers</div>
+          </div>
+          <div class="av-kpi">
+            <div class="av-kpi-val">$496.5M</div>
+            <div class="av-kpi-lbl">Total AR</div>
+          </div>
+          <div class="av-kpi">
+            <div class="av-kpi-val warn">$213.3M</div>
+            <div class="av-kpi-lbl">Total Past Due AR</div>
+          </div>
+          <div class="av-kpi">
+            <div class="av-kpi-val">2.2K</div>
+            <div class="av-kpi-lbl">Open Items</div>
+          </div>
+          <div class="av-kpi">
+            <div class="av-kpi-val">2K</div>
+            <div class="av-kpi-lbl">Open Debit Items</div>
+          </div>
+          <div class="av-kpi">
+            <div class="av-kpi-val ok">156</div>
+            <div class="av-kpi-lbl">Open Credit Items</div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="av-filters">
+          <select class="av-select"><option>Clerk Name</option><option>Thomas Henderson</option><option>Sylwia Michalczuk</option><option>Henry Gibson</option><option>Andreea Blag</option><option>Simon Paul</option><option>Diana Covaci</option><option>Alfredo Burnett</option><option>Herry Smith</option></select>
+          <select class="av-select"><option>Customer Number</option><option>GB000192</option><option>GB000421</option><option>CC978226</option><option>GB000220</option><option>CC978223</option></select>
+          <select class="av-select"><option>Customer Name</option><option>Hawkwood Electric Power</option><option>A&amp;C Consultancy</option><option>Pyramil Construction Inc.</option><option>AES Corporation</option></select>
+          <select class="av-select"><option>Business Unit</option><option>America</option><option>Europe</option><option>APAC</option></select>
+          <button class="btn btn-primary btn-sm" style="margin-left:auto;">🔄 Refresh</button>
+        </div>
+
+        <!-- Customer Overview Table -->
+        <div class="card" style="overflow:hidden;">
+          <div class="card-hdr">
+            <span class="card-title">Customer Overview</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="text" placeholder="Search customers…" style="border:1px solid var(--border);padding:4px 10px;font-family:inherit;font-size:11px;border-radius:var(--radius);background:#fff;color:var(--text-0);"/>
+              <span style="font-size:10px;color:var(--text-2);">Showing 20 of 1,100</span>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="cust-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox"/></th>
+                  <th>Customer Name ↕</th>
+                  <th>Cust. No.</th>
+                  <th>Priority ↕</th>
+                  <th>Credit Util.</th>
+                  <th>Business Unit</th>
+                  <th>Open A/R ↕</th>
+                  <th>A/R Due ↕</th>
+                  <th>Clerk</th>
+                  <th>Country</th>
+                  <th>Credit Limit</th>
+                  <th>Credit Remaining</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Hawkwood Electric Power</td><td style="font-family:monospace;font-size:10px;">GB000192</td><td><span class="prio-score prio-high">100</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:83%;"></div></div><span style="font-size:9px;color:var(--text-2);">83%</span></div></td><td>America</td><td>$17,770,000</td><td>$9,405,000</td><td>T. Henderson</td><td>USA</td><td>$21,324,000</td><td>$3,554,000</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">A&amp;C Consultancy</td><td style="font-family:monospace;font-size:10px;">GB000421</td><td><span class="prio-score prio-high">99</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-warn" style="width:93%;"></div></div><span style="font-size:9px;color:var(--text-2);">93%</span></div></td><td>America</td><td>$13,606,600</td><td>$13,249,700</td><td>T. Henderson</td><td>USA</td><td>$14,668,800</td><td>$1,062,200</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Pyramil Construction Inc.</td><td style="font-family:monospace;font-size:10px;">CC978226</td><td><span class="prio-score prio-high">97</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:64%;"></div></div><span style="font-size:9px;color:var(--text-2);">64%</span></div></td><td>Europe</td><td>$17,591,700</td><td>$16,837,200</td><td>T. Henderson</td><td>France</td><td>$27,500,000</td><td>$9,908,300</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">AES Corporation</td><td style="font-family:monospace;font-size:10px;">GB000220</td><td><span class="prio-score prio-high">96</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:50%;"></div></div><span style="font-size:9px;color:var(--text-2);">50%</span></div></td><td>APAC</td><td>$10,774,800</td><td>$10,033,300</td><td>Simon Paul</td><td>Japan</td><td>$21,504,600</td><td>$10,729,800</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Edge Communications</td><td style="font-family:monospace;font-size:10px;">CC978223</td><td><span class="prio-score prio-high">96</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--red);">129%</span></div></td><td>America</td><td>$11,992,207</td><td>$11,245,700</td><td>S. Michalczuk</td><td>USA</td><td>$9,288,800</td><td class="credit-neg">-$2,703,407</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">West Jackson</td><td style="font-family:monospace;font-size:10px;">GB000216</td><td><span class="prio-score prio-high">96</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-warn" style="width:81%;"></div></div><span style="font-size:9px;color:var(--text-2);">81%</span></div></td><td>Europe</td><td>$10,540,500</td><td>$9,720,500</td><td>T. Henderson</td><td>Romania</td><td>$13,050,200</td><td>$2,509,700</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">West Textile Services</td><td style="font-family:monospace;font-size:10px;">CC978230</td><td><span class="prio-score prio-high">93</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--red);">179%</span></div></td><td>America</td><td>$11,449,008</td><td>$9,943,900</td><td>A. Blag</td><td>USA</td><td>$6,398,700</td><td class="credit-neg">-$5,050,308</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Great Mills</td><td style="font-family:monospace;font-size:10px;">GB000783</td><td><span class="prio-score prio-high">92</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:63%;"></div></div><span style="font-size:9px;color:var(--text-2);">63%</span></div></td><td>Europe</td><td>$10,061,700</td><td>$9,705,000</td><td>Henry Gibson</td><td>Italy</td><td>$16,000,000</td><td>$5,938,300</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">APEX Manufacturing</td><td style="font-family:monospace;font-size:10px;">CC123455</td><td><span class="prio-score prio-high">91</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--red);">126%</span></div></td><td>APAC</td><td>$12,587,360</td><td>$8,768,311</td><td>Henry Gibson</td><td>Vietnam</td><td>$9,984,600</td><td class="credit-neg">-$2,602,760</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">General Motors</td><td style="font-family:monospace;font-size:10px;">GB000935</td><td><span class="prio-score prio-high">91</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--text-2);">64%</span></div></td><td>APAC</td><td>$9,683,000</td><td>$8,941,100</td><td>Henry Gibson</td><td>Russia</td><td>$15,216,600</td><td>$5,533,600</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Imperial Manufacturing</td><td style="font-family:monospace;font-size:10px;">CC978227</td><td><span class="prio-score prio-med">91</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-warn" style="width:84%;"></div></div><span style="font-size:9px;color:var(--text-2);">84%</span></div></td><td>America</td><td>$9,673,914</td><td>$8,730,000</td><td>Diana Covaci</td><td>USA</td><td>$11,462,100</td><td>$1,788,185</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Edge Manufacturing</td><td style="font-family:monospace;font-size:10px;">CD451796</td><td><span class="prio-score prio-high">90</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--red);">103%</span></div></td><td>America</td><td>$7,753,000</td><td>$7,753,000</td><td>Herry Smith</td><td>USA</td><td>$7,500,000</td><td class="credit-neg">-$253,000</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Beta Manufacturing</td><td style="font-family:monospace;font-size:10px;">GB000184</td><td><span class="prio-score prio-med">89</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:35%;"></div></div><span style="font-size:9px;color:var(--text-2);">35%</span></div></td><td>America</td><td>$7,850,148</td><td>$7,817,900</td><td>Henry Gibson</td><td>USA</td><td>$22,642,800</td><td>$14,792,651</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">InDev</td><td style="font-family:monospace;font-size:10px;">GB000758</td><td><span class="prio-score prio-med">87</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-warn" style="width:78%;"></div></div><span style="font-size:9px;color:var(--text-2);">78%</span></div></td><td>Europe</td><td>$6,943,000</td><td>$6,943,000</td><td>A. Burnett</td><td>Italy</td><td>$8,844,500</td><td>$1,901,500</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">MERRITT HOSPITALITY LLC</td><td style="font-family:monospace;font-size:10px;">GB000052</td><td><span class="prio-score prio-med">85</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:42%;"></div></div><span style="font-size:9px;color:var(--text-2);">42%</span></div></td><td>Europe</td><td>$6,994,000</td><td>$6,559,000</td><td>S. Michalczuk</td><td>Portugal</td><td>$16,803,700</td><td>$9,809,700</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Long Pacific</td><td style="font-family:monospace;font-size:10px;">GB000155</td><td><span class="prio-score prio-med">85</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:97%;"></div></div><span style="font-size:9px;color:var(--text-2);">97%</span></div></td><td>America</td><td>$6,706,000</td><td>$6,596,000</td><td>A. Blag</td><td>USA</td><td>$6,943,700</td><td>$237,700</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Inpex Holdings</td><td style="font-family:monospace;font-size:10px;">GB000851</td><td><span class="prio-score prio-med">83</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-over" style="width:100%;"></div></div><span style="font-size:9px;color:var(--red);">159%</span></div></td><td>Europe</td><td>$6,587,500</td><td>$5,965,000</td><td>S. Michalczuk</td><td>Italy</td><td>$4,133,800</td><td class="credit-neg">-$2,453,700</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Willmart</td><td style="font-family:monospace;font-size:10px;">CC990999</td><td><span class="prio-score prio-med">83</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:59%;"></div></div><span style="font-size:9px;color:var(--text-2);">59%</span></div></td><td>America</td><td>$12,069,500</td><td>$5,899,500</td><td>T. Henderson</td><td>USA</td><td>$20,500,000</td><td>$8,430,500</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Optimal Production Co.</td><td style="font-family:monospace;font-size:10px;">GB001057</td><td><span class="prio-score prio-med">82</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-ok" style="width:70%;"></div></div><span style="font-size:9px;color:var(--text-2);">70%</span></div></td><td>America</td><td>$6,746,000</td><td>$5,738,500</td><td>T. Henderson</td><td>USA</td><td>$9,657,200</td><td>$2,911,200</td></tr>
+                <tr><td><input type="checkbox"/></td><td class="cust-name">Nocartis</td><td style="font-family:monospace;font-size:10px;">GB000251</td><td><span class="prio-score prio-low">80</span></td><td><div class="cu-bar"><div class="cu-track"><div class="cu-fill cu-warn" style="width:77%;"></div></div><span style="font-size:9px;color:var(--text-2);">77%</span></div></td><td>Europe</td><td>$7,112,000</td><td>$5,492,000</td><td>A. Burnett</td><td>—</td><td>—</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="padding:8px 14px;background:var(--bg-1);border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;">
+            <button class="btn btn-primary btn-sm">📧 Send Dunning</button>
+            <button class="btn btn-ghost btn-sm">📋 Promise to Pay</button>
+            <button class="btn btn-ghost btn-sm">🔔 Escalate</button>
+            <span style="margin-left:auto;font-size:10px;color:var(--text-2);">0 selected</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ CURRENT STATE ══════════ -->
+      <div id="panel-current" class="tab-panel">
+        <div class="panels">
+
+          <!-- Collections -->
+          <div class="panel">
+            <div class="panel-hdr">
+              <span class="panel-hdr-title">Collections</span>
+              <span class="panel-tag" style="background:var(--red-pale);color:var(--red);">Below Target</span>
+            </div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">DSO</div><div class="kbox-val red">49.4d</div><div class="kbox-trend down">↘ +22d vs best-in-class</div></div>
+                <div class="kbox"><div class="kbox-lbl">CEI</div><div class="kbox-val red">56.6%</div><div class="kbox-note">target 83%+</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0d</span><span>20d</span><span>40d</span><span>60d</span><span>80d</span></div>
+                <div class="bullet-track" style="background:#f4e0e2;">
+                  <div class="bullet-fill" style="width:62%;background:var(--red);"></div>
+                  <div class="bullet-pin" style="left:33%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:50%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--red);"></div>DSO 49.4d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 26.7d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 40d</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Past Due %</div><div class="mc-val">43%</div></div><span class="mc-badge m-r">High</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Avg Days Delinquent</div><div class="mc-val">29.9d</div></div><span class="mc-badge m-r">High</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Collector Coverage</div><div class="mc-val">100%</div></div><span class="mc-badge m-o">Baseline</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">On-Time Payment</div><div class="mc-val">57%</div></div><span class="mc-badge m-r">Low</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">Investigate →</button></div>
+            </div>
+          </div>
+
+          <!-- Cash Application -->
+          <div class="panel">
+            <div class="panel-hdr">
+              <span class="panel-hdr-title">Cash Application</span>
+              <span class="panel-tag" style="background:var(--gold-pale);color:var(--gold);">Manual Intensive</span>
+            </div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">Auto-Match Rate</div><div class="kbox-val" style="color:var(--gold);">62%</div><div class="kbox-trend down">↘ target 90%+</div></div>
+                <div class="kbox"><div class="kbox-lbl">Unapplied Cash</div><div class="kbox-val red">$28.4M</div><div class="kbox-note">5.7% of total AR</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+                <div class="bullet-track">
+                  <div class="bullet-fill" style="width:62%;background:var(--gold);"></div>
+                  <div class="bullet-pin" style="left:90%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:80%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--gold);"></div>Auto-Match 62%</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 95%</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 80%</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Avg Apply Time</div><div class="mc-val">4.2d</div></div><span class="mc-badge m-r">Slow</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Exception Rate</div><div class="mc-val">38%</div></div><span class="mc-badge m-r">High</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Cost / Transaction</div><div class="mc-val">$4.20</div></div><span class="mc-badge m-o">Mid</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Remittance Match</div><div class="mc-val">54%</div></div><span class="mc-badge m-r">Low</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">Investigate →</button></div>
+            </div>
+          </div>
+
+          <!-- Disputes -->
+          <div class="panel">
+            <div class="panel-hdr">
+              <span class="panel-hdr-title">Disputes &amp; Credit</span>
+              <span class="panel-tag" style="background:var(--gold-pale);color:var(--gold);">Watch</span>
+            </div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">Open Disputes</div><div class="kbox-val red">847</div><div class="kbox-trend down">↘ rising trend</div></div>
+                <div class="kbox"><div class="kbox-lbl">Dispute Rate</div><div class="kbox-val" style="color:var(--gold);">8.3%</div><div class="kbox-note">target &lt;3%</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0d</span><span>10d</span><span>20d</span><span>30d</span><span>40d</span></div>
+                <div class="bullet-track" style="background:#f4e8d0;">
+                  <div class="bullet-fill" style="width:82%;background:var(--gold);"></div>
+                  <div class="bullet-pin" style="left:40%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:60%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--gold);"></div>DDO 32.7d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 16d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 24d</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Resolution Rate</div><div class="mc-val">58%</div></div><span class="mc-badge m-r">Low</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Credit Exposure</div><div class="mc-val">$31.2M</div></div><span class="mc-badge m-r">High</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Over-Limit Accounts</div><div class="mc-val">7</div></div><span class="mc-badge m-r">Risk</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Bad Debt Rate</div><div class="mc-val">2.1%</div></div><span class="mc-badge m-o">Watch</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">Investigate →</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="bottom-grid">
+          <!-- AR Aging Buckets -->
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">AR Aging Analysis</span>
+              <select style="font-size:11px;border:1px solid var(--border);padding:3px 6px;border-radius:2px;background:#fff;font-family:inherit;color:var(--text-2);"><option>All Business Units</option><option>America</option><option>Europe</option><option>APAC</option></select>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-2);margin-bottom:4px;"><span>Aging distribution · Total AR $496.5M</span><span style="font-weight:700;color:var(--red);">$213.3M overdue (43%)</span></div>
+              <div class="aging-bar">
+                <div class="aging-seg" style="width:57%;background:var(--green);">57%</div>
+                <div class="aging-seg" style="width:14%;background:var(--gold);">14%</div>
+                <div class="aging-seg" style="width:11%;background:var(--orange);">11%</div>
+                <div class="aging-seg" style="width:9%;background:var(--red);">9%</div>
+                <div class="aging-seg" style="width:9%;background:#8b0000;">9%</div>
+              </div>
+              <div class="aging-legend">
+                <div class="aging-item"><div class="aging-dot" style="background:var(--green);"></div>Current (57%) $283M</div>
+                <div class="aging-item"><div class="aging-dot" style="background:var(--gold);"></div>1–30d (14%) $69.5M</div>
+                <div class="aging-item"><div class="aging-dot" style="background:var(--orange);"></div>31–60d (11%) $54.6M</div>
+                <div class="aging-item"><div class="aging-dot" style="background:var(--red);"></div>61–90d (9%) $44.7M</div>
+                <div class="aging-item"><div class="aging-dot" style="background:#8b0000;"></div>90d+ (9%) $44.7M</div>
+              </div>
+              <div class="divider"></div>
+              <div class="hbar"><div class="hbar-lbl">America</div><div class="hbar-track"><div class="hbar-fill" style="width:52%;background:var(--blue);"><span class="hbar-pct">52%</span></div></div><div class="hbar-amt">$258M</div></div>
+              <div class="hbar"><div class="hbar-lbl">Europe</div><div class="hbar-track"><div class="hbar-fill" style="width:31%;background:var(--cyan);"><span class="hbar-pct">31%</span></div></div><div class="hbar-amt">$154M</div></div>
+              <div class="hbar"><div class="hbar-lbl">APAC</div><div class="hbar-track"><div class="hbar-fill" style="width:17%;background:var(--teal);"><span class="hbar-pct">17%</span></div></div><div class="hbar-amt">$84M</div></div>
+            </div>
+          </div>
+
+          <!-- Dispute Breakdown -->
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Dispute Reasons</span>
+              <span style="font-size:10px;color:var(--red);font-weight:700;">847 open</span>
+            </div>
+            <div class="card-body">
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Pricing Error</div><div class="hbar-track"><div class="hbar-fill" style="width:35%;background:var(--red);"><span class="hbar-pct">35%</span></div></div><div class="hbar-amt">$28.4M</div></div>
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Short Shipment</div><div class="hbar-track"><div class="hbar-fill" style="width:24%;background:var(--orange);"><span class="hbar-pct">24%</span></div></div><div class="hbar-amt">$19.5M</div></div>
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Quality Issue</div><div class="hbar-track"><div class="hbar-fill" style="width:18%;background:var(--gold);"><span class="hbar-pct">18%</span></div></div><div class="hbar-amt">$14.6M</div></div>
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Duplicate Invoice</div><div class="hbar-track"><div class="hbar-fill" style="width:12%;background:var(--blue);"><span class="hbar-pct">12%</span></div></div><div class="hbar-amt">$9.7M</div></div>
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Early Pay Deduction</div><div class="hbar-track"><div class="hbar-fill" style="width:7%;background:var(--purple);"></div></div><div class="hbar-amt">$5.7M</div></div>
+              <div class="hbar"><div class="hbar-lbl" style="width:100px;">Other</div><div class="hbar-track"><div class="hbar-fill" style="width:4%;background:var(--bg-2);"></div></div><div class="hbar-amt">$3.2M</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ WITH AI AGENTS ══════════ -->
+      <div id="panel-ai" class="tab-panel">
+        <div class="ai-banner">
+          <div style="font-size:22px;flex-shrink:0;">🤖</div>
+          <div class="ai-banner-text">
+            <div class="ai-banner-title">AI Agent Impact — Projected State with Full Deployment</div>
+            <div class="ai-banner-sub">Collections AI Agent · Cash Application Agent · Dispute Resolution Agent · Credit Risk Monitor</div>
+          </div>
+          <div class="ai-banner-kpis">
+            <div class="abk"><div class="abk-val">$6.8M</div><div class="abk-lbl">Realized Value</div></div>
+            <div class="abk"><div class="abk-val">-17.3d</div><div class="abk-lbl">DSO Reduction</div></div>
+            <div class="abk"><div class="abk-val">4</div><div class="abk-lbl">AI Agents Active</div></div>
+          </div>
+        </div>
+
+        <div class="panels">
+          <!-- Collections AI -->
+          <div class="panel" style="border-top:3px solid var(--green);">
+            <div class="panel-hdr"><span class="panel-hdr-title">Collections</span><span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span></div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">DSO</div><div class="kbox-val blue">32.1d</div><div class="kbox-trend up">↗ -17.3d vs baseline</div></div>
+                <div class="kbox"><div class="kbox-lbl">CEI</div><div class="kbox-val green">78.2%</div><div class="kbox-trend up">↗ +21.6pp</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0d</span><span>20d</span><span>40d</span><span>60d</span><span>80d</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:40%;background:var(--blue);"></div>
+                  <div class="bullet-pin" style="left:33%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:50%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--blue);"></div>DSO 32.1d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 26.7d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 40d</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Past Due %</div><div class="mc-val">27%</div></div><span class="mc-badge m-g">↓ -16pp</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Avg Days Delinquent</div><div class="mc-val">11.4d</div></div><span class="mc-badge m-g">↓ -18.5d</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Collector Coverage</div><div class="mc-val">195%</div></div><span class="mc-badge m-g">↑ +95pp</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">On-Time Payment</div><div class="mc-val">74%</div></div><span class="mc-badge m-g">↑ +17pp</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">View AI Actions →</button></div>
+            </div>
+          </div>
+
+          <!-- Cash Application AI -->
+          <div class="panel" style="border-top:3px solid var(--green);">
+            <div class="panel-hdr"><span class="panel-hdr-title">Cash Application</span><span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span></div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">Auto-Match Rate</div><div class="kbox-val blue">91%</div><div class="kbox-trend up">↗ +29pp vs baseline</div></div>
+                <div class="kbox"><div class="kbox-lbl">Unapplied Cash</div><div class="kbox-val green">$4.2M</div><div class="kbox-trend up">↓ -$24.2M</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:91%;background:var(--blue);"></div>
+                  <div class="bullet-pin" style="left:95%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:80%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--blue);"></div>Auto-Match 91%</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 95%</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 80%</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Avg Apply Time</div><div class="mc-val">0.8d</div></div><span class="mc-badge m-g">↓ -3.4d</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Exception Rate</div><div class="mc-val">9%</div></div><span class="mc-badge m-g">↓ -29pp</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Cost / Transaction</div><div class="mc-val">$0.80</div></div><span class="mc-badge m-g">↓ -$3.40</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Remittance Match</div><div class="mc-val">88%</div></div><span class="mc-badge m-g">↑ +34pp</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">View AI Actions →</button></div>
+            </div>
+          </div>
+
+          <!-- Disputes AI -->
+          <div class="panel" style="border-top:3px solid var(--green);">
+            <div class="panel-hdr"><span class="panel-hdr-title">Disputes &amp; Credit</span><span class="panel-tag" style="background:var(--green-pale);color:var(--green);">↑ Improving</span></div>
+            <div class="panel-body">
+              <div class="kpi2">
+                <div class="kbox"><div class="kbox-lbl">Open Disputes</div><div class="kbox-val blue">412</div><div class="kbox-trend up">↓ -435 resolved</div></div>
+                <div class="kbox"><div class="kbox-lbl">Dispute Rate</div><div class="kbox-val green">4.1%</div><div class="kbox-trend up">↓ -4.2pp</div></div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-axis"><span>0d</span><span>10d</span><span>20d</span><span>30d</span><span>40d</span></div>
+                <div class="bullet-track" style="background:#d9f7e1;">
+                  <div class="bullet-fill" style="width:28%;background:var(--blue);"></div>
+                  <div class="bullet-pin" style="left:40%;background:var(--text-2);"></div>
+                  <div class="bullet-pin" style="left:60%;background:var(--blue);"></div>
+                </div>
+                <div class="bullet-legend">
+                  <div class="bl"><div class="bl-sq" style="background:var(--blue);"></div>DDO 11.3d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--text-2);"></div>Best-in-class 16d</div>
+                  <div class="bl"><div class="bl-ln" style="background:var(--blue);"></div>Target 24d</div>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="metrics2">
+                <div class="mc"><div class="mc-info"><div class="mc-name">Resolution Rate</div><div class="mc-val">87%</div></div><span class="mc-badge m-g">↑ +29pp</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Credit Exposure</div><div class="mc-val">$14.8M</div></div><span class="mc-badge m-g">↓ -$16.4M</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Over-Limit Accounts</div><div class="mc-val">2</div></div><span class="mc-badge m-g">↓ -5</span></div>
+                <div class="mc"><div class="mc-info"><div class="mc-name">Bad Debt Rate</div><div class="mc-val">0.8%</div></div><span class="mc-badge m-g">↓ -1.3pp</span></div>
+              </div>
+              <div class="inv-bar"><button class="btn-inv">View AI Actions →</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Agents -->
+        <div class="card">
+          <div class="card-hdr"><span class="card-title">AI Agents Driving This Value</span><span style="font-size:10px;color:var(--green);font-weight:700;">4 Active</span></div>
+          <div class="card-body">
+            <div class="agents-grid">
+              <div class="agent-card"><div class="agent-icon">📞</div><div class="agent-name">Collections AI Agent</div><div class="agent-desc">Prioritises collector worklist daily using payment-likelihood scores. Auto-generates dunning emails and logs contacts back to ERP.</div><div class="agent-val">$3.2M recovered · -17d DSO</div></div>
+              <div class="agent-card"><div class="agent-icon">💳</div><div class="agent-name">Cash Application Agent</div><div class="agent-desc">Matches payments to invoices across channels using AI. Aggregates remittance data and auto-posts straight-through payments.</div><div class="agent-val">$24.2M unapplied cash cleared</div></div>
+              <div class="agent-card"><div class="agent-icon">⚖️</div><div class="agent-name">Dispute Resolution Agent</div><div class="agent-desc">Classifies disputes by root cause, routes to correct resolver, auto-generates response templates and tracks SLA adherence.</div><div class="agent-val">435 disputes resolved · DDO -21.4d</div></div>
+              <div class="agent-card"><div class="agent-icon">🔐</div><div class="agent-name">Credit Risk Monitor</div><div class="agent-desc">Scores each customer by payment behaviour, flags over-limit accounts, and surfaces early warning signals 30 days ahead.</div><div class="agent-val">$16.4M exposure reduced</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ TREND ANALYSIS ══════════ -->
+      <div id="panel-trends" class="tab-panel">
+        <div class="panels" style="grid-template-columns:repeat(4,1fr);">
+          <div class="panel" style="padding:14px;border-left:3px solid var(--blue);">
+            <div class="kbox-lbl">DSO · Trend (days)</div>
+            <div class="trend-mini-bars">
+              <div class="tmb" style="background:var(--red);height:100%;"></div>
+              <div class="tmb" style="background:var(--red);height:98%;"></div>
+              <div class="tmb" style="background:#f4a7ab;height:92%;"></div>
+              <div class="tmb" style="background:#f4a7ab;height:85%;"></div>
+              <div class="tmb" style="background:var(--gold);height:78%;"></div>
+              <div class="tmb" style="background:var(--gold);height:70%;"></div>
+              <div class="tmb" style="background:var(--blue);height:60%;"></div>
+              <div class="tmb" style="background:var(--green);height:48%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">49.4d → 32.1d (-17.3d)</div>
+          </div>
+          <div class="panel" style="padding:14px;border-left:3px solid var(--cyan);">
+            <div class="kbox-lbl">CEI · Trend (%)</div>
+            <div class="trend-mini-bars">
+              <div class="tmb" style="background:var(--bg-2);height:35%;"></div>
+              <div class="tmb" style="background:var(--bg-2);height:40%;"></div>
+              <div class="tmb" style="background:var(--blue-pale);height:46%;"></div>
+              <div class="tmb" style="background:var(--blue-pale);height:52%;"></div>
+              <div class="tmb" style="background:var(--blue);height:60%;"></div>
+              <div class="tmb" style="background:var(--blue);height:68%;"></div>
+              <div class="tmb" style="background:var(--blue);height:78%;"></div>
+              <div class="tmb" style="background:var(--green);height:90%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">56.6% → 78.2% (+21.6pp)</div>
+          </div>
+          <div class="panel" style="padding:14px;border-left:3px solid var(--green);">
+            <div class="kbox-lbl">Auto-Match Rate · Trend</div>
+            <div class="trend-mini-bars">
+              <div class="tmb" style="background:var(--bg-2);height:40%;"></div>
+              <div class="tmb" style="background:var(--bg-2);height:42%;"></div>
+              <div class="tmb" style="background:var(--blue-pale);height:50%;"></div>
+              <div class="tmb" style="background:var(--blue-pale);height:58%;"></div>
+              <div class="tmb" style="background:var(--blue);height:68%;"></div>
+              <div class="tmb" style="background:var(--blue);height:78%;"></div>
+              <div class="tmb" style="background:var(--blue);height:88%;"></div>
+              <div class="tmb" style="background:var(--green);height:98%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">62% → 91% (+29pp)</div>
+          </div>
+          <div class="panel" style="padding:14px;border-left:3px solid var(--purple);">
+            <div class="kbox-lbl">Open Disputes · Trend</div>
+            <div class="trend-mini-bars">
+              <div class="tmb" style="background:var(--red);height:100%;"></div>
+              <div class="tmb" style="background:var(--red);height:96%;"></div>
+              <div class="tmb" style="background:#f4a7ab;height:88%;"></div>
+              <div class="tmb" style="background:#f4a7ab;height:78%;"></div>
+              <div class="tmb" style="background:var(--gold);height:66%;"></div>
+              <div class="tmb" style="background:var(--gold);height:55%;"></div>
+              <div class="tmb" style="background:var(--blue);height:62%;"></div>
+              <div class="tmb" style="background:var(--green);height:48%;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-2);"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-top:6px;">847 → 412 (-51% open disputes)</div>
+          </div>
+        </div>
+
+        <!-- Cumulative Cash Flow Chart -->
+        <div class="card">
+          <div class="card-hdr"><span class="card-title">Cumulative Working Capital Improvement — Monthly (FY 2025)</span><span style="font-size:11px;font-weight:700;color:var(--green);">$14.2M YTD</span></div>
+          <div class="card-body">
+            <div style="display:flex;align-items:flex-end;gap:5px;height:110px;padding-bottom:4px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$0.3M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:3%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Jan</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$0.8M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:7%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Feb</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$1.5M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:13%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Mar</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$2.4M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:20%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Apr</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$3.6M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:30%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">May</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$5.1M</div><div style="width:100%;background:var(--blue);border-radius:2px 2px 0 0;height:43%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Jun</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$7.0M</div><div style="width:100%;background:var(--cyan);border-radius:2px 2px 0 0;height:59%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Jul</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$8.8M</div><div style="width:100%;background:var(--cyan);border-radius:2px 2px 0 0;height:74%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Aug</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$10.4M</div><div style="width:100%;background:var(--green);border-radius:2px 2px 0 0;height:87%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Sep</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$11.8M</div><div style="width:100%;background:var(--green);border-radius:2px 2px 0 0;height:99%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Oct</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$13.1M</div><div style="width:100%;background:var(--green);border-radius:2px 2px 0 0;height:100%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Nov</div></div>
+              <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px;"><div style="font-size:9px;color:var(--text-2);">$14.2M</div><div style="width:100%;background:var(--green);border-radius:2px 2px 0 0;height:100%;min-height:4px;"></div><div style="font-size:9px;color:var(--text-2);">Dec</div></div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:6px;font-size:10px;color:var(--text-2);">
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--blue);border-radius:1px;"></div>Early phase</div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--cyan);border-radius:1px;"></div>Scale-up</div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:12px;height:4px;background:var(--green);border-radius:1px;"></div>Steady state</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+
+    <!-- FILTER SIDEBAR -->
+    <div class="filter-sidebar">
+      <div class="fs-section">
+        <span class="fs-label">Time Period</span>
+        <div class="date-row">
+          <button class="date-btn active">YTD</button>
+          <button class="date-btn">Q4</button>
+          <button class="date-btn">Q3</button>
+        </div>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Date Range</span>
+        <input type="date" style="width:100%;border:1px solid var(--border);padding:5px 8px;font-family:inherit;font-size:11px;border-radius:var(--radius);background:#fff;color:var(--text-0);" value="2025-01-01"/>
+        <input type="date" style="width:100%;border:1px solid var(--border);padding:5px 8px;font-family:inherit;font-size:11px;border-radius:var(--radius);background:#fff;color:var(--text-0);margin-top:4px;" value="2025-12-31"/>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Company Code</span>
+        <select class="fs-select"><option>All Companies</option><option>AMER Region</option><option>EMEA Region</option><option>APAC Region</option></select>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Business Unit</span>
+        <div class="chips">
+          <span class="chip active">All</span>
+          <span class="chip">America</span>
+          <span class="chip">Europe</span>
+          <span class="chip">APAC</span>
+        </div>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Payment Terms</span>
+        <select class="fs-select"><option>All Terms</option><option>Net 30</option><option>Net 60</option><option>Net 90</option></select>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Aging Bucket</span>
+        <div class="chips">
+          <span class="chip active">All</span>
+          <span class="chip">Current</span>
+          <span class="chip">1–30d</span>
+          <span class="chip">31–60d</span>
+          <span class="chip">60d+</span>
+        </div>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Risk Score</span>
+        <div class="chips">
+          <span class="chip active">All</span>
+          <span class="chip">High</span>
+          <span class="chip">Medium</span>
+          <span class="chip">Low</span>
+        </div>
+      </div>
+      <div class="fs-section">
+        <span class="fs-label">Assigned Collector</span>
+        <select class="fs-select"><option>All Collectors</option><option>Thomas Henderson</option><option>Sylwia Michalczuk</option><option>Henry Gibson</option><option>Andreea Blag</option></select>
+      </div>
+      <div class="kpi-mini-box">
+        <div class="kmb-title">IBM Client Zero · AR Benchmark</div>
+        <div class="kmb-row"><span class="kmb-n">Working capital gain</span><span class="kmb-v">$380M</span></div>
+        <div class="kmb-row"><span class="kmb-n">DSO reduction</span><span class="kmb-v">-18 days</span></div>
+        <div class="kmb-row"><span class="kmb-n">Auto-match rate</span><span class="kmb-v">93%</span></div>
+        <div class="kmb-row"><span class="kmb-n">Collector efficiency</span><span class="kmb-v">+95%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(tab){
+  ['action','current','ai','trends'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    const p=document.getElementById('panel-'+t);
+    if(p) p.classList.toggle('active',t===tab);
+  });
+}
+document.querySelectorAll('.chips').forEach(group=>{
+  group.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      group.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+document.querySelectorAll('.date-row').forEach(row=>{
+  row.querySelectorAll('.date-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      row.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>
