@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Working Capital Forecast Intelligence · CFO Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-0: #ffffff;
+      --bg-1: #f4f4f4;
+      --bg-2: #e0e0e0;
+      --text-0: #161616;
+      --text-1: #393939;
+      --text-2: #525252;
+      --text-3: #6f6f6f;
+      --border: #e0e0e0;
+      --border-med: #c6c6c6;
+      --blue: #0f62fe;
+      --blue-l: #0043ce;
+      --blue-pale: #edf5ff;
+      --red: #da1e28;
+      --red-pale: #fff1f1;
+      --green: #198038;
+      --green-pale: #defbe6;
+      --orange: #ff832b;
+      --orange-pale: #fff2e8;
+    }
+    body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background: var(--bg-1); color: var(--text-0); font-size: 14px; line-height: 1.5; }
+
+    /* ── HERO ── */
+    .hero { background: #161616; color: #fff; padding: 2rem 2rem 0; }
+    .hero-inner { max-width: 1400px; margin: 0 auto; }
+    .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+    .hero-logo { background: #fff; color: #161616; font-size: 10px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; }
+    .hero-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.2); }
+    .hero-label { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.3px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(15,98,254,0.2); border: 1px solid rgba(15,98,254,0.45); color: #a6c8ff; font-size: 10px; font-weight: 600; padding: 3px 10px; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .hero-badge::before { content: '●'; font-size: 7px; color: #4589ff; }
+    .hero-title { font-size: 28px; font-weight: 300; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+    .hero-title strong { font-weight: 600; }
+    .hero-sub { font-size: 12px; color: rgba(255,255,255,0.5); max-width: 640px; line-height: 1.6; margin-bottom: 1.75rem; }
+
+    .hero-kpis { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid rgba(255,255,255,0.1); }
+    .hero-kpi { padding: 1.25rem 1.5rem; border-right: 1px solid rgba(255,255,255,0.08); }
+    .hero-kpi:last-child { border-right: none; }
+    .kpi-state { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .kpi-state::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .kpi-state.current { color: #ff8389; }
+    .kpi-state.current::before { background: #ff8389; }
+    .kpi-state.future { color: #42be65; }
+    .kpi-state.future::before { background: #42be65; }
+    .kpi-num { font-size: 26px; font-weight: 300; line-height: 1; margin-bottom: 3px; }
+    .kpi-num.bad { color: #ff8389; }
+    .kpi-num.good { color: #42be65; }
+    .kpi-lbl { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+    .kpi-divider { display: flex; align-items: center; justify-content: center; font-size: 18px; color: rgba(255,255,255,0.2); padding: 1.25rem 0; }
+
+    /* ── PAGE BODY ── */
+    .page { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    /* ── SECTION HEADER ── */
+    .sec-hdr { margin-bottom: 1.5rem; }
+    .sec-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 5px; }
+    .sec-title { font-size: 18px; font-weight: 600; color: var(--text-0); margin-bottom: 4px; }
+    .sec-sub { font-size: 12px; color: var(--text-2); }
+
+    /* ── PAIN POINT GRID ── */
+    .pain-grid { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border-med); background: var(--border-med); gap: 1px; margin-bottom: 2rem; }
+    .pain-card { background: var(--bg-0); overflow: hidden; }
+    .pain-top { background: var(--bg-1); padding: 9px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+    .pain-num { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: var(--text-3); background: var(--bg-2); padding: 2px 7px; }
+    .pain-title { font-size: 12px; font-weight: 600; color: var(--text-0); flex: 1; }
+    .pain-sev { font-size: 8px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 7px; }
+    .pain-sev.critical { background: var(--red-pale); color: var(--red); border: 1px solid rgba(218,30,40,0.2); }
+    .pain-sev.high { background: var(--orange-pale); color: var(--orange); border: 1px solid rgba(255,131,43,0.2); }
+    .pain-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .pain-col { padding: 14px 16px; }
+    .pain-col.cur { background: #fffbfb; border-right: 1px solid #f5c2c2; }
+    .pain-col.fut { background: #f6fbf7; }
+    .pain-col-lbl { font-size: 8px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+    .pain-col-lbl.c { color: var(--red); }
+    .pain-col-lbl.f { color: var(--green); }
+    .pain-text { font-size: 11px; color: var(--text-1); line-height: 1.55; margin-bottom: 10px; }
+    .pain-metric { display: flex; align-items: baseline; gap: 5px; }
+    .pain-metric-val { font-size: 22px; font-weight: 300; line-height: 1; font-family: 'IBM Plex Mono', monospace; }
+    .pain-metric-val.bad { color: var(--red); }
+    .pain-metric-val.good { color: var(--green); }
+    .pain-metric-lbl { font-size: 10px; color: var(--text-2); }
+
+    /* ── FORECAST TABLE ── */
+    .fc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-med); border: 1px solid var(--border-med); margin-bottom: 2rem; }
+    .fc-panel { background: var(--bg-0); padding: 1.5rem; }
+    .fc-panel.cur { background: #fffbfb; }
+    .fc-panel.fut { background: #f6fbf7; }
+    .fc-panel-lbl { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+    .fc-panel-lbl.c { color: var(--red); }
+    .fc-panel-lbl.f { color: var(--green); }
+    .fc-title { font-size: 13px; font-weight: 600; color: var(--text-0); margin-bottom: 3px; }
+    .fc-sub { font-size: 11px; color: var(--text-2); margin-bottom: 1.25rem; line-height: 1.5; }
+    .fc-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .fc-table th { font-size: 8px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-3); padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg-1); }
+    .fc-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text-1); vertical-align: middle; }
+    .fc-table tr:last-child td { border-bottom: none; }
+    .fc-table tr:hover td { background: var(--bg-1); }
+    .fc-val { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+    .fc-val.bad { color: var(--red); }
+    .fc-val.warn { color: var(--orange); }
+    .fc-val.good { color: var(--green); }
+    .fc-tag { font-size: 8px; font-weight: 700; padding: 1px 6px; border-radius: 1px; white-space: nowrap; }
+    .fc-tag.miss { background: var(--red-pale); color: var(--red); }
+    .fc-tag.shock { background: #fff0e6; color: #a2191f; border: 1px solid rgba(218,30,40,0.3); }
+    .fc-tag.ok { background: var(--green-pale); color: var(--green); }
+    .fc-tag.alert { background: var(--blue-pale); color: var(--blue-l); }
+    .fc-delta { display: flex; align-items: center; gap: 4px; }
+
+    /* ── INSIGHT STRIP ── */
+    .insight { background: var(--blue-pale); border: 1px solid rgba(15,98,254,0.18); border-left: 3px solid var(--blue); padding: 12px 16px; margin-bottom: 2rem; display: flex; align-items: flex-start; gap: 10px; }
+    .insight-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .insight-text { font-size: 12px; color: var(--text-0); line-height: 1.55; }
+    .insight-text strong { color: var(--blue-l); }
+
+    /* ── STAKEHOLDER STRIP ── */
+    .stakeholder-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2rem; }
+    .s-card { background: var(--bg-0); border: 1px solid var(--border); padding: 10px 14px; flex: 1; min-width: 160px; }
+    .s-label { font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); margin-bottom: 5px; }
+    .s-name { font-size: 12px; font-weight: 600; color: var(--text-0); margin-bottom: 2px; }
+    .s-role { font-size: 10px; color: var(--text-2); }
+    .s-status { font-size: 8px; font-weight: 700; padding: 1px 6px; margin-top: 5px; display: inline-block; }
+    .s-status.confirmed { background: var(--green-pale); color: var(--green); }
+    .s-status.tbc { background: var(--orange-pale); color: var(--orange); }
+
+    /* ── AGENTIC ORCHESTRATION ── */
+    .ao-wrap { background: #f4f4f4; border-top: 2px solid #e0e0e0; padding: 2.5rem 2rem; }
+    .ao-inner { max-width: 1400px; margin: 0 auto; }
+    .ao-hdr-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; gap: 2rem; }
+    .ao-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0f62fe; margin-bottom: 6px; }
+    .ao-name { font-size: 20px; font-weight: 600; color: #161616; margin-bottom: 6px; }
+    .ao-sub { font-size: 12px; color: #525252; max-width: 680px; line-height: 1.6; }
+    .ao-stat { text-align: right; flex-shrink: 0; padding-top: 4px; }
+    .ao-stat-num { font-size: 32px; font-weight: 300; color: #0f62fe; line-height: 1; }
+    .ao-stat-lbl { font-size: 10px; color: #525252; margin-top: 4px; letter-spacing: 0.5px; }
+    .ao-orch-bar { background: #161616; padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-radius: 2px 2px 0 0; flex-wrap: wrap; }
+    .ao-orch-bar-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-right: 6px; white-space: nowrap; }
+    .ao-orch-pill { font-size: 10px; font-weight: 600; color: #fff; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 5px; }
+    .ao-layers { border: 1px solid #c6c6c6; border-top: none; }
+    .ao-layer { display: grid; grid-template-columns: 190px 1fr; border-bottom: 1px solid #c6c6c6; background: #fff; }
+    .ao-layer:last-child { border-bottom: none; }
+    .ao-layer-meta { padding: 16px 14px; border-right: 1px solid #c6c6c6; background: #f4f4f4; display: flex; flex-direction: column; justify-content: center; position: relative; }
+    .ao-layer-connector { position: absolute; bottom: -17px; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; background: #f4f4f4; border: 1px solid #c6c6c6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #525252; z-index: 2; }
+    .ao-layer:last-child .ao-layer-connector { display: none; }
+    .ao-layer-num { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: #0f62fe; margin-bottom: 5px; }
+    .ao-layer-name { font-size: 13px; font-weight: 600; color: #161616; line-height: 1.2; margin-bottom: 5px; }
+    .ao-layer-desc { font-size: 10px; color: #525252; line-height: 1.4; }
+    .ao-agents { padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 8px; align-content: center; }
+    .ao-agent { background: #fff; border: 1px solid #c6c6c6; padding: 10px 12px; flex: 1; min-width: 200px; transition: border-color .15s; }
+    .ao-agent:hover { border-color: #0f62fe; }
+    .ao-agent-top { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+    .ao-agent-icon { font-size: 15px; flex-shrink: 0; }
+    .ao-agent-name { font-size: 11px; font-weight: 600; color: #161616; flex: 1; }
+    .ao-agent-badge { font-size: 7px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 1px 5px; border: 1px solid #0f62fe; color: #0f62fe; flex-shrink: 0; }
+    .ao-agent-solves { font-size: 9px; color: #198038; background: #defbe6; padding: 2px 7px; border: 1px solid rgba(25,128,56,0.25); margin-bottom: 6px; display: inline-block; font-weight: 600; }
+    .ao-agent-tools { display: flex; flex-wrap: wrap; gap: 3px; }
+    .ao-agent-tool { font-size: 9px; color: #525252; background: #f4f4f4; padding: 2px 6px; border: 1px solid #e0e0e0; }
+
+    /* ── FOOTER ── */
+    .dash-footer { background: #161616; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .dash-footer-logo { background: #fff; color: #161616; font-size: 9px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; flex-shrink: 0; }
+    .dash-footer-text { font-size: 10px; color: rgba(255,255,255,0.35); }
+  </style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hero-logo">IBM</div>
+      <div class="hero-sep"></div>
+      <div class="hero-label">CFO Office · O&amp;P Business Finance</div>
+    </div>
+    <div class="hero-badge">Working Capital Intelligence · Agentic AI Vision</div>
+    <div class="hero-title">Working Capital <strong>Forecast Intelligence</strong></div>
+    <div class="hero-sub">Current state analysis and AI-enabled future view addressing the 5 core forecasting failures identified in the Business Lead working session. Immediate scope: O&amp;P — scaling path to I&amp;D and APS.</div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">~45%</div>
+        <div class="kpi-lbl">WC Forecast Accuracy</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">94%</div>
+        <div class="kpi-lbl">WC Forecast Accuracy</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">$200MM</div>
+        <div class="kpi-lbl">Largest CapEx Surprise</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">$0</div>
+        <div class="kpi-lbl">Unplanned CapEx Events</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">&lt;10%</div>
+        <div class="kpi-lbl">AP Due-Date Visibility</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">100%</div>
+        <div class="kpi-lbl">AP Due-Date Visibility</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAIN POINTS ════════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="sec-hdr" style="margin-top:0.5rem;">
+    <div class="sec-eyebrow">Root Cause Analysis · 5 Forecasting Failures</div>
+    <div class="sec-title">Current State vs. Agentic AI Future State</div>
+    <div class="sec-sub">Each pain point mapped to its AI agent solution and the measurable outcome it delivers.</div>
+  </div>
+
+  <div class="pain-grid">
+
+    <!-- P1 -->
+    <div class="pain-card">
+      <div class="pain-top">
+        <div class="pain-num">PROBLEM #1</div>
+        <div class="pain-title">Segment / Legal Entity Mismatch (OPAM · Equistar)</div>
+        <div class="pain-sev high">HIGH</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-col cur">
+          <div class="pain-col-lbl c">⚠ Current State</div>
+          <div class="pain-text">OPAM is largely the Equistar legal entity which spans O&amp;P, APS, and I&amp;D. Invoices and payables don't cleanly map to operating segments — creating a persistent disconnect between business activity and balance sheet visibility. Finance cannot reconcile segment performance against legal entity cash movements.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val bad">3</div>
+            <div class="pain-metric-lbl">BUs impacted by entity mismatch</div>
+          </div>
+        </div>
+        <div class="pain-col fut">
+          <div class="pain-col-lbl f">✓ Agentic AI Solution</div>
+          <div class="pain-text">Multi-Entity Mapper Agent maintains a continuously updated entity-to-segment resolution table. Every Equistar transaction is automatically attributed to O&amp;P, APS, or I&amp;D in real-time, giving Business Finance a clean segment-level cash view without manual reconciliation.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val good">100%</div>
+            <div class="pain-metric-lbl">Transaction-to-segment attribution</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="pain-card">
+      <div class="pain-top">
+        <div class="pain-num">PROBLEM #2</div>
+        <div class="pain-title">Cost Allocation Opacity — No SAP Drill-Down</div>
+        <div class="pain-sev high">HIGH</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-col cur">
+          <div class="pain-col-lbl c">⚠ Current State</div>
+          <div class="pain-text">Costs are allocated to segments but the Business Finance team has no visibility into timing or origin. SAP doesn't provide drill-down into what makes up an allocation. A $10MM HR invoice appears only when it posts — impossible to forecast overhead or inventory costs before they hit the books.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val bad">0%</div>
+            <div class="pain-metric-lbl">Pre-posting cost allocation visibility</div>
+          </div>
+        </div>
+        <div class="pain-col fut">
+          <div class="pain-col-lbl f">✓ Agentic AI Solution</div>
+          <div class="pain-text">Cost Allocation Tracer Agent connects to upstream cost center commitments, scheduled allocation runs, and HR payroll cycles — surfacing pending charges 30–45 days before they post to SAP GL. Finance sees what's coming, not just what's landed.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val good">30–45d</div>
+            <div class="pain-metric-lbl">Advance allocation visibility window</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="pain-card">
+      <div class="pain-top">
+        <div class="pain-num">PROBLEM #3</div>
+        <div class="pain-title">Accounts Payable Black Box — Single Largest Problem</div>
+        <div class="pain-sev critical">CRITICAL</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-col cur">
+          <div class="pain-col-lbl c">⚠ Current State</div>
+          <div class="pain-text">AP balances flow directly into segment balance sheets with no forward visibility into what is due or when. This is the single largest forecasting failure across all segments. Without AP maturity data, the cash conversion cycle cannot be managed — only reacted to.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val bad">&lt;10%</div>
+            <div class="pain-metric-lbl">Invoice due-date visibility in AP</div>
+          </div>
+        </div>
+        <div class="pain-col fut">
+          <div class="pain-col-lbl f">✓ Agentic AI Solution</div>
+          <div class="pain-text">AP Maturity Agent reads every open invoice across all segments, maps payment terms and aging buckets, and auto-generates a rolling 13-week AP cash requirements schedule broken out by segment, vendor category, and due-date band. Gives O&amp;P Finance the visibility they need to proactively manage cash.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val good">13-wk</div>
+            <div class="pain-metric-lbl">Rolling AP cash requirements schedule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="pain-card">
+      <div class="pain-top">
+        <div class="pain-num">PROBLEM #4</div>
+        <div class="pain-title">CapEx Payment Shock Events — $200MM vs $50MM Forecast</div>
+        <div class="pain-sev critical">CRITICAL</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-col cur">
+          <div class="pain-col-lbl c">⚠ Current State</div>
+          <div class="pain-text">$200MM was paid in a single month against a $50MM forecast — multiple CapEx invoices clustered due at the same time with no advance warning. The team had no visibility into CapEx payable balances or when those payables became due. A 4× forecast miss with direct P&amp;L and Treasury impact.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val bad">4×</div>
+            <div class="pain-metric-lbl">CapEx forecast miss (Feb example)</div>
+          </div>
+        </div>
+        <div class="pain-col fut">
+          <div class="pain-col-lbl f">✓ Agentic AI Solution</div>
+          <div class="pain-text">CapEx Invoice Monitor tracks every open CapEx payable across all projects, models due-date clustering risk, and issues automated alerts when projected monthly CapEx cash exceeds 120% of plan — with a minimum 30-day lead time. The February $200MM event would have triggered an alert 32 days in advance.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val good">32d</div>
+            <div class="pain-metric-lbl">Advance CapEx clustering alert (Feb scenario)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="pain-card">
+      <div class="pain-top">
+        <div class="pain-num">PROBLEM #5</div>
+        <div class="pain-title">Treasury Cash Inflow Overstatement &amp; Liquidity Risk</div>
+        <div class="pain-sev high">HIGH</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-col cur">
+          <div class="pain-col-lbl c">⚠ Current State</div>
+          <div class="pain-text">Treasury relies on forecasted cash inflows to plan creditor payments, dividends, and other obligations. When the working capital forecast overstates expected cash generation, Treasury is forced to reposition cash at short notice — creating liquidity risk, operational complexity, and increased cost of carry.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val bad">High</div>
+            <div class="pain-metric-lbl">Treasury liquidity reposition risk</div>
+          </div>
+        </div>
+        <div class="pain-col fut">
+          <div class="pain-col-lbl f">✓ Agentic AI Solution</div>
+          <div class="pain-text">Cash Inflow Predictor Agent cross-references AR aging, customer payment behaviour history, and macro credit signals to build probability-weighted inflow forecasts. Automatically flags overstatement risk to Treasury with confidence intervals — converting a reactive function to a proactive one.</div>
+          <div class="pain-metric">
+            <div class="pain-metric-val good">±3%</div>
+            <div class="pain-metric-lbl">Target cash inflow forecast variance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pain-grid -->
+
+  <!-- ══ SCOPE RECOMMENDATION ════════════════════════════════════════════ -->
+  <div class="insight">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      <strong>Scope recommendation (from working session):</strong> Begin with <strong>short-term forecasting</strong> — 13-week rolling working capital — focused on O&amp;P, targeting Problems #3 (AP) and #4 (CapEx) first as highest dollar impact. Extend to <strong>long-range planning (LRP) and scenario modelling</strong> in Phase 2. Data elements are shared across horizons — foundational agents built in Phase 1 scale directly to LRP. Involve I&amp;D and APS in interview phase to support future scaling. Segment involvement confirmed: O&amp;P primary, I&amp;D and APS in discovery.
+    </div>
+  </div>
+
+  <!-- ══ FORECAST ACCURACY COMPARISON ══════════════════════════════════ -->
+  <div class="sec-hdr">
+    <div class="sec-eyebrow">Monthly Forecast vs Actual · Working Capital Cash</div>
+    <div class="sec-title">Before &amp; After — Manual Forecast vs Agentic AI Forecast</div>
+    <div class="sec-sub">Illustrative quarterly view using the $200MM CapEx shock event as the reference scenario.</div>
+  </div>
+
+  <div class="fc-grid">
+
+    <div class="fc-panel cur">
+      <div class="fc-panel-lbl c">⚠ Current State — Manual / SAP Extract</div>
+      <div class="fc-title">Working Capital Cash Forecast vs Actual</div>
+      <div class="fc-sub">Large forecast-actual gaps driven by AP opacity, CapEx due-date clustering, and no forward allocation visibility.</div>
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Forecast</th>
+            <th>Actual</th>
+            <th>Variance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>January</td>
+            <td><span class="fc-val">$110MM</span></td>
+            <td><span class="fc-val bad">$68MM</span></td>
+            <td><span class="fc-val bad">−38%</span></td>
+            <td><span class="fc-tag miss">MISS</span></td>
+          </tr>
+          <tr>
+            <td>February</td>
+            <td><span class="fc-val">$50MM</span></td>
+            <td><span class="fc-val bad">$200MM</span></td>
+            <td><span class="fc-val bad">+300%</span></td>
+            <td><span class="fc-tag shock">⚡ CAPEX SHOCK</span></td>
+          </tr>
+          <tr>
+            <td>March</td>
+            <td><span class="fc-val">$140MM</span></td>
+            <td><span class="fc-val warn">$95MM</span></td>
+            <td><span class="fc-val warn">−32%</span></td>
+            <td><span class="fc-tag miss">MISS</span></td>
+          </tr>
+          <tr>
+            <td>April</td>
+            <td><span class="fc-val">$85MM</span></td>
+            <td><span class="fc-val bad">$130MM</span></td>
+            <td><span class="fc-val bad">+53%</span></td>
+            <td><span class="fc-tag miss">MISS</span></td>
+          </tr>
+          <tr>
+            <td>May</td>
+            <td><span class="fc-val">$120MM</span></td>
+            <td><span class="fc-val warn">$88MM</span></td>
+            <td><span class="fc-val warn">−27%</span></td>
+            <td><span class="fc-tag miss">MISS</span></td>
+          </tr>
+          <tr style="background:var(--bg-1);">
+            <td style="font-weight:600;font-size:10px;">5-Month Avg</td>
+            <td><span class="fc-val" style="font-size:10px;">$101MM</span></td>
+            <td><span class="fc-val bad" style="font-size:10px;">$116MM</span></td>
+            <td><span class="fc-val bad" style="font-size:10px;">~46% avg miss</span></td>
+            <td><span class="fc-tag miss">POOR</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fc-panel fut">
+      <div class="fc-panel-lbl f">✓ Agentic AI Future State — Agent-Driven Forecast</div>
+      <div class="fc-title">Working Capital Cash Forecast vs Actual</div>
+      <div class="fc-sub">Agent-driven forecasts align tightly. CapEx clustering detected 32 days ahead. AP maturity schedule eliminates surprise payables.</div>
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>AI Forecast</th>
+            <th>Actual</th>
+            <th>Variance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>January</td>
+            <td><span class="fc-val good">$70MM</span></td>
+            <td><span class="fc-val">$68MM</span></td>
+            <td><span class="fc-val good">−3%</span></td>
+            <td><span class="fc-tag ok">✓ ON TARGET</span></td>
+          </tr>
+          <tr>
+            <td>February</td>
+            <td><span class="fc-val good">$196MM</span></td>
+            <td><span class="fc-val">$200MM</span></td>
+            <td><span class="fc-val good">+2%</span></td>
+            <td><span class="fc-tag alert">🔔 ALERT −32d</span></td>
+          </tr>
+          <tr>
+            <td>March</td>
+            <td><span class="fc-val good">$94MM</span></td>
+            <td><span class="fc-val">$95MM</span></td>
+            <td><span class="fc-val good">+1%</span></td>
+            <td><span class="fc-tag ok">✓ ON TARGET</span></td>
+          </tr>
+          <tr>
+            <td>April</td>
+            <td><span class="fc-val good">$128MM</span></td>
+            <td><span class="fc-val">$130MM</span></td>
+            <td><span class="fc-val good">+2%</span></td>
+            <td><span class="fc-tag ok">✓ ON TARGET</span></td>
+          </tr>
+          <tr>
+            <td>May</td>
+            <td><span class="fc-val good">$90MM</span></td>
+            <td><span class="fc-val">$88MM</span></td>
+            <td><span class="fc-val good">−2%</span></td>
+            <td><span class="fc-tag ok">✓ ON TARGET</span></td>
+          </tr>
+          <tr style="background:var(--bg-1);">
+            <td style="font-weight:600;font-size:10px;">5-Month Avg</td>
+            <td><span class="fc-val good" style="font-size:10px;">$116MM</span></td>
+            <td><span class="fc-val" style="font-size:10px;">$116MM</span></td>
+            <td><span class="fc-val good" style="font-size:10px;">~2% avg miss</span></td>
+            <td><span class="fc-tag ok">EXCELLENT</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /fc-grid -->
+
+  <!-- ══ STAKEHOLDERS ════════════════════════════════════════════════════ -->
+  <div class="sec-hdr">
+    <div class="sec-eyebrow">Identified Stakeholders · Discovery &amp; Interviews</div>
+    <div class="sec-title">Required Stakeholder Involvement</div>
+    <div class="sec-sub">Confirmed and to-be-confirmed contacts from the working session — needed to complete the discovery phase.</div>
+  </div>
+  <div class="stakeholder-row">
+    <div class="s-card">
+      <div class="s-label">Accounts Payable</div>
+      <div class="s-name">Cedric Lathon</div>
+      <div class="s-role">AP Lead</div>
+      <div class="s-status confirmed">CONFIRMED</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Accounts Payable</div>
+      <div class="s-name">Tim Hartley</div>
+      <div class="s-role">AP — Optional</div>
+      <div class="s-status confirmed">OPTIONAL</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Procurement</div>
+      <div class="s-name">TBC via Jen Jewson</div>
+      <div class="s-role">Point of contact needed</div>
+      <div class="s-status tbc">TBC</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">I&amp;D Business Finance</div>
+      <div class="s-name">To be identified</div>
+      <div class="s-role">Discovery scope — I&amp;D segment</div>
+      <div class="s-status tbc">TBC</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">Project Management</div>
+      <div class="s-name">Hugo Morales</div>
+      <div class="s-role">PM assigned to this project</div>
+      <div class="s-status confirmed">ASSIGNED</div>
+    </div>
+    <div class="s-card">
+      <div class="s-label">APS Segment</div>
+      <div class="s-name">To be identified</div>
+      <div class="s-role">Discovery scope — APS segment</div>
+      <div class="s-status tbc">TBC</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ══ AGENTIC ORCHESTRATION ══════════════════════════════════════════════ -->
+<div class="ao-wrap">
+  <div class="ao-inner">
+    <div class="ao-hdr-row">
+      <div>
+        <div class="ao-eyebrow">Working Capital · Agent Architecture</div>
+        <div class="ao-name">Agentic Orchestration</div>
+        <div class="ao-sub">8 specialized agents across 4 operational layers, each directly addressing one or more of the 5 identified forecasting failures. A single Working Capital Orchestrator coordinates all agents across the full forecast cycle — from raw SAP extraction to CFO-ready board pack narrative.</div>
+      </div>
+      <div class="ao-stat">
+        <div class="ao-stat-num">8</div>
+        <div class="ao-stat-lbl">Active Agents</div>
+      </div>
+    </div>
+
+    <div class="ao-orch-bar">
+      <span class="ao-orch-bar-label">Orchestration</span>
+      <span class="ao-orch-pill">🧠 Working Capital Orchestrator — coordinates full forecast cycle, dispatches agents, monitors SLA, assembles CFO output</span>
+    </div>
+
+    <div class="ao-layers">
+
+      <!-- Layer 04 -->
+      <div class="ao-layer">
+        <div class="ao-layer-meta">
+          <div class="ao-layer-connector">▼</div>
+          <div class="ao-layer-num">LAYER 04</div>
+          <div class="ao-layer-name">User Experience</div>
+          <div class="ao-layer-desc">CFO-ready narratives, board-pack commentary &amp; scenario views</div>
+        </div>
+        <div class="ao-agents">
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">💬</span>
+              <span class="ao-agent-name">CFO Forecast Narrator</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P1 · P2 · P3 · P4 · P5 (output layer)</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">LLM Reasoning</span><span class="ao-agent-tool">Variance Commentary</span><span class="ao-agent-tool">Board-Pack Draft</span><span class="ao-agent-tool">Context Store</span>
+            </div>
+          </div>
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">📐</span>
+              <span class="ao-agent-name">Scenario Planning Agent</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: LRP scope · short/long-term bridge</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">Bull/Base/Bear</span><span class="ao-agent-tool">Sensitivity Engine</span><span class="ao-agent-tool">LRP Bridge</span><span class="ao-agent-tool">Horizon Connector</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 03 -->
+      <div class="ao-layer">
+        <div class="ao-layer-meta">
+          <div class="ao-layer-connector">▼</div>
+          <div class="ao-layer-num">LAYER 03</div>
+          <div class="ao-layer-name">Business Intelligence</div>
+          <div class="ao-layer-desc">Working capital modelling &amp; Treasury liquidity advisory</div>
+        </div>
+        <div class="ao-agents">
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">📊</span>
+              <span class="ao-agent-name">Working Capital Modeler</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P1 · P3 · P4 — segment cash bridge</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">13-wk Rolling Model</span><span class="ao-agent-tool">Cash Bridge Builder</span><span class="ao-agent-tool">Segment Splitter</span>
+            </div>
+          </div>
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">🏦</span>
+              <span class="ao-agent-name">Treasury Cash Advisor</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P5 — inflow overstatement detection</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">Inflow Predictor</span><span class="ao-agent-tool">Overstatement Flag</span><span class="ao-agent-tool">Liquidity Monitor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 02 -->
+      <div class="ao-layer">
+        <div class="ao-layer-meta">
+          <div class="ao-layer-connector">▼</div>
+          <div class="ao-layer-num">LAYER 02</div>
+          <div class="ao-layer-name">Analytics</div>
+          <div class="ao-layer-desc">AP maturity analysis &amp; CapEx clustering detection</div>
+        </div>
+        <div class="ao-agents">
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">📋</span>
+              <span class="ao-agent-name">AP Maturity Agent</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P3 — eliminates AP black box</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">Aging Bucket Model</span><span class="ao-agent-tool">Payment Terms Engine</span><span class="ao-agent-tool">Segment AP Schedule</span>
+            </div>
+          </div>
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">🏗️</span>
+              <span class="ao-agent-name">CapEx Invoice Monitor</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P4 — prevents CapEx shock events</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">Clustering Detector</span><span class="ao-agent-tool">Due-Date Modeller</span><span class="ao-agent-tool">120% Threshold Alert</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 01 -->
+      <div class="ao-layer">
+        <div class="ao-layer-meta">
+          <div class="ao-layer-num">LAYER 01</div>
+          <div class="ao-layer-name">Data Ingestion</div>
+          <div class="ao-layer-desc">SAP extraction, entity resolution &amp; pre-posting cost allocation surfacing</div>
+        </div>
+        <div class="ao-agents">
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">🔌</span>
+              <span class="ao-agent-name">SAP GL Extractor</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P1 · P2 — raw data foundation</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">SAP RFC Connector</span><span class="ao-agent-tool">GL / AP / CapEx Pull</span><span class="ao-agent-tool">Delta Loader</span>
+            </div>
+          </div>
+          <div class="ao-agent">
+            <div class="ao-agent-top">
+              <span class="ao-agent-icon">🗺️</span>
+              <span class="ao-agent-name">Multi-Entity Mapper &amp; Cost Tracer</span>
+              <span class="ao-agent-badge">WC</span>
+            </div>
+            <div class="ao-agent-solves">Solves: P1 · P2 — segment attribution &amp; pre-post visibility</div>
+            <div class="ao-agent-tools">
+              <span class="ao-agent-tool">Entity Resolution ML</span><span class="ao-agent-tool">Segment Mapper</span><span class="ao-agent-tool">Allocation Tracer</span><span class="ao-agent-tool">HR Cycle Monitor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /ao-layers -->
+  </div>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<div class="dash-footer">
+  <div class="dash-footer-logo">IBM</div>
+  <div class="dash-footer-text">Working Capital Forecast Intelligence · Confidential · O&amp;P Business Finance · CFO Office</div>
+  <div class="dash-footer-text">Agentic AI Value Platform · Vision Document</div>
+</div>
+
+</body>
+</html>
