@@ -617,27 +617,48 @@
   }
 })();
 
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
   const name = document.getElementById('projectName').value.trim();
   const key  = document.getElementById('projectKey').value.trim();
   const err  = document.getElementById('loginError');
+  const btn  = e.target.querySelector('button[type=submit]');
 
   if (!name || !key) {
+    err.textContent = 'Please enter both client name and password.';
     err.classList.add('show');
     return;
   }
   err.classList.remove('show');
+  if (btn) { btn.disabled = true; btn.textContent = 'Verifying…'; }
 
-  sessionStorage.setItem('aavp_auth', JSON.stringify({
-    projectName: name,
-    projectKey:  key,
-    loginTime:   new Date().toISOString()
-  }));
-
-  const params   = new URLSearchParams(window.location.search);
-  const redirect = params.get('redirect') || 'assess.html';
-  window.location.href = redirect;
+  try {
+    const resp = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientName: name, password: key })
+    });
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({}));
+      err.textContent = data.error || 'Invalid client name or password.';
+      err.classList.add('show');
+      if (btn) { btn.disabled = false; btn.textContent = 'Access Platform'; }
+      return;
+    }
+    const { token, clientName } = await resp.json();
+    sessionStorage.setItem('aavp_auth', JSON.stringify({
+      projectName: clientName,
+      token,
+      loginTime: new Date().toISOString()
+    }));
+    const params   = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || 'assess.html';
+    window.location.href = redirect;
+  } catch (ex) {
+    err.textContent = 'Connection error — please try again.';
+    err.classList.add('show');
+    if (btn) { btn.disabled = false; btn.textContent = 'Access Platform'; }
+  }
 }
 </script>
 </body>

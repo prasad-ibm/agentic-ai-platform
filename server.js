@@ -2,7 +2,29 @@ require('dotenv').config(); // loads .env for local dev (no-op on Railway)
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-const { randomUUID: uuidv4 } = require('crypto'); // built-in Node.js — no package needed
+const { randomUUID: uuidv4, createHmac } = require('crypto'); // built-in Node.js — no package needed
+
+// ── AUTH HELPERS ───────────────────────────────────────────────────────────
+const TOKEN_SECRET = process.env.TOKEN_SECRET || 'dev-secret-not-for-prod';
+const TOKEN_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+
+function signToken(clientName) {
+  const ts = Date.now().toString();
+  const payload = `${clientName}:${ts}`;
+  const sig = createHmac('sha256', TOKEN_SECRET).update(payload).digest('hex');
+  return Buffer.from(JSON.stringify({ payload, sig })).toString('base64url');
+}
+
+function verifyToken(token) {
+  try {
+    const { payload, sig } = JSON.parse(Buffer.from(token, 'base64url').toString('utf8'));
+    const expected = createHmac('sha256', TOKEN_SECRET).update(payload).digest('hex');
+    if (sig !== expected) return null;
+    const [clientName, ts] = payload.split(':');
+    if (Date.now() - parseInt(ts, 10) > TOKEN_TTL_MS) return null;
+    return clientName;
+  } catch { return null; }
+}
 const path = require('path');
 const fs = require('fs');
 
@@ -248,6 +270,26 @@ app.get('/api/roi-summary/:client_id', async (req, res) => {
     });
     res.json(summary);
   } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── LOGIN & VERIFY ─────────────────────────────────────────────────────────
+app.post('/api/login', (req, res) => {
+  const { clientName, password } = req.body || {};
+  const validName = process.env.CLIENT_NAME || '';
+  const validPass = process.env.CLIENT_PASSWORD || '';
+  if (!validName || !validPass)
+    return res.status(503).json({ error: 'Auth not configured on server' });
+  if (!clientName || !password || clientName !== validName || password !== validPass)
+    return res.status(401).json({ error: 'Invalid client name or password' });
+  res.json({ token: signToken(clientName), clientName });
+});
+
+app.get('/api/verify', (req, res) => {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  const clientName = verifyToken(token);
+  if (!clientName) return res.status(401).json({ error: 'Invalid or expired session' });
+  res.json({ ok: true, clientName });
 });
 
 // ── PLATFORM CONFIG (drives open vs protected mode) ────────────────────────

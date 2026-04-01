@@ -239,16 +239,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── AUTH GUARD (only active when PROTECTED_MODE=true on the server) ──────────
+// ── AUTH GUARD (server-verified token, active when PROTECTED_MODE=true) ─────
 (function(){
   const protected = window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode;
   const navExtras = document.getElementById('authNavExtras');
   if(!protected){ if(navExtras) navExtras.style.display='none'; return; }
-  const auth = sessionStorage.getItem('aavp_auth');
-  if(!auth){ window.location.href = 'login.html?redirect=tracker.html'; return; }
-  const { projectName } = JSON.parse(auth);
+  const raw = sessionStorage.getItem('aavp_auth');
+  if(!raw){ window.location.href = 'login.html?redirect=tracker.html'; return; }
+  const { projectName, token } = JSON.parse(raw);
   const el = document.getElementById('authProjectLabel');
   if(el) el.textContent = projectName;
+  fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
+    .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=tracker.html'; } })
+    .catch(() => {});
 })();
 function logout(){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html'; }
 
