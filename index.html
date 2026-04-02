@@ -177,13 +177,14 @@
       color: #4c4c4c;
       margin: 0 6px;
     }
-    .contact-bar-email {
-      color: #78a9ff;
-      text-decoration: none;
+    .contact-bar-name-link {
+      color: #e0e0e0;
       font-weight: 500;
-      transition: color 0.15s;
+      text-decoration: none;
+      border-bottom: 1px dotted #4c4c4c;
+      transition: color 0.15s, border-color 0.15s;
     }
-    .contact-bar-email:hover { color: #a6c8ff; text-decoration: underline; }
+    .contact-bar-name-link:hover { color: #78a9ff; border-bottom-color: #78a9ff; }
     .contact-bar-right {
       display: flex;
       align-items: center;
@@ -520,11 +521,9 @@
 <div class="contact-bar">
   <div class="contact-bar-left">
     <span class="contact-bar-label">Contact</span>
-    <span class="contact-bar-name">Prasad Venkitaramanan</span>
+    <a href="mailto:nvenkit@us.ibm.com?subject=Agentic AI Platform — Enquiry&body=Hi Prasad,%0A%0AI'm interested in learning more about the IBM Agentic AI Value Platform.%0A%0A" class="contact-bar-name-link">Prasad Venkitaramanan</a>
     <span class="contact-bar-sep">·</span>
     <span>IBM Technology · Agentic AI</span>
-    <span class="contact-bar-sep">·</span>
-    <a href="mailto:nvenkit@us.ibm.com" class="contact-bar-email">nvenkit@us.ibm.com</a>
   </div>
   <div class="contact-bar-right">
     <span class="contact-bar-ibm">IBM</span>
