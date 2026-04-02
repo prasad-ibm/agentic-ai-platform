@@ -239,8 +239,21 @@
     .ao-agent-tools{display:flex;flex-wrap:wrap;gap:3px;}
     .ao-agent-tool{font-size:9px;color:#525252;background:#f4f4f4;padding:2px 6px;border:1px solid #e0e0e0;}
   </style>
+  <script src="/config.js"></script>
 </head>
 <body>
+<script>
+// ── AUTH GUARD ─────────────────────────────────────────────────────────────
+(function(){
+  if(!(window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode)) return;
+  const raw = sessionStorage.getItem('aavp_auth');
+  if(!raw){ window.location.href = 'login.html?redirect=procurement.html'; return; }
+  const { token } = JSON.parse(raw);
+  fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
+    .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=procurement.html'; } })
+    .catch(() => {});
+})();
+</script>
 
 <!-- ── MOBILE GATE ──────────────────────────────────────────────────────── -->
 <div id="mobile-gate">

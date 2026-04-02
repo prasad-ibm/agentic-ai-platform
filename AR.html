@@ -268,8 +268,21 @@
     .mg-btn-s{background:transparent;color:#0f62fe;border:1px solid #0f62fe;padding:12px 28px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;max-width:320px;}
     @media(min-width:768px){#mobile-gate{display:none!important;}}
   </style>
+  <script src="/config.js"></script>
 </head>
 <body>
+<script>
+// ── AUTH GUARD ─────────────────────────────────────────────────────────────
+(function(){
+  if(!(window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode)) return;
+  const raw = sessionStorage.getItem('aavp_auth');
+  if(!raw){ window.location.href = 'login.html?redirect=AR.html'; return; }
+  const { token } = JSON.parse(raw);
+  fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
+    .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=AR.html'; } })
+    .catch(() => {});
+})();
+</script>
 
 <!-- ── MOBILE GATE ──────────────────────────────────────────────────────── -->
 <div id="mobile-gate">
