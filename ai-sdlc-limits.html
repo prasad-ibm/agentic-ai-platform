@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise AI Tooling — SDLC Limitations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0: #ffffff;
+    --bg-1: #f4f4f4;
+    --bg-2: #e0e0e0;
+    --text-0: #161616;
+    --text-1: #525252;
+    --text-2: #8d8d8d;
+    --blue: #0f62fe;
+    --blue-light: #edf5ff;
+    --blue-mid: #d0e2ff;
+    --red: #da1e28;
+    --red-light: #fff1f1;
+    --orange: #ff832b;
+    --orange-light: #fff2e8;
+    --green: #24a148;
+    --green-light: #defbe6;
+    --purple: #8a3ffc;
+    --purple-light: #f6f2ff;
+    --teal: #007d79;
+    --teal-light: #d9fbfb;
+    --dark: #161616;
+    --border: #c6c6c6;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg-1);
+    color: var(--text-0);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+  }
+
+  .slide {
+    width: 100%;
+    max-width: 1280px;
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  .slide-header {
+    background: var(--dark);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .slide-header-left { display: flex; flex-direction: column; gap: 4px; }
+  .slide-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #8d8d8d;
+  }
+  .slide-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .slide-subtitle {
+    font-size: 12px;
+    font-weight: 400;
+    color: #a8a8a8;
+    margin-top: 2px;
+  }
+  .slide-header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .ibm-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -1px;
+  }
+  .slide-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6f6f6f;
+  }
+
+  /* ─── SDLC PIPELINE BAR ─── */
+  .pipeline {
+    background: #1c1c1c;
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: stretch;
+    border-bottom: 2px solid var(--blue);
+    overflow-x: auto;
+  }
+  .pipeline-stage {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    position: relative;
+    cursor: default;
+    transition: background 0.15s;
+  }
+  .pipeline-stage::after {
+    content: '›';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #4c4c4c;
+    z-index: 2;
+  }
+  .pipeline-stage:last-child::after { display: none; }
+  .stage-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-bottom: 5px;
+    font-weight: 700;
+  }
+  .stage-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #c6c6c6;
+  }
+  .stage-count {
+    font-size: 9px;
+    color: #6f6f6f;
+    margin-top: 2px;
+  }
+
+  .s-design  .stage-icon { background: var(--purple); color: #fff; }
+  .s-dev     .stage-icon { background: var(--blue); color: #fff; }
+  .s-test    .stage-icon { background: var(--orange); color: #fff; }
+  .s-deploy  .stage-icon { background: var(--teal); color: #fff; }
+  .s-operate .stage-icon { background: var(--red); color: #fff; }
+
+  /* ─── CONTENT GRID ─── */
+  .content {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    min-height: 0;
+  }
+
+  .phase-col {
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .phase-col:last-child { border-right: none; }
+
+  .phase-header {
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phase-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .phase-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  .p-design  .phase-dot { background: var(--purple); }
+  .p-design  .phase-name { color: var(--purple); }
+  .p-dev     .phase-dot { background: var(--blue); }
+  .p-dev     .phase-name { color: var(--blue); }
+  .p-test    .phase-dot { background: var(--orange); }
+  .p-test    .phase-name { color: var(--orange); }
+  .p-deploy  .phase-dot { background: var(--teal); }
+  .p-deploy  .phase-name { color: var(--teal); }
+  .p-operate .phase-dot { background: var(--red); }
+  .p-operate .phase-name { color: var(--red); }
+
+  .phase-items {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .limit-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    border-left: 2px solid transparent;
+    background: var(--bg-1);
+    border-radius: 0 2px 2px 0;
+  }
+  .limit-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-0);
+    line-height: 1.3;
+  }
+  .limit-desc {
+    font-size: 10px;
+    color: var(--text-1);
+    line-height: 1.4;
+  }
+  .severity {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .sev-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .sev-critical .sev-dot { background: var(--red); }
+  .sev-critical { color: var(--red); }
+  .sev-high .sev-dot { background: var(--orange); }
+  .sev-high { color: var(--orange); }
+  .sev-med .sev-dot { background: #f1c21b; }
+  .sev-med { color: #a67f00; }
+
+  /* border colors by phase */
+  .p-design  .limit-item { border-left-color: var(--purple); }
+  .p-dev     .limit-item { border-left-color: var(--blue); }
+  .p-test    .limit-item { border-left-color: var(--orange); }
+  .p-deploy  .limit-item { border-left-color: var(--teal); }
+  .p-operate .limit-item { border-left-color: var(--red); }
+
+  /* ─── ENTERPRISE STRUCTURAL GAP STRIP ─── */
+  .gap-strip {
+    border-top: 2px solid var(--border);
+    background: #1c1c1c;
+    padding: 14px 2.5rem;
+  }
+  .gap-strip-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6f6f6f;
+    margin-bottom: 10px;
+  }
+  .gap-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .gap-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #262626;
+    border: 1px solid #393939;
+    border-radius: 2px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: #c6c6c6;
+  }
+  .gap-pill-icon {
+    font-size: 13px;
+  }
+  .gap-pill strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* ─── VERDICT BAR ─── */
+  .verdict {
+    background: var(--blue);
+    padding: 12px 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .verdict-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.5;
+    max-width: 820px;
+  }
+  .verdict-text strong { font-weight: 700; }
+  .verdict-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #a6c8ff;
+    white-space: nowrap;
+  }
+
+  /* ─── FOOTER ─── */
+  .slide-footer {
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    padding: 8px 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-note {
+    font-size: 10px;
+    color: var(--text-2);
+  }
+  .footer-legend {
+    display: flex;
+    gap: 16px;
+  }
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--text-2);
+  }
+  .leg-dot { width: 6px; height: 6px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<div class="slide">
+
+  <!-- HEADER -->
+  <div class="slide-header">
+    <div class="slide-header-left">
+      <span class="slide-eyebrow">Enterprise AI Enablement · Technology Assessment</span>
+      <div class="slide-title">Current Limitations of AI Coding Assistants Across the SDLC</div>
+      <div class="slide-subtitle">Claude Code, GitHub Copilot, Cursor and similar tools — where they fall short at enterprise scale</div>
+    </div>
+    <div class="slide-header-right">
+      <div class="ibm-logo">IBM</div>
+      <div class="slide-tag">Confidential · 2026</div>
+    </div>
+  </div>
+
+  <!-- PIPELINE BAR -->
+  <div class="pipeline">
+    <div class="pipeline-stage s-design">
+      <div class="stage-icon">D</div>
+      <div class="stage-label">Design</div>
+      <div class="stage-count">4 gaps</div>
+    </div>
+    <div class="pipeline-stage s-dev">
+      <div class="stage-icon">⌨</div>
+      <div class="stage-label">Develop</div>
+      <div class="stage-count">5 gaps</div>
+    </div>
+    <div class="pipeline-stage s-test">
+      <div class="stage-icon">✓</div>
+      <div class="stage-label">Test</div>
+      <div class="stage-count">5 gaps</div>
+    </div>
+    <div class="pipeline-stage s-deploy">
+      <div class="stage-icon">▲</div>
+      <div class="stage-label">Deploy</div>
+      <div class="stage-count">4 gaps</div>
+    </div>
+    <div class="pipeline-stage s-operate">
+      <div class="stage-icon">◉</div>
+      <div class="stage-label">Operate</div>
+      <div class="stage-count">5 gaps</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT GRID -->
+  <div class="content">
+
+    <!-- DESIGN -->
+    <div class="phase-col p-design">
+      <div class="phase-header">
+        <div class="phase-dot"></div>
+        <div class="phase-name">Design</div>
+      </div>
+      <div class="phase-items">
+        <div class="limit-item">
+          <div class="limit-title">Context Window Ceiling</div>
+          <div class="limit-desc">Large codebases exceed 200K token limit — agents lose coherence across subsystems</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Persistent Memory</div>
+          <div class="limit-desc">Architectural decisions and org conventions must be re-injected every session</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Historical Reasoning</div>
+          <div class="limit-desc">Can't query ADRs, Jira history, or explain why past decisions were made</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Single-Repo Bias</div>
+          <div class="limit-desc">Multi-repo, polyglot architectures (20+ services) break most integrations</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEVELOP -->
+    <div class="phase-col p-dev">
+      <div class="phase-header">
+        <div class="phase-dot"></div>
+        <div class="phase-name">Develop</div>
+      </div>
+      <div class="phase-items">
+        <div class="limit-item">
+          <div class="limit-title">Long-Horizon Task Drift</div>
+          <div class="limit-desc">Quality degrades after 50+ sequential decisions — agents lose coherence on large refactors</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Hallucinated Internal APIs</div>
+          <div class="limit-desc">Proprietary libraries and internal SDKs not in training data — fabrication risk is high</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Runtime Visibility</div>
+          <div class="limit-desc">Can't observe live prod state, staging logs, or real-time telemetry without tool plumbing</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Security Pattern Blindness</div>
+          <div class="limit-desc">No built-in awareness of org-specific security policies or license compliance obligations</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Merge Conflict Limits</div>
+          <div class="limit-desc">Struggles with complex 3-way merges in high-velocity parallel branch environments</div>
+          <span class="severity sev-med"><span class="sev-dot"></span>Medium</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEST -->
+    <div class="phase-col p-test">
+      <div class="phase-header">
+        <div class="phase-dot"></div>
+        <div class="phase-name">Test</div>
+      </div>
+      <div class="phase-items">
+        <div class="limit-item">
+          <div class="limit-title">No Closed-Loop Execution</div>
+          <div class="limit-desc">Can't write → run → observe → fix autonomously without external CI/CD scaffolding</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Mock-Only Test Generation</div>
+          <div class="limit-desc">Tests built against mocked behavior miss edge cases visible only with real data distributions</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Flaky Test Blindness</div>
+          <div class="limit-desc">Intermittent failures caused by timing or data state are undiagnosable without execution access</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Perf / Load Insight</div>
+          <div class="limit-desc">k6, Gatling scripts require deep infra context the model doesn't have — outputs are generic</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Compliance Test Gaps</div>
+          <div class="limit-desc">SOX, HIPAA, PCI audit evidence generation requires domain specificity beyond current capability</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPLOY -->
+    <div class="phase-col p-deploy">
+      <div class="phase-header">
+        <div class="phase-dot"></div>
+        <div class="phase-name">Deploy</div>
+      </div>
+      <div class="phase-items">
+        <div class="limit-item">
+          <div class="limit-title">No ITSM Integration</div>
+          <div class="limit-desc">No native connectors to ServiceNow, Remedy, or CAB approval workflows</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Actuation Rights</div>
+          <div class="limit-desc">Can suggest rollbacks or patches but can't execute them autonomously in production</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Audit Trail Blindspot</div>
+          <div class="limit-desc">AI-generated changes lack native attribution, review gates, and SOC2/ISO evidence chain</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Multi-Region Unawareness</div>
+          <div class="limit-desc">No native understanding of geo-specific deployment constraints, data residency, or blast radius</div>
+          <span class="severity sev-med"><span class="sev-dot"></span>Medium</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPERATE -->
+    <div class="phase-col p-operate">
+      <div class="phase-header">
+        <div class="phase-dot"></div>
+        <div class="phase-name">Operate</div>
+      </div>
+      <div class="phase-items">
+        <div class="limit-item">
+          <div class="limit-title">No Live Observability</div>
+          <div class="limit-desc">Can't ingest Datadog, Splunk, or Dynatrace feeds in real-time without bespoke MCP wiring</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Incident Reasoning Drift</div>
+          <div class="limit-desc">Multi-system cascading failures across 10+ log streams cause context loss under pressure</div>
+          <span class="severity sev-critical"><span class="sev-dot"></span>Critical</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Plausible Wrong RCA</div>
+          <div class="limit-desc">Root cause analysis is only as good as logs fed in — confident fabrication is a real risk</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">Runbook Knowledge Decay</div>
+          <div class="limit-desc">Confluence and ServiceNow runbooks require explicit RAG pipelines — not native</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+        <div class="limit-item">
+          <div class="limit-title">No Model Governance</div>
+          <div class="limit-desc">No native model card, drift detection, or bias audit support for AI systems being operated</div>
+          <span class="severity sev-high"><span class="sev-dot"></span>High</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ENTERPRISE STRUCTURAL GAPS STRIP -->
+  <div class="gap-strip">
+    <div class="gap-strip-label">Enterprise-Wide Structural Gaps — Across All Phases</div>
+    <div class="gap-pills">
+      <div class="gap-pill">
+        <span class="gap-pill-icon">🔐</span>
+        <strong>IAM / RBAC Blindness</strong> — no who-can-do-what awareness
+      </div>
+      <div class="gap-pill">
+        <span class="gap-pill-icon">💰</span>
+        <strong>No FinOps Attribution</strong> — token spend not team-allocated
+      </div>
+      <div class="gap-pill">
+        <span class="gap-pill-icon">🏢</span>
+        <strong>Multi-Tenant Context Bleed</strong> — isolation not guaranteed
+      </div>
+      <div class="gap-pill">
+        <span class="gap-pill-icon">📋</span>
+        <strong>No Change Management</strong> — CAB / ITSM disconnected
+      </div>
+      <div class="gap-pill">
+        <span class="gap-pill-icon">⚖️</span>
+        <strong>License Compliance</strong> — GPL / OSS obligation blindspot
+      </div>
+      <div class="gap-pill">
+        <span class="gap-pill-icon">🌐</span>
+        <strong>Data Residency</strong> — geo-specific constraints ignored
+      </div>
+    </div>
+  </div>
+
+  <!-- VERDICT BAR -->
+  <div class="verdict">
+    <div class="verdict-label">Bottom Line</div>
+    <div class="verdict-text">
+      Today's AI coding tools are <strong>excellent tactical accelerators</strong> — compressing hours to minutes on well-scoped tasks.
+      They are <strong>not yet autonomous enterprise engineering platforms.</strong>
+      The critical gaps are: persistent memory, closed-loop execution, governance controls, and verified reasoning on proprietary systems.
+      Closing these gaps requires a deliberate <strong>Agentic Orchestration layer</strong> — not just point tools.
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="slide-footer">
+    <div class="footer-note">IBM Confidential · Enterprise AI Enablement · April 2026</div>
+    <div class="footer-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Critical — blocks enterprise adoption</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div>High — significant friction</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f1c21b"></div>Medium — manageable with workarounds</div>
+    </div>
+  </div>
+
+</div><!-- /slide -->
+
+</body>
+</html>
