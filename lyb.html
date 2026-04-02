@@ -165,6 +165,57 @@
     .ao-agent-tools { display: flex; flex-wrap: wrap; gap: 3px; }
     .ao-agent-tool { font-size: 9px; color: #525252; background: #f4f4f4; padding: 2px 6px; border: 1px solid #e0e0e0; }
 
+    /* ── R2R CONTEXT STRIP ── */
+    .r2r-strip { background: #161616; border-top: 1px solid rgba(255,255,255,0.06); padding: 0 2rem; }
+    .r2r-strip-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: stretch; }
+    .r2r-strip-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 14px 20px 14px 0; border-right: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; white-space: nowrap; }
+    .r2r-process-row { display: flex; align-items: stretch; flex: 1; }
+    .r2r-proc { flex: 1; padding: 10px 16px; border-right: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; justify-content: center; gap: 4px; transition: background 0.15s; }
+    .r2r-proc:last-child { border-right: none; }
+    .r2r-proc.active { background: rgba(15,98,254,0.15); border-bottom: 2px solid #0f62fe; }
+    .r2r-proc-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .r2r-proc-apps { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+    .r2r-proc-badge { font-size: 7px; font-weight: 700; letter-spacing: 0.5px; padding: 1px 5px; display: inline-block; margin-top: 3px; }
+    .r2r-proc-badge.active { background: rgba(15,98,254,0.3); color: #a6c8ff; border: 1px solid rgba(15,98,254,0.4); }
+    .r2r-proc-badge.scope { background: rgba(25,128,56,0.25); color: #42be65; border: 1px solid rgba(25,128,56,0.3); }
+
+    /* ── R2R APP INTEGRATION MAP ── */
+    .r2r-map { margin-bottom: 2rem; }
+    .r2r-map-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border-med); border: 1px solid var(--border-med); }
+    .r2r-col { background: var(--bg-0); }
+    .r2r-col-hdr { padding: 10px 14px; background: var(--bg-1); border-bottom: 2px solid var(--border-med); }
+    .r2r-col-hdr.record { border-bottom-color: #0f62fe; }
+    .r2r-col-hdr.close  { border-bottom-color: #007d79; }
+    .r2r-col-hdr.report { border-bottom-color: #8a3ffc; }
+    .r2r-col-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); margin-bottom: 3px; }
+    .r2r-col-title { font-size: 12px; font-weight: 600; color: var(--text-0); }
+    .r2r-col-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; }
+    .r2r-app-list { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+    .r2r-app { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); background: var(--bg-0); }
+    .r2r-app:hover { border-color: var(--blue); }
+    .r2r-app-status { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .r2r-app-status.keep  { background: #198038; }
+    .r2r-app-status.retire { background: #da1e28; }
+    .r2r-app-status.new   { background: #0f62fe; }
+    .r2r-app-status.tbd   { background: #ff832b; }
+    .r2r-app-body { flex: 1; min-width: 0; }
+    .r2r-app-name { font-size: 10px; font-weight: 600; color: var(--text-0); line-height: 1.3; margin-bottom: 3px; }
+    .r2r-app-cap  { font-size: 9px; color: var(--text-2); margin-bottom: 4px; }
+    .r2r-app-agent { font-size: 8px; font-weight: 700; color: #0f62fe; background: var(--blue-pale); padding: 1px 5px; border: 1px solid rgba(15,98,254,0.2); display: inline-block; }
+    .r2r-app-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+    .r2r-tag { font-size: 8px; padding: 1px 5px; font-weight: 600; }
+    .r2r-tag.keep   { background: var(--green-pale); color: var(--green); border: 1px solid rgba(25,128,56,0.25); }
+    .r2r-tag.retire { background: var(--red-pale);   color: var(--red);   border: 1px solid rgba(218,30,40,0.2); }
+    .r2r-tag.new    { background: var(--blue-pale);  color: var(--blue-l);border: 1px solid rgba(15,98,254,0.2); }
+    .r2r-tag.tbd    { background: var(--orange-pale);color: var(--orange);border: 1px solid rgba(255,131,43,0.2); }
+    .r2r-tag.core   { background: #f4f4f4; color: var(--text-2); border: 1px solid var(--border); }
+    .r2r-legend-row { display: flex; align-items: center; gap: 16px; padding: 10px 14px; background: var(--bg-1); border-top: 1px solid var(--border); font-size: 10px; color: var(--text-2); }
+    .r2r-legend-item { display: flex; align-items: center; gap: 5px; }
+    .r2r-legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .r2r-retire-note { background: #fff8f0; border: 1px solid rgba(218,30,40,0.18); border-left: 3px solid #da1e28; padding: 10px 14px; margin-top: 1px; }
+    .r2r-retire-note-title { font-size: 10px; font-weight: 700; color: #da1e28; margin-bottom: 4px; }
+    .r2r-retire-note-text  { font-size: 10px; color: var(--text-1); line-height: 1.5; }
+
     /* ── FOOTER ── */
     .dash-footer { background: #161616; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
     .dash-footer-logo { background: #fff; color: #161616; font-size: 9px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; flex-shrink: 0; }
@@ -181,9 +232,9 @@
       <div class="hero-sep"></div>
       <div class="hero-label">CFO Office · O&amp;P Business Finance</div>
     </div>
-    <div class="hero-badge">Working Capital Intelligence · Agentic AI Vision</div>
+    <div class="hero-badge">Record to Report · Working Capital · Agentic AI Vision</div>
     <div class="hero-title">Working Capital <strong>Forecast Intelligence</strong></div>
-    <div class="hero-sub">Current state analysis and AI-enabled future view addressing the 5 core forecasting failures identified in the Business Lead working session. Immediate scope: O&amp;P — scaling path to I&amp;D and APS.</div>
+    <div class="hero-sub">Current state analysis and AI-enabled future view addressing the 5 core forecasting failures identified in the Business Lead working session. Anchored in the R2R F&amp;A to-be application landscape — S/4 HANA, Onestream, Trintech Cadency, and Workiva as foundational systems. Immediate scope: O&amp;P — scaling path to I&amp;D and APS.</div>
     <div class="hero-kpis">
       <div class="hero-kpi">
         <div class="kpi-state current">Current state</div>
@@ -217,6 +268,40 @@
         <div class="kpi-state future">AI future</div>
         <div class="kpi-num good">100%</div>
         <div class="kpi-lbl">AP Due-Date Visibility</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ R2R PROCESS CONTEXT STRIP ══════════════════════════════════════════ -->
+<div class="r2r-strip">
+  <div class="r2r-strip-inner">
+    <div class="r2r-strip-label">R2R F&amp;A Process</div>
+    <div class="r2r-process-row">
+      <div class="r2r-proc active">
+        <div class="r2r-proc-name">📒 Record</div>
+        <div class="r2r-proc-apps">Inventory · Fixed Assets · General · Lease Accounting</div>
+        <span class="r2r-proc-badge active">◀ WC SCOPE</span>
+      </div>
+      <div class="r2r-proc">
+        <div class="r2r-proc-name">🔄 Close &amp; Consolidate</div>
+        <div class="r2r-proc-apps">Onestream SaaS · Perform Consolidation</div>
+        <span class="r2r-proc-badge scope">PHASE 2</span>
+      </div>
+      <div class="r2r-proc">
+        <div class="r2r-proc-name">📊 Report — Internal</div>
+        <div class="r2r-proc-apps">General Accounting · Perform Audits · Internal Controls</div>
+        <span class="r2r-proc-badge scope">PHASE 2</span>
+      </div>
+      <div class="r2r-proc">
+        <div class="r2r-proc-name">📋 Report — External</div>
+        <div class="r2r-proc-apps">Workiva SEC · PwC Disclosure · Regulatory / Statutory</div>
+        <span class="r2r-proc-badge scope">PHASE 2</span>
+      </div>
+      <div class="r2r-proc">
+        <div class="r2r-proc-name">⚙ Foundation</div>
+        <div class="r2r-proc-apps">S/4 HANA (CLCS) · Data Quality Platform · Trintech Cadency</div>
+        <span class="r2r-proc-badge active">ALL PHASES</span>
       </div>
     </div>
   </div>
@@ -511,6 +596,217 @@
 
   </div><!-- /fc-grid -->
 
+  <!-- ══ R2R APP INTEGRATION MAP ═════════════════════════════════════════ -->
+  <div class="sec-hdr">
+    <div class="sec-eyebrow">R2R F&amp;A To-Be Application Landscape · Integration Points</div>
+    <div class="sec-title">Working Capital Agents Mapped to the R2R To-Be Stack</div>
+    <div class="sec-sub">13 applications in scope across the R2R to-be state (9 Keep, 3 Retire, 1 Under Review). WC agents connect directly to the keep and new applications — retiring legacy tools that previously masked forecast data.</div>
+  </div>
+
+  <div class="r2r-map">
+    <div class="r2r-map-grid">
+
+      <!-- RECORD COLUMN -->
+      <div class="r2r-col">
+        <div class="r2r-col-hdr record">
+          <div class="r2r-col-eyebrow">Level 1 · 4 Capabilities · 4 Apps</div>
+          <div class="r2r-col-title">Record</div>
+          <div class="r2r-col-sub">Inventory · Fixed Assets · General · Lease Accounting</div>
+        </div>
+        <div class="r2r-app-list">
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Core ECC &amp; S/4 HANA (CLCS)</div>
+              <div class="r2r-app-cap">GL · AP · CapEx · Inventory Transactions</div>
+              <span class="r2r-app-agent">→ SAP GL Extractor · Multi-Entity Mapper</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span><span class="r2r-tag core">BACKBONE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Data Quality Platform (D&amp;A)</div>
+              <div class="r2r-app-cap">Finance Master Data · Data Integrity Layer</div>
+              <span class="r2r-app-agent">→ Multi-Entity Mapper · Cost Tracer</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">LeaseAccelerator Enterprise Lease Accounting</div>
+              <div class="r2r-app-cap">Lease Obligations · IFRS 16 / ASC 842 Payments</div>
+              <span class="r2r-app-agent">→ AP Maturity Agent · CapEx Invoice Monitor</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">LYB LIFO &amp; FIFO Consolidation (Alteryx)</div>
+              <div class="r2r-app-cap">Inventory Accounting Analysis &amp; Reporting</div>
+              <span class="r2r-app-agent">→ Working Capital Modeler</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status new"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Trintech Cadency — Assurenet (Matching)</div>
+              <div class="r2r-app-cap">Transaction Matching · AP Reconciliation</div>
+              <span class="r2r-app-agent">→ AP Maturity Agent</span>
+              <div class="r2r-app-tags"><span class="r2r-tag new">NEW — TO-BE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status new"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Innowera Process Runner</div>
+              <div class="r2r-app-cap">Finance Master Data Automation</div>
+              <span class="r2r-app-agent">→ SAP GL Extractor</span>
+              <div class="r2r-app-tags"><span class="r2r-tag new">NEW — TO-BE</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOSE & CONSOLIDATE COLUMN -->
+      <div class="r2r-col">
+        <div class="r2r-col-hdr close">
+          <div class="r2r-col-eyebrow">Level 1 · 1 Capability · 2 Apps</div>
+          <div class="r2r-col-title">Close &amp; Consolidate</div>
+          <div class="r2r-col-sub">Perform Consolidation · Journal Management</div>
+        </div>
+        <div class="r2r-app-list">
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Onestream SaaS</div>
+              <div class="r2r-app-cap">Financial Consolidation · Close Management</div>
+              <span class="r2r-app-agent">→ Working Capital Modeler · CFO Narrator · Scenario Planning</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span><span class="r2r-tag core">CONSOLIDATION SYSTEM</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Trintech Cadency — Assurenet (C-Cert, Journal Mgmt)</div>
+              <div class="r2r-app-cap">Close Certification · Journal Entry Controls</div>
+              <span class="r2r-app-agent">→ AP Maturity Agent · Working Capital Modeler</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORT COLUMN -->
+      <div class="r2r-col">
+        <div class="r2r-col-hdr report">
+          <div class="r2r-col-eyebrow">Level 1 · 4 Capabilities · 5 Keep · 3 Retire</div>
+          <div class="r2r-col-title">Report</div>
+          <div class="r2r-col-sub">External · Regulatory · Audit · Internal Controls</div>
+        </div>
+        <div class="r2r-app-list">
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Workiva SEC Reporting</div>
+              <div class="r2r-app-cap">External Reporting · SEC Filings</div>
+              <span class="r2r-app-agent">→ CFO Forecast Narrator · Treasury Cash Advisor</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">PwC Automated Disclosure Checklist</div>
+              <div class="r2r-app-cap">Regulatory Disclosure Compliance</div>
+              <span class="r2r-app-agent">→ CFO Forecast Narrator</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Workiva Internal Audit</div>
+              <div class="r2r-app-cap">Audit Planning · Controls Testing</div>
+              <span class="r2r-app-agent">→ CFO Forecast Narrator</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status keep"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">McGraw Hill CapitalIQ Office Plugin</div>
+              <div class="r2r-app-cap">External Benchmarking · Peer Analysis</div>
+              <span class="r2r-app-agent">→ Scenario Planning Agent</span>
+              <div class="r2r-app-tags"><span class="r2r-tag keep">KEEP</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status new"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Internal Audit Assistant</div>
+              <div class="r2r-app-cap">AI-Assisted Audit Workflow</div>
+              <span class="r2r-app-agent">→ CFO Forecast Narrator</span>
+              <div class="r2r-app-tags"><span class="r2r-tag new">NEW — TO-BE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status retire"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Thompson Reuters Statutory Reporting</div>
+              <div class="r2r-app-cap">Local Statutory Accounts — being replaced</div>
+              <div class="r2r-app-tags"><span class="r2r-tag retire">RETIRE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status retire"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">1C Enterprise</div>
+              <div class="r2r-app-cap">Regulatory Reporting — Russia/CIS — being retired</div>
+              <div class="r2r-app-tags"><span class="r2r-tag retire">RETIRE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status retire"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Aforix (Secretaria De Estado De Comercio)</div>
+              <div class="r2r-app-cap">Local Statutory — Brazil — being retired</div>
+              <div class="r2r-app-tags"><span class="r2r-tag retire">RETIRE</span></div>
+            </div>
+          </div>
+          <div class="r2r-app">
+            <div class="r2r-app-status tbd"></div>
+            <div class="r2r-app-body">
+              <div class="r2r-app-name">Auditboard</div>
+              <div class="r2r-app-cap">Risk &amp; Compliance Management — under review</div>
+              <div class="r2r-app-tags"><span class="r2r-tag tbd">UNDER REVIEW</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /r2r-map-grid -->
+
+    <!-- legend + retire note -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-med);border:1px solid var(--border-med);border-top:none;">
+      <div class="r2r-legend-row">
+        <span style="font-size:9px;font-weight:700;color:var(--text-2);margin-right:4px;">LEGEND</span>
+        <div class="r2r-legend-item"><div class="r2r-legend-dot" style="background:#198038;"></div>Keep / Invest</div>
+        <div class="r2r-legend-item"><div class="r2r-legend-dot" style="background:#da1e28;"></div>Retire</div>
+        <div class="r2r-legend-item"><div class="r2r-legend-dot" style="background:#0f62fe;"></div>New (To-Be)</div>
+        <div class="r2r-legend-item"><div class="r2r-legend-dot" style="background:#ff832b;"></div>Under Review</div>
+        <span style="font-size:9px;color:var(--text-3);margin-left:auto;">Source: R2R F&amp;A To-Be tab · LYB Application Landscape</span>
+      </div>
+      <div class="r2r-retire-note">
+        <div class="r2r-retire-note-title">⚠ Retiring Systems Create a Forecasting Opportunity</div>
+        <div class="r2r-retire-note-text">Thompson Reuters Statutory, 1C Enterprise, and Aforix are all being retired in the to-be state. These legacy tools previously masked financial data behind proprietary formats with no API access — a key reason why WC forecasting accuracy was below 50%. Their removal, combined with S/4 HANA consolidation, creates the clean data foundation the WC agentic agents require.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ STAKEHOLDERS ════════════════════════════════════════════════════ -->
   <div class="sec-hdr">
     <div class="sec-eyebrow">Identified Stakeholders · Discovery &amp; Interviews</div>
@@ -563,9 +859,9 @@
   <div class="ao-inner">
     <div class="ao-hdr-row">
       <div>
-        <div class="ao-eyebrow">Working Capital · Agent Architecture</div>
+        <div class="ao-eyebrow">Working Capital · R2R F&amp;A · Agent Architecture</div>
         <div class="ao-name">Agentic Orchestration</div>
-        <div class="ao-sub">8 specialized agents across 4 operational layers, each directly addressing one or more of the 5 identified forecasting failures. A single Working Capital Orchestrator coordinates all agents across the full forecast cycle — from raw SAP extraction to CFO-ready board pack narrative.</div>
+        <div class="ao-sub">8 specialized agents across 4 operational layers, each directly addressing one or more of the 5 identified forecasting failures. Agents connect natively to the R2R to-be application stack — S/4 HANA (CLCS), Onestream SaaS, Trintech Cadency, LeaseAccelerator, and Workiva — eliminating the need for manual extracts from the retiring legacy systems.</div>
       </div>
       <div class="ao-stat">
         <div class="ao-stat-num">8</div>
@@ -597,7 +893,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P1 · P2 · P3 · P4 · P5 (output layer)</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">LLM Reasoning</span><span class="ao-agent-tool">Variance Commentary</span><span class="ao-agent-tool">Board-Pack Draft</span><span class="ao-agent-tool">Context Store</span>
+              <span class="ao-agent-tool">LLM Reasoning</span><span class="ao-agent-tool">Variance Commentary</span><span class="ao-agent-tool">Workiva SEC</span><span class="ao-agent-tool">Onestream SaaS</span><span class="ao-agent-tool">PwC Disclosure Checklist</span>
             </div>
           </div>
           <div class="ao-agent">
@@ -608,7 +904,7 @@
             </div>
             <div class="ao-agent-solves">Solves: LRP scope · short/long-term bridge</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">Bull/Base/Bear</span><span class="ao-agent-tool">Sensitivity Engine</span><span class="ao-agent-tool">LRP Bridge</span><span class="ao-agent-tool">Horizon Connector</span>
+              <span class="ao-agent-tool">Bull/Base/Bear</span><span class="ao-agent-tool">Onestream SaaS</span><span class="ao-agent-tool">CapitalIQ Plugin</span><span class="ao-agent-tool">LRP Bridge</span>
             </div>
           </div>
         </div>
@@ -631,7 +927,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P1 · P3 · P4 — segment cash bridge</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">13-wk Rolling Model</span><span class="ao-agent-tool">Cash Bridge Builder</span><span class="ao-agent-tool">Segment Splitter</span>
+              <span class="ao-agent-tool">13-wk Rolling Model</span><span class="ao-agent-tool">Onestream SaaS</span><span class="ao-agent-tool">Alteryx LIFO/FIFO</span><span class="ao-agent-tool">Segment Splitter</span>
             </div>
           </div>
           <div class="ao-agent">
@@ -642,7 +938,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P5 — inflow overstatement detection</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">Inflow Predictor</span><span class="ao-agent-tool">Overstatement Flag</span><span class="ao-agent-tool">Liquidity Monitor</span>
+              <span class="ao-agent-tool">Inflow Predictor</span><span class="ao-agent-tool">Workiva Internal Audit</span><span class="ao-agent-tool">Onestream SaaS</span><span class="ao-agent-tool">Overstatement Flag</span>
             </div>
           </div>
         </div>
@@ -665,7 +961,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P3 — eliminates AP black box</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">Aging Bucket Model</span><span class="ao-agent-tool">Payment Terms Engine</span><span class="ao-agent-tool">Segment AP Schedule</span>
+              <span class="ao-agent-tool">Trintech Cadency (Matching)</span><span class="ao-agent-tool">Aging Bucket Model</span><span class="ao-agent-tool">LeaseAccelerator</span><span class="ao-agent-tool">S/4 HANA AP</span>
             </div>
           </div>
           <div class="ao-agent">
@@ -676,7 +972,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P4 — prevents CapEx shock events</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">Clustering Detector</span><span class="ao-agent-tool">Due-Date Modeller</span><span class="ao-agent-tool">120% Threshold Alert</span>
+              <span class="ao-agent-tool">S/4 HANA CapEx AP</span><span class="ao-agent-tool">LeaseAccelerator</span><span class="ao-agent-tool">Clustering Detector</span><span class="ao-agent-tool">120% Threshold Alert</span>
             </div>
           </div>
         </div>
@@ -698,7 +994,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P1 · P2 — raw data foundation</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">SAP RFC Connector</span><span class="ao-agent-tool">GL / AP / CapEx Pull</span><span class="ao-agent-tool">Delta Loader</span>
+              <span class="ao-agent-tool">S/4 HANA (CLCS)</span><span class="ao-agent-tool">Core ECC GL/AP/CapEx</span><span class="ao-agent-tool">Innowera Process Runner</span><span class="ao-agent-tool">Data Quality Platform</span>
             </div>
           </div>
           <div class="ao-agent">
@@ -709,7 +1005,7 @@
             </div>
             <div class="ao-agent-solves">Solves: P1 · P2 — segment attribution &amp; pre-post visibility</div>
             <div class="ao-agent-tools">
-              <span class="ao-agent-tool">Entity Resolution ML</span><span class="ao-agent-tool">Segment Mapper</span><span class="ao-agent-tool">Allocation Tracer</span><span class="ao-agent-tool">HR Cycle Monitor</span>
+              <span class="ao-agent-tool">Data Quality Platform</span><span class="ao-agent-tool">S/4 HANA Entity Model</span><span class="ao-agent-tool">Segment Mapper</span><span class="ao-agent-tool">Allocation Tracer</span>
             </div>
           </div>
         </div>
