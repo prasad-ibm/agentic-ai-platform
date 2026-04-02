@@ -113,7 +113,7 @@
 
     /* ── NAVIGATION ──────────────────────────────────────────────────────── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 32px; left: 0; right: 0; z-index: 100;
       background: #ffffff; border-bottom: 1px solid var(--border);
       padding: 0 2rem; height: 48px;
       display: flex; align-items: center; justify-content: space-between;
@@ -143,10 +143,78 @@
     .nav-cta a.cta-fill { background: var(--blue); color: #fff; border-color: var(--blue); }
     .nav-cta a.cta-fill:hover { background: #0353e9; }
 
+    /* ── CONTACT BAR ────────────────────────────────────────────────────── */
+    .contact-bar {
+      background: #161616;
+      border-bottom: 1px solid #393939;
+      padding: 0 2rem;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #a8a8a8;
+      letter-spacing: 0.2px;
+    }
+    .contact-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .contact-bar-label {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 9px;
+      color: #6f6f6f;
+      margin-right: 4px;
+    }
+    .contact-bar-name {
+      color: #e0e0e0;
+      font-weight: 500;
+    }
+    .contact-bar-sep {
+      color: #4c4c4c;
+      margin: 0 6px;
+    }
+    .contact-bar-email {
+      color: #78a9ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+    .contact-bar-email:hover { color: #a6c8ff; text-decoration: underline; }
+    .contact-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .contact-bar-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #0f62fe;
+      color: #ffffff !important;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 4px 12px;
+      text-decoration: none !important;
+      border-radius: 2px;
+      transition: background 0.15s;
+    }
+    .contact-bar-cta:hover { background: #0353e9 !important; }
+    .contact-bar-ibm {
+      font-size: 10px;
+      font-weight: 700;
+      color: #6f6f6f;
+      letter-spacing: 1px;
+    }
+
     /* ── ANNOUNCEMENT BAR ────────────────────────────────────────────────── */
     .announce-bar {
       background: #e5f0ff; border-bottom: 1px solid #b8d4f8;
-      padding: 10px 2rem; text-align: center; margin-top: 48px;
+      padding: 10px 2rem; text-align: center; margin-top: 80px;
       font-size: 14px; color: var(--text-0);
     }
     .announce-bar a { color: var(--blue); font-weight: 600; margin-left: 8px; }
@@ -446,6 +514,24 @@
   <div class="mg-hint"><span>📐</span> Recommended: 1280px wide or larger</div>
   <button class="mg-btn-p" onclick="document.getElementById('mobile-gate').style.display='none'">Continue on this device →</button>
   <button class="mg-btn-s" onclick="document.getElementById('mobile-gate').style.display='none'">View anyway</button>
+</div>
+
+<!-- ── CONTACT BAR ──────────────────────────────────────────────────────────── -->
+<div class="contact-bar">
+  <div class="contact-bar-left">
+    <span class="contact-bar-label">Contact</span>
+    <span class="contact-bar-name">Prasad Venkitaramanan</span>
+    <span class="contact-bar-sep">·</span>
+    <span>IBM Technology Sales · Agentic AI</span>
+    <span class="contact-bar-sep">·</span>
+    <a href="mailto:nvenkit@us.ibm.com" class="contact-bar-email">nvenkit@us.ibm.com</a>
+  </div>
+  <div class="contact-bar-right">
+    <span class="contact-bar-ibm">IBM</span>
+    <a href="mailto:nvenkit@us.ibm.com?subject=Agentic AI Platform — Enquiry&body=Hi Prasad,%0A%0AI'm interested in learning more about the IBM Agentic AI Value Platform.%0A%0A" class="contact-bar-cta">
+      ✉ Get in Touch
+    </a>
+  </div>
 </div>
 
 <!-- ── NAVIGATION ──────────────────────────────────────────────────────────── -->
