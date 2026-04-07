@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Accounts Payable Intelligence · Executive Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="/config.js"></script>
+  <script>
+  (function(){
+    if(!(window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode)) return;
+    const raw = sessionStorage.getItem('aavp_auth');
+    if(!raw){ window.location.href = 'login.html?redirect=AP.html'; return; }
+    const { token } = JSON.parse(raw);
+    fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
+      .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=AP.html'; } })
+      .catch(() => {});
+  })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-0: #ffffff; --bg-1: #f4f4f4; --bg-2: #e0e0e0;
+      --text-0: #161616; --text-1: #393939; --text-2: #525252; --text-3: #6f6f6f;
+      --border: #e0e0e0; --border-med: #c6c6c6;
+      --cyan: #0072c3; --cyan-d: #00539a; --cyan-pale: #e5f6ff;
+      --blue: #0f62fe; --blue-pale: #edf5ff;
+      --green: #198038; --green-pale: #defbe6;
+      --red: #da1e28; --red-pale: #fff1f1;
+      --orange: #ff832b; --orange-pale: #fff2e8;
+      --gold: #b28600; --gold-pale: #fcf4d6;
+    }
+    body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background: var(--bg-1); color: var(--text-0); font-size: 14px; line-height: 1.5; }
+
+    /* NAV */
+    .dash-nav { background: #161616; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 48px; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; }
+    .nav-logo { background: #fff; color: #161616; font-size: 9px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; }
+    .nav-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.2); }
+    .nav-title { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500; }
+    .nav-tabs { display: flex; gap: 0; }
+    .nav-tab { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55); padding: 0 16px; height: 48px; display: flex; align-items: center; cursor: pointer; border-bottom: 2px solid transparent; transition: 0.15s; }
+    .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .nav-tab.active { color: #fff; border-bottom-color: var(--cyan); }
+    .nav-back { font-size: 11px; color: rgba(255,255,255,0.5); text-decoration: none; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.15); }
+    .nav-back:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* HERO */
+    .hero { background: #161616; color: #fff; padding: 2rem 2rem 0; }
+    .hero-inner { max-width: 1400px; margin: 0 auto; }
+    .hero-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+    .hero-logo { background: #fff; color: #161616; font-size: 10px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; }
+    .hero-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.2); }
+    .hero-label { font-size: 11px; color: rgba(255,255,255,0.45); }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,114,195,0.2); border: 1px solid rgba(0,114,195,0.45); color: #82cfff; font-size: 10px; font-weight: 600; padding: 3px 10px; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .hero-badge::before { content: '●'; font-size: 7px; color: #33b1ff; }
+    .hero-title { font-size: 26px; font-weight: 300; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+    .hero-title strong { font-weight: 600; }
+    .hero-sub { font-size: 12px; color: rgba(255,255,255,0.5); max-width: 700px; line-height: 1.6; margin-bottom: 1.5rem; }
+
+    .hero-kpis { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid rgba(255,255,255,0.1); }
+    .hero-kpi { padding: 1.1rem 1.25rem; border-right: 1px solid rgba(255,255,255,0.08); }
+    .hero-kpi:last-child { border-right: none; }
+    .kpi-state { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+    .kpi-state::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .kpi-state.current { color: #ff8389; } .kpi-state.current::before { background: #ff8389; }
+    .kpi-state.future { color: #42be65; } .kpi-state.future::before { background: #42be65; }
+    .kpi-num { font-size: 24px; font-weight: 300; line-height: 1; margin-bottom: 3px; }
+    .kpi-num.bad { color: #ff8389; } .kpi-num.good { color: #42be65; }
+    .kpi-lbl { font-size: 9.5px; color: rgba(255,255,255,0.5); line-height: 1.3; }
+    .kpi-divider { display: flex; align-items: center; justify-content: center; font-size: 16px; color: rgba(255,255,255,0.2); padding: 1.1rem 0; }
+
+    /* PAGE */
+    .page { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    /* VIEW SWITCHER */
+    .view-switch { display: flex; gap: 0; margin-bottom: 1.5rem; border: 1px solid var(--border-med); width: fit-content; }
+    .vs-btn { font-size: 12px; font-weight: 600; padding: 8px 20px; cursor: pointer; background: #fff; color: var(--text-2); border: none; border-right: 1px solid var(--border-med); transition: 0.15s; }
+    .vs-btn:last-child { border-right: none; }
+    .vs-btn.active { background: var(--cyan); color: #fff; }
+    .vs-btn:hover:not(.active) { background: var(--bg-1); }
+
+    /* SECTION HEADER */
+    .sec-hdr { margin-bottom: 1.25rem; }
+    .sec-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 4px; }
+    .sec-title { font-size: 16px; font-weight: 600; color: var(--text-0); margin-bottom: 3px; }
+    .sec-sub { font-size: 11.5px; color: var(--text-2); }
+
+    /* KPI CARDS ROW */
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border-med); border: 1px solid var(--border-med); margin-bottom: 1.5rem; }
+    .kpi-card { background: #fff; padding: 1rem 1.1rem; }
+    .kpi-card-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px; }
+    .kpi-card-val { font-size: 26px; font-weight: 300; font-family: 'IBM Plex Mono', monospace; line-height: 1; margin-bottom: 3px; }
+    .kpi-card-val.bad { color: var(--red); }
+    .kpi-card-val.warn { color: var(--orange); }
+    .kpi-card-val.good { color: var(--green); }
+    .kpi-card-val.cyan { color: var(--cyan); }
+    .kpi-card-sub { font-size: 10px; color: var(--text-2); }
+    .kpi-card-ai { font-size: 10px; font-weight: 700; color: var(--green); background: var(--green-pale); padding: 2px 7px; margin-top: 6px; display: inline-block; border: 1px solid rgba(25,128,56,0.2); }
+
+    /* GRID 2 */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .grid-13 { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+
+    /* PANEL */
+    .panel { background: #fff; border: 1px solid var(--border); }
+    .panel-hdr { padding: 10px 14px; background: var(--bg-1); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .panel-hdr-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-1); }
+    .panel-hdr-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; }
+    .panel-body { padding: 14px; }
+
+    /* PROCESS FLOW */
+    .process-flow { display: flex; align-items: stretch; gap: 0; background: var(--border-med); border: 1px solid var(--border-med); margin-bottom: 1.5rem; }
+    .pf-step { flex: 1; background: #fff; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; position: relative; }
+    .pf-step + .pf-step { border-left: 1px solid var(--border-med); }
+    .pf-step.problem { background: #fff8f8; }
+    .pf-step.highlight { background: var(--cyan-pale); }
+    .pf-step-num { font-size: 8px; font-weight: 700; letter-spacing: 1px; color: var(--text-3); }
+    .pf-step-name { font-size: 11px; font-weight: 700; color: var(--text-0); }
+    .pf-step-stat { font-size: 18px; font-weight: 300; font-family: 'IBM Plex Mono', monospace; }
+    .pf-step-stat.bad { color: var(--red); }
+    .pf-step-stat.warn { color: var(--orange); }
+    .pf-step-stat.good { color: var(--green); }
+    .pf-step-note { font-size: 9px; color: var(--text-2); line-height: 1.35; }
+    .pf-arrow { display: flex; align-items: center; justify-content: center; padding: 0 6px; background: var(--bg-1); color: var(--text-3); font-size: 13px; flex-shrink: 0; }
+
+    /* BLOCK REASONS TABLE */
+    .block-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .block-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-3); padding: 6px 10px; text-align: left; border-bottom: 2px solid var(--border); background: var(--bg-1); }
+    .block-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text-1); vertical-align: middle; }
+    .block-table tr:last-child td { border-bottom: none; }
+    .block-table tr:hover td { background: var(--bg-1); }
+    .bar-wrap { width: 100%; background: var(--bg-2); height: 6px; border-radius: 2px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 2px; }
+    .sev-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 5px; }
+    .mono { font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+
+    /* ROOT CAUSE STRIP */
+    .rca-strip { background: #fffbf0; border: 1px solid rgba(178,134,0,0.25); border-left: 3px solid var(--gold); padding: 12px 16px; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 10px; }
+    .rca-icon { font-size: 18px; flex-shrink: 0; }
+    .rca-text { font-size: 12px; color: var(--text-0); line-height: 1.6; }
+    .rca-text strong { color: var(--gold); }
+
+    /* AGENTIC VIEW */
+    .agent-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-med); border: 1px solid var(--border-med); margin-bottom: 1.5rem; }
+    .agent-card { background: #fff; padding: 14px; }
+    .agent-card.highlight { background: #f0f8ff; }
+    .agent-icon { font-size: 22px; margin-bottom: 8px; }
+    .agent-name { font-size: 12px; font-weight: 700; color: var(--text-0); margin-bottom: 4px; }
+    .agent-solves { font-size: 9px; font-weight: 700; color: var(--cyan); background: var(--cyan-pale); padding: 2px 7px; display: inline-block; margin-bottom: 8px; }
+    .agent-metric { font-size: 22px; font-weight: 300; color: var(--green); font-family: 'IBM Plex Mono', monospace; line-height: 1; }
+    .agent-metric-lbl { font-size: 9px; color: var(--text-2); margin-top: 2px; }
+    .agent-tools { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; }
+    .agent-tool { font-size: 9px; color: var(--text-2); background: var(--bg-1); padding: 2px 6px; border: 1px solid var(--border); }
+
+    /* COMPARISON TABLE */
+    .cmp-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .cmp-table th { font-size: 8.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); }
+    .cmp-table th:first-child { background: var(--bg-1); color: var(--text-3); }
+    .cmp-table th.cur { background: #fff1f1; color: var(--red); }
+    .cmp-table th.ai { background: var(--green-pale); color: var(--green); }
+    .cmp-table th.delta { background: var(--cyan-pale); color: var(--cyan-d); }
+    .cmp-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table tr:nth-child(even) td { background: var(--bg-1); }
+    .cmp-table tr:nth-child(even) td:first-child { background: var(--bg-2); }
+
+    /* INSIGHT BOX */
+    .insight { background: var(--cyan-pale); border: 1px solid rgba(0,114,195,0.18); border-left: 3px solid var(--cyan); padding: 12px 16px; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 10px; }
+    .insight-text { font-size: 12px; color: var(--text-0); line-height: 1.55; }
+    .insight-text strong { color: var(--cyan-d); }
+
+    /* FOOTER */
+    .dash-footer { background: #161616; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .dash-footer-logo { background: #fff; color: #161616; font-size: 9px; font-weight: 700; padding: 2px 6px; letter-spacing: 1px; flex-shrink: 0; }
+    .dash-footer-text { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="dash-nav">
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <div class="nav-title">Accounts Payable · Intelligence Dashboard</div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchView('current',this)">Current State</div>
+    <div class="nav-tab" onclick="switchView('agentic',this)">With Agentic AI</div>
+    <div class="nav-tab" onclick="switchView('compare',this)">Side by Side</div>
+  </div>
+  <a href="index.html#exec-dashboards" class="nav-back">← Back</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hero-logo">IBM</div>
+      <div class="hero-sep"></div>
+      <div class="hero-label">Finance Operations · Procure-to-Pay</div>
+    </div>
+    <div class="hero-badge">Accounts Payable · Process Intelligence · Agentic AI Vision</div>
+    <div class="hero-title">Accounts Payable <strong>Intelligence Dashboard</strong></div>
+    <div class="hero-sub">End-to-end AP performance with upstream root cause tracing back to ordering failures. Blocked invoices, duplicate exposure, and cycle time waste identified — and eliminated with agentic AI agents operating natively across SAP, Coupa, and Basware.</div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">23%</div>
+        <div class="kpi-lbl">Touchless Invoice Rate</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">91%</div>
+        <div class="kpi-lbl">Touchless Invoice Rate</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">34%</div>
+        <div class="kpi-lbl">Invoice Block Rate</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">7.4%</div>
+        <div class="kpi-lbl">Invoice Block Rate</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="kpi-state current">Current state</div>
+        <div class="kpi-num bad">18.4d</div>
+        <div class="kpi-lbl">Avg Cycle Time</div>
+      </div>
+      <div class="kpi-divider">→</div>
+      <div class="hero-kpi">
+        <div class="kpi-state future">AI future</div>
+        <div class="kpi-num good">7.0d</div>
+        <div class="kpi-lbl">Avg Cycle Time</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- View Switcher -->
+  <div class="view-switch">
+    <button class="vs-btn active" id="btn-current" onclick="switchView('current',this)">⚠ Current State</button>
+    <button class="vs-btn" id="btn-agentic" onclick="switchView('agentic',this)">✦ With Agentic AI</button>
+    <button class="vs-btn" id="btn-compare" onclick="switchView('compare',this)">⇄ Side by Side</button>
+  </div>
+
+  <!-- ══ CURRENT STATE VIEW ══════════════════════════════════════════════════ -->
+  <div class="view-panel active" id="view-current">
+
+    <div class="sec-hdr">
+      <div class="sec-eyebrow">Accounts Payable · Current State Analysis</div>
+      <div class="sec-title">AP Process Performance — Where Time and Money Are Lost</div>
+      <div class="sec-sub">Based on 12-month invoice processing data across 3 entities. Root causes traced to upstream ordering and PO management failures.</div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Touchless Invoice Rate</div>
+        <div class="kpi-card-val bad">23%</div>
+        <div class="kpi-card-sub">Target: 60% · IBM C0: 90%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Invoice Block Rate</div>
+        <div class="kpi-card-val bad">34%</div>
+        <div class="kpi-card-sub">~14,200 invoices blocked/yr</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Avg. Cycle Time</div>
+        <div class="kpi-card-val warn">18.4d</div>
+        <div class="kpi-card-sub">Target: 7d · IBM C0: 3.2d</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">On-Time Payment</div>
+        <div class="kpi-card-val warn">71%</div>
+        <div class="kpi-card-sub">Target: 92%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Duplicate Risk Exposure</div>
+        <div class="kpi-card-val bad">$4.2M</div>
+        <div class="kpi-card-sub">2.8% of total AP volume</div>
+      </div>
+    </div>
+
+    <!-- Process Flow -->
+    <div class="sec-hdr">
+      <div class="sec-eyebrow">P2P Process Flow · Current State</div>
+      <div class="sec-title">Where the AP Process Breaks Down</div>
+    </div>
+    <div class="process-flow" style="margin-bottom:1.5rem;">
+      <div class="pf-step">
+        <div class="pf-step-num">STEP 01</div>
+        <div class="pf-step-name">PO Creation</div>
+        <div class="pf-step-stat warn">68%</div>
+        <div class="pf-step-note">PO-backed invoices · 32% arrive without a valid PO</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step">
+        <div class="pf-step-num">STEP 02</div>
+        <div class="pf-step-name">Invoice Receipt</div>
+        <div class="pf-step-stat warn">41,800</div>
+        <div class="pf-step-note">Invoices/yr · 74% paper or email PDF · 26% EDI/portal</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step problem">
+        <div class="pf-step-num">STEP 03 ⚠</div>
+        <div class="pf-step-name">3-Way Match &amp; Block</div>
+        <div class="pf-step-stat bad">34%</div>
+        <div class="pf-step-note">Block rate · Manual resolution averages 6.2 days per blocked invoice</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step problem">
+        <div class="pf-step-num">STEP 04 ⚠</div>
+        <div class="pf-step-name">Approval &amp; Routing</div>
+        <div class="pf-step-stat bad">4.8d</div>
+        <div class="pf-step-note">Avg approval wait · 22% of invoices require re-routing</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step">
+        <div class="pf-step-num">STEP 05</div>
+        <div class="pf-step-name">Payment Run</div>
+        <div class="pf-step-stat warn">71%</div>
+        <div class="pf-step-note">On-time payment rate · $2.1M late payment penalties YTD</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step">
+        <div class="pf-step-num">STEP 06</div>
+        <div class="pf-step-name">DPO &amp; Working Capital</div>
+        <div class="pf-step-stat warn">38.4d</div>
+        <div class="pf-step-note">DPO · Target 42d · $8.4M early-pay discount missed YTD</div>
+      </div>
+    </div>
+
+    <!-- Root Cause Strip -->
+    <div class="rca-strip">
+      <div class="rca-icon">🔍</div>
+      <div class="rca-text">
+        <strong>Root Cause (Upstream Ordering):</strong> 61% of AP blocks trace directly to upstream P2P failures — incorrect or missing POs, price deviations introduced at requisition, and goods receipts posted late. The AP team is absorbing the cost of ordering process failures they did not create. Fixing AP in isolation without addressing ordering quality will not resolve the block rate.
+      </div>
+    </div>
+
+    <!-- Block Reasons -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="panel-hdr-title">Invoice Block Reasons — Top 6</span>
+          <span class="panel-hdr-badge" style="background:var(--red-pale);color:var(--red);">34% block rate</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="block-table">
+            <thead>
+              <tr>
+                <th>Block Reason</th>
+                <th>% of Blocks</th>
+                <th>Volume / yr</th>
+                <th>Avg Resolution</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--red);"></span>Price Deviation &gt;5%</td>
+                <td class="mono">28%</td>
+                <td class="mono">3,976</td>
+                <td class="mono">7.4d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:28%;background:var(--red);"></div></div></td>
+              </tr>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--red);"></span>PO Not Found / Closed</td>
+                <td class="mono">24%</td>
+                <td class="mono">3,408</td>
+                <td class="mono">8.1d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:24%;background:var(--red);"></div></div></td>
+              </tr>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--orange);"></span>Quantity Mismatch</td>
+                <td class="mono">19%</td>
+                <td class="mono">2,698</td>
+                <td class="mono">5.9d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:19%;background:var(--orange);"></div></div></td>
+              </tr>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--orange);"></span>GR Not Posted</td>
+                <td class="mono">16%</td>
+                <td class="mono">2,272</td>
+                <td class="mono">6.8d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:16%;background:var(--orange);"></div></div></td>
+              </tr>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--gold);"></span>Duplicate Suspected</td>
+                <td class="mono">8%</td>
+                <td class="mono">1,136</td>
+                <td class="mono">4.2d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:8%;background:var(--gold);"></div></div></td>
+              </tr>
+              <tr>
+                <td><span class="sev-dot" style="background:var(--text-3);"></span>Other / Tax Coding</td>
+                <td class="mono">5%</td>
+                <td class="mono">710</td>
+                <td class="mono">3.1d</td>
+                <td><div class="bar-wrap"><div class="bar-fill" style="width:5%;background:var(--text-3);"></div></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="panel-hdr-title">Payment Performance by Category</span>
+          <span class="panel-hdr-badge" style="background:var(--gold-pale);color:var(--gold);">$2.1M late penalties YTD</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="block-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Current</th>
+                <th>Target</th>
+                <th>IBM C0</th>
+                <th>Gap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>On-Time Payment Rate</td>
+                <td class="mono" style="color:var(--orange);">71.0%</td>
+                <td class="mono">92.0%</td>
+                <td class="mono">97.2%</td>
+                <td class="mono" style="color:var(--red);">−21pp</td>
+              </tr>
+              <tr>
+                <td>First Pass Yield</td>
+                <td class="mono" style="color:var(--orange);">62.4%</td>
+                <td class="mono">85.0%</td>
+                <td class="mono">94.1%</td>
+                <td class="mono" style="color:var(--red);">−22.6pp</td>
+              </tr>
+              <tr>
+                <td>Days Payable Outstanding</td>
+                <td class="mono" style="color:var(--gold);">38.4d</td>
+                <td class="mono">42.0d</td>
+                <td class="mono">44.8d</td>
+                <td class="mono" style="color:var(--gold);">+3.6d short</td>
+              </tr>
+              <tr>
+                <td>Early Pay Discount Capture</td>
+                <td class="mono" style="color:var(--red);">18%</td>
+                <td class="mono">55%</td>
+                <td class="mono">72%</td>
+                <td class="mono" style="color:var(--red);">$8.4M missed</td>
+              </tr>
+              <tr>
+                <td>Late Payment Penalties</td>
+                <td class="mono" style="color:var(--red);">$2.1M</td>
+                <td class="mono">$0</td>
+                <td class="mono">$120K</td>
+                <td class="mono" style="color:var(--red);">$2.1M excess</td>
+              </tr>
+              <tr>
+                <td>Duplicate Payment Exposure</td>
+                <td class="mono" style="color:var(--red);">$4.2M</td>
+                <td class="mono">&lt;$500K</td>
+                <td class="mono">$140K</td>
+                <td class="mono" style="color:var(--red);">$3.7M at risk</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FTE Cost of Waste -->
+    <div class="insight">
+      <div style="font-size:18px;">💡</div>
+      <div class="insight-text">
+        <strong>Cost of Current State:</strong> At 34% block rate and 18.4-day average cycle, the AP team spends an estimated <strong>62% of capacity</strong> on exception handling, re-routing, and manual matching that adds no value. Annualised FTE cost of waste: <strong>$3.4M</strong>. Late payment penalties and missed early-pay discounts add a further <strong>$10.5M</strong> in avoidable annual cost.
+      </div>
+    </div>
+
+  </div><!-- /current -->
+
+  <!-- ══ AGENTIC AI VIEW ════════════════════════════════════════════════════ -->
+  <div class="view-panel" id="view-agentic">
+
+    <div class="sec-hdr">
+      <div class="sec-eyebrow">Accounts Payable · Agentic AI Future State</div>
+      <div class="sec-title">4 AI Agents Eliminate the Root Causes — Not Just the Symptoms</div>
+      <div class="sec-sub">Each agent targets a specific failure mode in the current P2P process. Together they deliver 91% touchless rates and $41M annual value at IBM Client Zero benchmarks.</div>
+    </div>
+
+    <!-- Agent Cards -->
+    <div class="agent-row">
+      <div class="agent-card highlight">
+        <div class="agent-icon">🔗</div>
+        <div class="agent-name">PO Intelligence Agent</div>
+        <div class="agent-solves">Solves: PO Not Found · Price Deviations</div>
+        <div class="agent-metric">−52%</div>
+        <div class="agent-metric-lbl">Reduction in PO-related blocks</div>
+        <div class="agent-tools">
+          <span class="agent-tool">SAP MM</span>
+          <span class="agent-tool">Coupa Catalogs</span>
+          <span class="agent-tool">Price Tolerance Engine</span>
+          <span class="agent-tool">PO Status Monitor</span>
+        </div>
+      </div>
+      <div class="agent-card highlight">
+        <div class="agent-icon">🧾</div>
+        <div class="agent-name">Invoice Ingestion &amp; Match Agent</div>
+        <div class="agent-solves">Solves: Manual Entry · Low Touchless Rate</div>
+        <div class="agent-metric">91%</div>
+        <div class="agent-metric-lbl">Touchless invoice rate (from 23%)</div>
+        <div class="agent-tools">
+          <span class="agent-tool">OCR / IDP</span>
+          <span class="agent-tool">SAP FI-AP</span>
+          <span class="agent-tool">Basware</span>
+          <span class="agent-tool">3-Way Match AI</span>
+        </div>
+      </div>
+      <div class="agent-card highlight">
+        <div class="agent-icon">🔎</div>
+        <div class="agent-name">Duplicate &amp; Fraud Detection Agent</div>
+        <div class="agent-solves">Solves: Duplicate Exposure · Fraud Risk</div>
+        <div class="agent-metric">−93%</div>
+        <div class="agent-metric-lbl">Duplicate risk ($4.2M → $0.3M)</div>
+        <div class="agent-tools">
+          <span class="agent-tool">Fuzzy Matching</span>
+          <span class="agent-tool">Vendor Master</span>
+          <span class="agent-tool">ML Anomaly Scoring</span>
+          <span class="agent-tool">IBAN/Bank Verifier</span>
+        </div>
+      </div>
+      <div class="agent-card highlight">
+        <div class="agent-icon">💸</div>
+        <div class="agent-name">Payment Optimisation Agent</div>
+        <div class="agent-solves">Solves: Late Payment · Missed Discounts</div>
+        <div class="agent-metric">$9.8M</div>
+        <div class="agent-metric-lbl">Annual savings (penalties + discounts)</div>
+        <div class="agent-tools">
+          <span class="agent-tool">Payment Term AI</span>
+          <span class="agent-tool">DPO Optimiser</span>
+          <span class="agent-tool">Early Pay Scheduler</span>
+          <span class="agent-tool">Cash Flow Link</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Process Flow AI -->
+    <div class="sec-hdr">
+      <div class="sec-eyebrow">P2P Process Flow · With Agentic AI</div>
+      <div class="sec-title">Every Step Automated, Monitored, and Self-Correcting</div>
+    </div>
+    <div class="process-flow" style="margin-bottom:1.5rem;">
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 01 ✦</div>
+        <div class="pf-step-name">PO Creation</div>
+        <div class="pf-step-stat good">98%</div>
+        <div class="pf-step-note">PO-backed · Agent validates PO at requisition stage, not invoice receipt</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 02 ✦</div>
+        <div class="pf-step-name">Invoice Ingestion</div>
+        <div class="pf-step-stat good">100%</div>
+        <div class="pf-step-note">AI OCR + EDI capture · All formats processed without manual keying</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 03 ✦</div>
+        <div class="pf-step-name">3-Way Match &amp; Clear</div>
+        <div class="pf-step-stat good">7.4%</div>
+        <div class="pf-step-note">Block rate (from 34%) · AI pre-clears exceptions with confidence scoring</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 04 ✦</div>
+        <div class="pf-step-name">Smart Approval</div>
+        <div class="pf-step-stat good">0.6d</div>
+        <div class="pf-step-note">Avg approval time (from 4.8d) · Only genuine exceptions reach humans</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 05 ✦</div>
+        <div class="pf-step-name">Optimised Payment</div>
+        <div class="pf-step-stat good">96.3%</div>
+        <div class="pf-step-note">On-time rate · Agent schedules by due date, discount windows &amp; cash forecast</div>
+      </div>
+      <div class="pf-arrow">›</div>
+      <div class="pf-step highlight">
+        <div class="pf-step-num">STEP 06 ✦</div>
+        <div class="pf-step-name">DPO &amp; Working Capital</div>
+        <div class="pf-step-stat good">44.1d</div>
+        <div class="pf-step-note">DPO (from 38.4d) · $8.4M early-pay discounts captured annually</div>
+      </div>
+    </div>
+
+    <!-- AI KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Touchless Invoice Rate</div>
+        <div class="kpi-card-val good">91%</div>
+        <div class="kpi-card-sub">IBM C0 benchmark achieved</div>
+        <div class="kpi-card-ai">▲ +68pp vs current</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Invoice Block Rate</div>
+        <div class="kpi-card-val good">7.4%</div>
+        <div class="kpi-card-sub">~3,100 blocks/yr (from 14,200)</div>
+        <div class="kpi-card-ai">▼ −78% blocks</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">Avg. Cycle Time</div>
+        <div class="kpi-card-val good">7.0d</div>
+        <div class="kpi-card-sub">Near IBM C0 benchmark of 3.2d</div>
+        <div class="kpi-card-ai">▼ −62% faster</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">On-Time Payment</div>
+        <div class="kpi-card-val good">96.3%</div>
+        <div class="kpi-card-sub">Exceeds 92% target</div>
+        <div class="kpi-card-ai">▲ +25.3pp improvement</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-lbl">AI Annual Value</div>
+        <div class="kpi-card-val cyan">$41M</div>
+        <div class="kpi-card-sub">FY target · 306% ROI</div>
+        <div class="kpi-card-ai">YTD: $28.4M realized</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div style="font-size:18px;">✦</div>
+      <div class="insight-text">
+        <strong>Total Agentic AI Value:</strong> $41M annual · Breakdown: <strong>$9.8M</strong> from late payment elimination + early-pay capture · <strong>$14.6M</strong> from FTE redeployment (exception handling eliminated) · <strong>$11.2M</strong> from DPO optimization and working capital improvement · <strong>$5.4M</strong> from duplicate payment recovery and fraud prevention.
+      </div>
+    </div>
+
+  </div><!-- /agentic -->
+
+  <!-- ══ SIDE BY SIDE ════════════════════════════════════════════════════════ -->
+  <div class="view-panel" id="view-compare">
+
+    <div class="sec-hdr">
+      <div class="sec-eyebrow">Accounts Payable · Before &amp; After</div>
+      <div class="sec-title">Current State vs Agentic AI — Full KPI Comparison</div>
+      <div class="sec-sub">IBM Client Zero benchmarks shown as the proven target state. Delta column shows the AI improvement.</div>
+    </div>
+
+    <div class="panel" style="margin-bottom:1.5rem;">
+      <div class="panel-hdr">
+        <span class="panel-hdr-title">AP Performance — Before &amp; After Agentic AI</span>
+        <span class="panel-hdr-badge" style="background:var(--green-pale);color:var(--green);">● IBM C0 Verified</span>
+      </div>
+      <div class="panel-body" style="padding:0;">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>KPI</th>
+              <th class="cur">⚠ Current State</th>
+              <th>IBM C0 Target</th>
+              <th class="ai">✦ With AI Agents</th>
+              <th class="delta">Δ Improvement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Touchless Invoice Rate</strong></td>
+              <td style="color:var(--red);font-weight:600;font-family:'IBM Plex Mono',monospace;">23%</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">90%</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">91%</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▲ +68 percentage points</td>
+            </tr>
+            <tr>
+              <td><strong>Invoice Block Rate</strong></td>
+              <td style="color:var(--red);font-weight:600;font-family:'IBM Plex Mono',monospace;">34%</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">6%</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">7.4%</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▼ −78% block rate</td>
+            </tr>
+            <tr>
+              <td><strong>Avg. Invoice Cycle Time</strong></td>
+              <td style="color:var(--orange);font-weight:600;font-family:'IBM Plex Mono',monospace;">18.4 days</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">3.2 days</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">7.0 days</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▼ −62% cycle time</td>
+            </tr>
+            <tr>
+              <td><strong>On-Time Payment Rate</strong></td>
+              <td style="color:var(--orange);font-weight:600;font-family:'IBM Plex Mono',monospace;">71%</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">97%</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">96.3%</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▲ +25.3 percentage points</td>
+            </tr>
+            <tr>
+              <td><strong>First Pass Yield</strong></td>
+              <td style="color:var(--orange);font-weight:600;font-family:'IBM Plex Mono',monospace;">62.4%</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">94%</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">92.8%</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▲ +30.4 percentage points</td>
+            </tr>
+            <tr>
+              <td><strong>Days Payable Outstanding</strong></td>
+              <td style="color:var(--orange);font-weight:600;font-family:'IBM Plex Mono',monospace;">38.4 days</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">44–46 days</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">44.1 days</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▲ +5.7 days (working capital ↑)</td>
+            </tr>
+            <tr>
+              <td><strong>Early Pay Discount Capture</strong></td>
+              <td style="color:var(--red);font-weight:600;font-family:'IBM Plex Mono',monospace;">18% / $1.8M</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">72% / $7.2M</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">68% / $6.8M</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▲ +$5.0M captured</td>
+            </tr>
+            <tr>
+              <td><strong>Duplicate Invoice Risk</strong></td>
+              <td style="color:var(--red);font-weight:600;font-family:'IBM Plex Mono',monospace;">$4.2M exposure</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">&lt;$200K</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">$0.3M</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▼ −93% risk eliminated</td>
+            </tr>
+            <tr>
+              <td><strong>Late Payment Penalties</strong></td>
+              <td style="color:var(--red);font-weight:600;font-family:'IBM Plex Mono',monospace;">$2.1M / yr</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">$120K</td>
+              <td style="color:var(--green);font-weight:600;font-family:'IBM Plex Mono',monospace;">$180K</td>
+              <td style="color:var(--cyan-d);font-weight:700;">▼ −$1.9M penalties avoided</td>
+            </tr>
+            <tr style="background:var(--cyan-pale);">
+              <td><strong>Annual AI Value</strong></td>
+              <td style="font-family:'IBM Plex Mono',monospace;">—</td>
+              <td style="font-family:'IBM Plex Mono',monospace;">—</td>
+              <td style="color:var(--cyan-d);font-weight:700;font-size:16px;font-family:'IBM Plex Mono',monospace;">$41M</td>
+              <td style="color:var(--cyan-d);font-weight:700;">306% ROI · 14-month payback</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bottom row: agents + cost -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="panel-hdr-title">AP Value — Current Cost vs AI Future</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="block-table">
+            <thead>
+              <tr><th>Cost / Value Driver</th><th>Current</th><th>With AI</th><th>Saving</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>FTE Exception Handling Cost</td><td class="mono" style="color:var(--red);">$3.4M</td><td class="mono" style="color:var(--green);">$0.6M</td><td class="mono" style="color:var(--green);">$2.8M</td></tr>
+              <tr><td>Late Payment Penalties</td><td class="mono" style="color:var(--red);">$2.1M</td><td class="mono" style="color:var(--green);">$0.18M</td><td class="mono" style="color:var(--green);">$1.9M</td></tr>
+              <tr><td>Missed Early Pay Discounts</td><td class="mono" style="color:var(--red);">$8.4M</td><td class="mono" style="color:var(--green);">$1.6M</td><td class="mono" style="color:var(--green);">$6.8M</td></tr>
+              <tr><td>Duplicate Payment Losses</td><td class="mono" style="color:var(--red);">$1.8M</td><td class="mono" style="color:var(--green);">$0.12M</td><td class="mono" style="color:var(--green);">$1.7M</td></tr>
+              <tr><td>Working Capital (DPO gap)</td><td class="mono" style="color:var(--red);">$12.4M</td><td class="mono" style="color:var(--green);">$1.2M</td><td class="mono" style="color:var(--green);">$11.2M</td></tr>
+              <tr style="background:var(--green-pale);"><td><strong>Total Avoidable Annual Cost</strong></td><td class="mono" style="color:var(--red);font-weight:700;">$28.1M</td><td class="mono" style="color:var(--green);font-weight:700;">$3.7M</td><td class="mono" style="color:var(--green);font-weight:700;">$24.4M</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="panel-hdr-title">Deployment Roadmap</span>
+          <span class="panel-hdr-badge" style="background:var(--cyan-pale);color:var(--cyan);">6–8 week deployment</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--border);border-left:3px solid var(--cyan);">
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);min-width:60px;">Week 1–2</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;">Connect &amp; Baseline</div>
+                <div style="font-size:11px;color:var(--text-2);">SAP FI-AP / Coupa / Basware integration · Extract 12-month AP history · Establish block rate and cycle time baselines</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--border);border-left:3px solid var(--cyan);">
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);min-width:60px;">Week 3–4</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;">Deploy Invoice Match &amp; Duplicate Agents</div>
+                <div style="font-size:11px;color:var(--text-2);">Touchless matching live · Duplicate detection scanning backlog · First-pass yield improvement visible within days</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--border);border-left:3px solid var(--cyan);">
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);min-width:60px;">Week 5–6</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;">PO Intelligence &amp; Exception Routing</div>
+                <div style="font-size:11px;color:var(--text-2);">Block rate reduction begins · Pre-validation at PO creation · Intelligent routing to right approvers</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;border:1px solid var(--border);border-left:3px solid var(--cyan);">
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);min-width:60px;">Week 7–8</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;">Payment Optimisation Agent Go-Live</div>
+                <div style="font-size:11px;color:var(--text-2);">DPO optimization · Early pay scheduling · Late payment risk alerts · Full dashboard live for AP leadership</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /compare -->
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<div class="dash-footer">
+  <div class="dash-footer-logo">IBM</div>
+  <div class="dash-footer-text">Accounts Payable Intelligence · Agentic AI Value Platform · IBM Technology</div>
+  <div class="dash-footer-text">Confidential · Executive View</div>
+</div>
+
+<script>
+function switchView(id, el) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.vs-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+  if (el && el.classList.contains('nav-tab')) el.classList.add('active');
+}
+</script>
+</body>
+</html>

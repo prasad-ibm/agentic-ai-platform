@@ -1044,7 +1044,8 @@
     <div style="display:flex;justify-content:center;margin-bottom:2rem;gap:0;" data-reveal>
       <div class="exec-tab active" onclick="switchExecTab('cfo',this)" style="padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);border-right:none;background:#fff;color:var(--text-2);transition:var(--transition);">💼 CFO Dashboard</div>
       <div class="exec-tab" onclick="switchExecTab('proc',this)" style="padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);border-right:none;background:#fff;color:var(--text-2);transition:var(--transition);">🏭 Procurement</div>
-      <div class="exec-tab" onclick="switchExecTab('ar',this)" style="padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:var(--transition);">📥 Accounts Receivable</div>
+      <div class="exec-tab" onclick="switchExecTab('ar',this)" style="padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);border-right:none;background:#fff;color:var(--text-2);transition:var(--transition);">📥 Accounts Receivable</div>
+      <div class="exec-tab" onclick="switchExecTab('ap',this)" style="padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:var(--transition);">🧾 Accounts Payable</div>
     </div>
 
     <!-- CFO Panel -->
@@ -1210,6 +1211,89 @@
               <div style="font-size:22px;font-weight:700;color:var(--green);">$38.6M</div>
               <div style="font-size:10px;color:var(--text-2);margin-top:2px;">YTD realized</div>
               <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">FY Target: $52M · ROI 284%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AP Panel -->
+    <div class="exec-panel" id="exec-ap" style="display:none;" data-reveal>
+      <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:2rem;align-items:start;">
+        <div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.25rem;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#e5f6ff;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:26px;">🧾</div>
+            <div>
+              <div style="font-size:20px;font-weight:700;">Accounts Payable Dashboard</div>
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-2);">P2P Process Intelligence · AI-Powered</div>
+            </div>
+          </div>
+          <p style="font-size:14px;color:var(--text-1);line-height:1.7;margin-bottom:1.25rem;">End-to-end AP process intelligence — from invoice receipt through payment — with root cause tracing back to upstream ordering failures. Identifies blocked invoices, duplicate risk, and late-payment exposure, with agentic AI projections showing the path to touchless, exception-free AP operations.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:2px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;"></div>
+              <span style="font-size:12px;font-weight:600;">Current State</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-2);">Invoice volumes · Block rate · Cycle time · DPO</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:2px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;"></div>
+              <span style="font-size:12px;font-weight:600;">Root Cause Analysis</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-2);">PO issues · Price deviations · Duplicate detection</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#e5f6ff;border:1px solid rgba(0,114,195,0.3);border-radius:2px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;"></div>
+              <span style="font-size:12px;font-weight:700;color:var(--cyan);">With AI Agents</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--cyan);">Touchless 90%+ · Blocks −78% · Cycle time −62%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border:1px solid var(--border);border-radius:2px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;"></div>
+              <span style="font-size:12px;font-weight:600;">Payment &amp; Compliance</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-2);">On-time payment · Early pay capture · Duplicate risk</span>
+            </div>
+          </div>
+          <a href="AP.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--cyan);color:#fff;font-size:13px;font-weight:700;border-radius:2px;text-decoration:none;transition:var(--transition);" onmouseover="this.style.background='#00539a'" onmouseout="this.style.background='#0072c3'">Open AP Dashboard →</a>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:2px;overflow:hidden;">
+          <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-1);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Current State vs AI Impact</span>
+            <span style="background:var(--green-pale);color:var(--green);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;border:1px solid rgba(25,128,56,0.2);">● IBM Client Zero Benchmarked</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;">
+            <div style="padding:16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">Touchless Invoice Rate</div>
+              <div style="font-size:22px;font-weight:700;color:var(--red);">23%</div>
+              <div style="font-size:10px;color:var(--red);margin-top:2px;">Target 60% · IBM C0 90%</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">AI: 91% ▲ +68pp</div>
+            </div>
+            <div style="padding:16px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">Invoice Block Rate</div>
+              <div style="font-size:22px;font-weight:700;color:var(--red);">34%</div>
+              <div style="font-size:10px;color:var(--red);margin-top:2px;">Target &lt;10% · IBM C0 6%</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">AI: 7.4% ▼ −78%</div>
+            </div>
+            <div style="padding:16px;border-bottom:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">Avg. Cycle Time</div>
+              <div style="font-size:22px;font-weight:700;color:var(--gold);">18.4d</div>
+              <div style="font-size:10px;color:var(--red);margin-top:2px;">Target 7d · IBM C0 3.2d</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">AI: 7.0d ▼ −62%</div>
+            </div>
+            <div style="padding:16px;border-right:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">On-Time Payment Rate</div>
+              <div style="font-size:22px;font-weight:700;color:var(--gold);">71%</div>
+              <div style="font-size:10px;color:var(--red);margin-top:2px;">Target 92%</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">AI: 96.3% ▲ +25.3pp</div>
+            </div>
+            <div style="padding:16px;border-right:1px solid var(--border);">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">Duplicate Invoice Risk</div>
+              <div style="font-size:22px;font-weight:700;color:var(--red);">$4.2M</div>
+              <div style="font-size:10px;color:var(--red);margin-top:2px;">Exposure · 2.8% of AP volume</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">AI: $0.3M ▼ −93% detected</div>
+            </div>
+            <div style="padding:16px;">
+              <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:4px;">AI Annual Value</div>
+              <div style="font-size:22px;font-weight:700;color:var(--cyan);">$28.4M</div>
+              <div style="font-size:10px;color:var(--text-2);margin-top:2px;">YTD realized</div>
+              <div style="font-size:10px;color:var(--green);font-weight:700;margin-top:4px;padding-top:4px;border-top:1px solid var(--border);">FY Target: $41M · ROI 306%</div>
             </div>
           </div>
         </div>
