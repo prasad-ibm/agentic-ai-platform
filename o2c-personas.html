@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>O2C Persona Hub · Agentic AI Value Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+ --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-dark:#161616;
+ --blue:#0f62fe;--blue-pale:#edf5ff;
+ --cyan:#0072c3;--cyan-pale:#e5f6ff;
+ --teal:#007d79;--teal-pale:#d9fbfb;
+ --green:#198038;--green-pale:rgba(25,128,56,0.08);
+ --gold:#b28600;--gold-pale:rgba(178,134,0,0.10);
+ --orange:#ff832b;--orange-pale:rgba(255,131,43,0.10);
+ --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+ --purple:#6929c4;--purple-pale:#f6f2ff;
+ --magenta:#d02670;--magenta-pale:#fff0f7;
+ --text-0:#161616;--text-1:#393939;--text-2:#525252;--text-3:#6f6f6f;
+ --border:#e0e0e0;--transition:0.15s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;}
+a{color:var(--purple);text-decoration:none;}
+
+nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-logo{width:48px;height:18px;background:#161616;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;}
+.nav-sep{width:1px;height:20px;background:var(--border);}
+.nav-title{font-size:13px;font-weight:600;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:var(--transition);font-family:inherit;}
+.btn-ghost{background:transparent;color:var(--purple);border:1px solid var(--purple);}
+.btn-ghost:hover{background:var(--purple-pale);}
+.btn-primary{background:var(--purple);color:#fff;}
+.btn-primary:hover{background:#5416a5;}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.badge-live{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+.page{padding-top:48px;display:flex;min-height:100vh;}
+
+/* LEFT NAV */
+.sidenav{width:280px;background:var(--bg-1);border-right:1px solid var(--border);flex-shrink:0;position:sticky;top:48px;align-self:flex-start;height:calc(100vh - 48px);overflow-y:auto;}
+.sn-head{padding:1.25rem 1.25rem 0.75rem;}
+.sn-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.sn-sub{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.sn-note{font-size:11px;color:var(--text-2);line-height:1.5;}
+.sn-divider{height:1px;background:var(--border);margin:10px 0 0;}
+.sn-list{padding:0.5rem 0;}
+.sn-item{display:flex;align-items:center;gap:12px;padding:12px 1.25rem;cursor:pointer;border-left:3px solid transparent;transition:var(--transition);text-decoration:none;color:var(--text-1);}
+.sn-item:hover{background:#fff;}
+.sn-item.active{background:#fff;border-left-color:var(--accent);}
+.sn-icon{width:32px;height:32px;border-radius:50%;background:var(--accent-pale);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sn-item-text{flex:1;min-width:0;}
+.sn-item-role{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--accent);margin-bottom:2px;}
+.sn-item-name{font-size:12px;font-weight:600;line-height:1.3;color:var(--text-0);}
+.sn-item.active .sn-item-name{font-weight:700;}
+.sn-foot{padding:1rem 1.25rem;border-top:1px solid var(--border);margin-top:0.5rem;}
+.sn-foot-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.sn-back{font-size:11px;color:var(--purple);font-weight:600;}
+
+/* accent colors */
+.c-blue{--accent:var(--blue);--accent-pale:var(--blue-pale);}
+.c-teal{--accent:var(--teal);--accent-pale:var(--teal-pale);}
+.c-orange{--accent:var(--orange);--accent-pale:var(--orange-pale);}
+.c-green{--accent:var(--green);--accent-pale:var(--green-pale);}
+.c-gold{--accent:var(--gold);--accent-pale:var(--gold-pale);}
+.c-magenta{--accent:var(--magenta);--accent-pale:var(--magenta-pale);}
+.c-purple{--accent:var(--purple);--accent-pale:var(--purple-pale);}
+
+/* CONTENT */
+.content{flex:1;min-width:0;padding:0;}
+.persona-panel{display:none;padding:1.75rem 2rem;}
+.persona-panel.active{display:block;}
+
+/* PERSONA HEADER */
+.p-head{display:flex;align-items:flex-start;gap:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+.p-head-icon{width:64px;height:64px;border-radius:50%;background:var(--accent-pale);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
+.p-head-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.p-head-title{font-size:26px;font-weight:700;line-height:1.15;margin-bottom:8px;}
+.p-head-sub{font-size:13px;color:var(--text-2);line-height:1.55;max-width:780px;}
+.p-head-actions{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+.p-head-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:5px 10px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+
+/* SECTION HDR */
+.sec-hdr{margin-bottom:1rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;}
+.sec-eyebrow{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.sec-title{font-size:15px;font-weight:700;}
+.sec-right{font-size:10px;color:var(--text-3);}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem;}
+.kpi-row.k5{grid-template-columns:repeat(5,1fr);}
+.kpi-row.k3{grid-template-columns:repeat(3,1fr);}
+.kcell{background:#fff;padding:14px 16px;}
+.kcell-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.kcell-val{font-size:26px;font-weight:300;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:3px;color:var(--text-0);}
+.kcell-val.good{color:var(--green);}
+.kcell-val.warn{color:var(--orange);}
+.kcell-val.bad{color:var(--red);}
+.kcell-val.acc{color:var(--accent);}
+.kcell-sub{font-size:10px;color:var(--text-2);}
+.kcell-delta{font-size:10px;font-weight:700;margin-top:5px;padding:2px 6px;display:inline-block;}
+.kcell-delta.up{background:var(--green-pale);color:var(--green);}
+.kcell-delta.dn{background:var(--red-pale);color:var(--red);}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-13{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+
+/* PANEL */
+.panel{background:#fff;border:1px solid var(--border);overflow:hidden;}
+.panel-hdr{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg-1);display:flex;align-items:center;justify-content:space-between;}
+.panel-hdr-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-1);}
+.panel-hdr-badge{font-size:9px;font-weight:700;padding:2px 8px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+.panel-body{padding:14px 16px;}
+.panel-body.flush{padding:0;}
+
+/* BAR LIST */
+.bar-list{display:flex;flex-direction:column;gap:10px;}
+.bl-row{}
+.bl-top{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;margin-bottom:4px;}
+.bl-label{font-weight:600;color:var(--text-1);}
+.bl-value{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--text-0);}
+.bl-track{height:7px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+.bl-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.tbl th{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg-1);}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-1);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg-1);}
+.mono{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.pill{font-size:9px;font-weight:700;padding:2px 7px;display:inline-block;}
+.pill.red{background:var(--red-pale);color:var(--red);}
+.pill.green{background:var(--green-pale);color:var(--green);}
+.pill.gold{background:var(--gold-pale);color:var(--gold);}
+.pill.blue{background:var(--blue-pale);color:var(--blue);}
+.pill.purple{background:var(--purple-pale);color:var(--purple);}
+
+/* FLOW (for cash app dashboard) */
+.cash-flow{display:grid;grid-template-columns:1fr 50px 1fr 50px 1fr;gap:0;align-items:center;}
+.cf-box{background:#fff;border:1px solid var(--border);padding:14px;text-align:center;}
+.cf-box.inbound{background:var(--blue-pale);border-color:var(--blue);}
+.cf-box.matched{background:var(--green-pale);border-color:var(--green);}
+.cf-box.except{background:var(--red-pale);border-color:var(--red);}
+.cf-box-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.cf-box-val{font-size:22px;font-weight:300;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:4px;}
+.cf-box-val.b{color:var(--blue);}
+.cf-box-val.g{color:var(--green);}
+.cf-box-val.r{color:var(--red);}
+.cf-box-sub{font-size:10px;color:var(--text-2);}
+.cf-arrow{text-align:center;font-size:24px;color:var(--text-3);}
+
+/* RULE FLOW (contract pricing) */
+.rule-flow{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:center;margin-bottom:1rem;}
+.rule-box{background:#fff;border:2px solid var(--accent);padding:14px;text-align:center;}
+.rule-box .rb-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+.rule-box .rb-t{font-size:13px;font-weight:700;margin-bottom:4px;}
+.rule-box .rb-sub{font-size:10px;color:var(--text-2);line-height:1.5;}
+.rule-arrow{text-align:center;font-size:22px;color:var(--accent);}
+
+/* CHIPS */
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-size:10px;font-weight:600;padding:4px 10px;background:var(--bg-1);border:1px solid var(--border);color:var(--text-1);}
+
+/* AGENT SKILLS SECTION */
+.agents{background:var(--bg-1);border:1px solid var(--border);border-top:3px solid var(--accent);padding:1.5rem;margin-top:1rem;}
+.agents-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px;}
+.agents-title-wrap .ah-eye{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.agents-title-wrap .ah-t{font-size:18px;font-weight:700;}
+.agents-title-wrap .ah-s{font-size:12px;color:var(--text-2);margin-top:4px;max-width:680px;}
+.agents-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;}
+.skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.skill-card{background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);padding:12px 14px;}
+.skill-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px;}
+.skill-name{font-size:12px;font-weight:700;color:var(--text-0);display:flex;align-items:center;gap:6px;}
+.skill-name::before{content:"✦";color:var(--accent);font-size:10px;}
+.skill-tag{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);}
+.skill-desc{font-size:11px;color:var(--text-2);line-height:1.55;margin-bottom:8px;}
+.skill-meta{display:flex;gap:10px;font-size:9.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;}
+.skill-meta span{display:flex;align-items:center;gap:4px;}
+.skill-meta span::before{content:"●";color:var(--accent);font-size:7px;}
+
+@media(max-width:1024px){.page{flex-direction:column;}.sidenav{width:100%;position:static;height:auto;}.kpi-row,.kpi-row.k5,.kpi-row.k3{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-3,.grid-13{grid-template-columns:1fr;}.skill-grid{grid-template-columns:1fr;}.cash-flow,.rule-flow{grid-template-columns:1fr;}.cf-arrow,.rule-arrow{transform:rotate(90deg);padding:8px 0;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">O2C Persona Hub · The Agentic Organization</span>
+  </div>
+  <div class="nav-links">
+    <a href="o2c-future.html" class="btn btn-ghost btn-sm">← Vision</a>
+    <a href="AR.html" class="btn btn-ghost btn-sm">AR Dashboard</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <span class="badge-live">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- LEFT NAV -->
+<aside class="sidenav">
+  <div class="sn-head">
+    <div class="sn-title">O2C Persona Hub</div>
+    <div class="sn-sub">The Agentic Org</div>
+    <div class="sn-note">Seven personas. Every dashboard. Every low-code skill.</div>
+  </div>
+  <div class="sn-divider"></div>
+  <div class="sn-list">
+    <a class="sn-item active c-blue" data-target="billing" onclick="sel('billing',this)">
+      <div class="sn-icon">🧾</div>
+      <div class="sn-item-text"><div class="sn-item-role">Billing</div><div class="sn-item-name">Billing Specialist</div></div>
+    </a>
+    <a class="sn-item c-teal" data-target="revenue" onclick="sel('revenue',this)">
+      <div class="sn-icon">📈</div>
+      <div class="sn-item-text"><div class="sn-item-role">Revenue Assurance</div><div class="sn-item-name">Revenue Accountant</div></div>
+    </a>
+    <a class="sn-item c-orange" data-target="credit" onclick="sel('credit',this)">
+      <div class="sn-icon">🛡️</div>
+      <div class="sn-item-text"><div class="sn-item-role">Credit &amp; Collections</div><div class="sn-item-name">C&amp;C Analyst</div></div>
+    </a>
+    <a class="sn-item c-green" data-target="cashapp" onclick="sel('cashapp',this)">
+      <div class="sn-icon">💰</div>
+      <div class="sn-item-text"><div class="sn-item-role">Cash Application</div><div class="sn-item-name">Cash App Specialist</div></div>
+    </a>
+    <a class="sn-item c-gold" data-target="contract" onclick="sel('contract',this)">
+      <div class="sn-icon">📜</div>
+      <div class="sn-item-text"><div class="sn-item-role">Contract &amp; Pricing</div><div class="sn-item-name">Pricing Analyst</div></div>
+    </a>
+    <a class="sn-item c-magenta" data-target="customer" onclick="sel('customer',this)">
+      <div class="sn-icon">🤝</div>
+      <div class="sn-item-text"><div class="sn-item-role">Customer Finance</div><div class="sn-item-name">Customer Finance Mgr</div></div>
+    </a>
+    <a class="sn-item c-purple" data-target="director" onclick="sel('director',this)">
+      <div class="sn-icon">🎯</div>
+      <div class="sn-item-text"><div class="sn-item-role">Leadership</div><div class="sn-item-name">AR Mgr / Director O2C</div></div>
+    </a>
+  </div>
+  <div class="sn-foot">
+    <div class="sn-foot-title">Related</div>
+    <a href="o2c-future.html" class="sn-back">← Future of O2C vision</a>
+  </div>
+</aside>
+
+<!-- CONTENT -->
+<div class="content" id="content">
+
+<!-- ═════════════════════ BILLING SPECIALIST ═════════════════════ -->
+<div class="persona-panel active c-blue" id="panel-billing">
+  <div class="p-head">
+    <div class="p-head-icon">🧾</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Billing</div>
+      <div class="p-head-title">Billing Specialist</div>
+      <div class="p-head-sub">Oversees autonomous billing agents and ensures billing logic and policies are correctly applied across every invoice generated. Focuses on billing accuracy, policy compliance, and anomaly resolution — not invoice keying.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 92% autonomous</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Billing Agent Control Room</div><div class="sec-title">Autonomous Billing Performance</div></div><div class="sec-right">Updated 4 min ago</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Invoices Generated</div><div class="kcell-val">41,820</div><div class="kcell-sub">MTD · 93% straight-through</div></div>
+    <div class="kcell"><div class="kcell-lbl">Billing Accuracy</div><div class="kcell-val good">99.6%</div><div class="kcell-delta up">▲ +0.8pp vs LQ</div></div>
+    <div class="kcell"><div class="kcell-lbl">Policy Violations</div><div class="kcell-val warn">42</div><div class="kcell-sub">Of 41,820 · 0.1%</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Gen Time</div><div class="kcell-val acc">2.1s</div><div class="kcell-sub">Per invoice · agent-driven</div></div>
+    <div class="kcell"><div class="kcell-lbl">Leakage Prevented</div><div class="kcell-val good">$1.4M</div><div class="kcell-sub">Caught at billing, not close</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Billing Agent Exception Queue</span><span class="panel-hdr-badge">42 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Invoice</th><th>Customer</th><th>Policy</th><th>Amount</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">INV-284419</td><td>Acme Foods</td><td>Tiered volume &gt; threshold</td><td class="mono">$84,200</td><td><span class="pill red">Review</span></td></tr>
+            <tr><td class="mono">INV-284420</td><td>North Bev Co</td><td>Contract minimum shortfall</td><td class="mono">$14,700</td><td><span class="pill gold">Hold</span></td></tr>
+            <tr><td class="mono">INV-284421</td><td>Pacific Retail</td><td>Rebate accrual mismatch</td><td class="mono">$22,180</td><td><span class="pill red">Review</span></td></tr>
+            <tr><td class="mono">INV-284422</td><td>GlobalCo EMEA</td><td>FX rate tolerance &gt; 2%</td><td class="mono">€9,420</td><td><span class="pill gold">Hold</span></td></tr>
+            <tr><td class="mono">INV-284423</td><td>Summit Spirits</td><td>Promo price window expired</td><td class="mono">$6,300</td><td><span class="pill green">Agent fixed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Policy Application Mix</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Contract pricing tiers</span><span class="bl-value">98.4%</span></div><div class="bl-track"><div class="bl-fill" style="width:98.4%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Rebate &amp; discount logic</span><span class="bl-value">96.1%</span></div><div class="bl-track"><div class="bl-fill" style="width:96.1%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Tax determination</span><span class="bl-value">99.2%</span></div><div class="bl-track"><div class="bl-fill" style="width:99.2%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Multi-currency / FX</span><span class="bl-value">94.6%</span></div><div class="bl-track"><div class="bl-fill" style="width:94.6%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Freight &amp; surcharge</span><span class="bl-value">91.3%</span></div><div class="bl-track"><div class="bl-fill" style="width:91.3%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Billing Specialist — Skills Library</div>
+        <div class="ah-s">Each skill is a reusable, low-code building block for the Billing Agent. Skills are composable, governed, and owned by the Billing Specialist.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">invoice.audit</div><span class="skill-tag">Audit</span></div><div class="skill-desc">Inspects every generated invoice against the contract pricing table, promo calendar, and rebate accruals. Flags deviations &gt; configurable tolerance.</div><div class="skill-meta"><span>Input: invoice JSON</span><span>Output: issue list</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.enforce</div><span class="skill-tag">Logic</span></div><div class="skill-desc">Applies billing policies from a versioned rule library: contract tiers, minimums, surcharges, tax codes. Returns pass / hold / review decision.</div><div class="skill-meta"><span>Trigger: pre-post</span><span>SLA: &lt; 3s</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">anomaly.detect</div><span class="skill-tag">ML</span></div><div class="skill-desc">Scores invoices for unusual combinations (price × volume × customer × period) using trained pattern models. Catches issues rule-based audits miss.</div><div class="skill-meta"><span>Model: XGBoost</span><span>Threshold: tunable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">exception.resolve</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Routes held invoices to the right reviewer with recommended fix, backing data, and evidence trail. Auto-releases on approval.</div><div class="skill-meta"><span>Human-in-loop</span><span>Audit trail</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">leakage.recover</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Identifies missed charges (freight, surcharges, minimum commitments) and generates corrective invoices or credit notes automatically.</div><div class="skill-meta"><span>Runs: daily</span><span>Value: tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">billing.narrate</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Generates plain-language explanation of every invoice for customer CX and internal reviewers — line by line, with source references.</div><div class="skill-meta"><span>Model: LLM</span><span>Multilingual</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ REVENUE ACCOUNTANT ═════════════════════ -->
+<div class="persona-panel c-teal" id="panel-revenue">
+  <div class="p-head">
+    <div class="p-head-icon">📈</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Revenue Assurance</div>
+      <div class="p-head-title">Revenue Accountant / Revenue Assurance Analyst</div>
+      <div class="p-head-sub">Monitors AI-driven revenue integrity dashboards and resolves high-judgment revenue exceptions. Closes the books faster by catching recognition errors at source, not at month-end.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ ASC 606 / IFRS 15</span></div>
+  </div>
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · AI-Driven Revenue Integrity</div><div class="sec-title">Revenue Integrity Monitor</div></div><div class="sec-right">Period: FY26 Q1</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Revenue Booked YTD</div><div class="kcell-val">$742M</div><div class="kcell-sub">Auto-recognized 96.8%</div></div>
+    <div class="kcell"><div class="kcell-lbl">First-Pass Accuracy</div><div class="kcell-val good">98.4%</div><div class="kcell-delta up">▲ +6.2pp YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Open Exceptions</div><div class="kcell-val warn">58</div><div class="kcell-sub">23 high judgment</div></div>
+    <div class="kcell"><div class="kcell-lbl">Close Cycle</div><div class="kcell-val acc">2.6d</div><div class="kcell-sub">From 6.2d · target 2d</div></div>
+  </div>
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Revenue Integrity Trend · 6-month</span><span class="panel-hdr-badge">▲ Improving</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Nov</span><span class="bl-value">94.1% · $118M</span></div><div class="bl-track"><div class="bl-fill" style="width:94%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Dec</span><span class="bl-value">95.3% · $131M</span></div><div class="bl-track"><div class="bl-fill" style="width:95%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Jan</span><span class="bl-value">96.7% · $122M</span></div><div class="bl-track"><div class="bl-fill" style="width:96.7%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Feb</span><span class="bl-value">97.5% · $127M</span></div><div class="bl-track"><div class="bl-fill" style="width:97.5%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Mar</span><span class="bl-value">98.1% · $130M</span></div><div class="bl-track"><div class="bl-fill" style="width:98.1%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Apr MTD</span><span class="bl-value">98.4% · $114M</span></div><div class="bl-track"><div class="bl-fill" style="width:98.4%"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">High-Judgment Exceptions</span><span class="panel-hdr-badge">23 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Type</th><th>Count</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Variable consideration</td><td class="mono">9</td><td class="mono">$2.8M</td></tr>
+            <tr><td>Contract modification</td><td class="mono">6</td><td class="mono">$1.4M</td></tr>
+            <tr><td>Multi-element allocation</td><td class="mono">4</td><td class="mono">$840K</td></tr>
+            <tr><td>Principal vs agent</td><td class="mono">2</td><td class="mono">$520K</td></tr>
+            <tr><td>Cut-off &amp; timing</td><td class="mono">2</td><td class="mono">$310K</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:1rem;">
+    <div class="panel-hdr"><span class="panel-hdr-title">Revenue Leakage — Detected &amp; Recovered</span><span class="panel-hdr-badge">$4.8M YTD recovered</span></div>
+    <div class="panel-body flush">
+      <table class="tbl">
+        <thead><tr><th>Source</th><th>Count</th><th>Exposure</th><th>Recovered</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Unbilled fulfilled orders</td><td class="mono">127</td><td class="mono">$1.6M</td><td class="mono">$1.6M</td><td><span class="pill green">Closed</span></td></tr>
+          <tr><td>Missed contract escalators</td><td class="mono">42</td><td class="mono">$1.2M</td><td class="mono">$1.1M</td><td><span class="pill gold">In progress</span></td></tr>
+          <tr><td>Underbilled usage overages</td><td class="mono">89</td><td class="mono">$980K</td><td class="mono">$950K</td><td><span class="pill green">Closed</span></td></tr>
+          <tr><td>Missed rebate true-ups</td><td class="mono">21</td><td class="mono">$640K</td><td class="mono">$580K</td><td><span class="pill gold">In progress</span></td></tr>
+          <tr><td>Expired promo continued</td><td class="mono">18</td><td class="mono">$420K</td><td class="mono">$420K</td><td><span class="pill green">Closed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Revenue Accountant — Skills Library</div>
+        <div class="ah-s">Skills that power the Revenue Assurance Agent. Each skill is a reusable low-code building block with defined inputs, outputs, and audit trails.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">revenue.recognize</div><span class="skill-tag">ASC 606</span></div><div class="skill-desc">Applies the 5-step model: identify contract, performance obligations, price, allocate, recognize. Returns recognition schedule per contract line.</div><div class="skill-meta"><span>Input: contract</span><span>Output: schedule</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">variance.triage</div><span class="skill-tag">ML</span></div><div class="skill-desc">Ranks revenue variances by materiality × judgment × risk. Routes low-judgment items to auto-resolve, high-judgment to the analyst.</div><div class="skill-meta"><span>Priority queue</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">contract.interpret</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Extracts performance obligations, payment terms, consideration clauses from contract PDFs. Structured output ready for rev rec engine.</div><div class="skill-meta"><span>Model: LLM</span><span>Human review</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">leakage.scan</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Cross-joins fulfillment, billing, contract, and usage data to find revenue that was earned but not billed. Produces recovery queue.</div><div class="skill-meta"><span>Runs: nightly</span><span>Value: tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">close.accelerate</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Pre-populates month-end journals, flux explanations, and disclosures. Reduces analyst prep from days to hours.</div><div class="skill-meta"><span>Trigger: BD-1</span><span>Audit ready</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">disclosure.draft</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Generates disaggregated revenue disclosures, remaining performance obligations, and contract balance tables with source citations.</div><div class="skill-meta"><span>Audit trail</span><span>SOX ready</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CREDIT & COLLECTIONS ═════════════════════ -->
+<div class="persona-panel c-orange" id="panel-credit">
+  <div class="p-head">
+    <div class="p-head-icon">🛡️</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Credit &amp; Collections</div>
+      <div class="p-head-title">Credit &amp; Collections Analyst</div>
+      <div class="p-head-sub">Guides AI-generated credit and collection strategies and intervenes only in high-risk customer situations. Moves from dunning caller to risk strategist and negotiator.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 1.1K accounts</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Customer Risk &amp; Collection Strategy</div><div class="sec-title">Credit Portfolio Overview</div></div><div class="sec-right">1,124 customers · $496.5M AR</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">DSO</div><div class="kcell-val warn">49.4d</div><div class="kcell-sub">Target 42d · ▲ 2.1d MoM</div></div>
+    <div class="kcell"><div class="kcell-lbl">Past Due</div><div class="kcell-val bad">$213M</div><div class="kcell-sub">43% of total AR</div></div>
+    <div class="kcell"><div class="kcell-lbl">High-Risk Accts</div><div class="kcell-val bad">38</div><div class="kcell-sub">Requires analyst review</div></div>
+    <div class="kcell"><div class="kcell-lbl">Agent Auto-Actions</div><div class="kcell-val good">2,147</div><div class="kcell-sub">MTD · $18.6M recovered</div></div>
+    <div class="kcell"><div class="kcell-lbl">Bad Debt Reserve</div><div class="kcell-val acc">$8.4M</div><div class="kcell-sub">1.7% of AR · stable</div></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">AI-Generated Collection Strategy</div><div class="sec-title">Customer Segments &amp; Recommended Action</div></div></div>
+  <div class="grid-3">
+    <div class="panel" style="border-top:3px solid var(--green);">
+      <div class="panel-hdr"><span class="panel-hdr-title">Low Risk · Strategic</span><span class="panel-hdr-badge" style="background:var(--green-pale);color:var(--green);border-color:var(--green);">847 accts</span></div>
+      <div class="panel-body">
+        <div style="font-size:11px;color:var(--text-2);line-height:1.6;margin-bottom:10px;">Autonomous agent handles end-to-end. Gentle reminders, auto-reconcile, no analyst touch.</div>
+        <div class="chip-row"><span class="chip">Auto-reminders</span><span class="chip">Self-service portal</span><span class="chip">Relationship preserve</span></div>
+        <div style="margin-top:10px;font-size:22px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--green);">$214M</div>
+        <div style="font-size:10px;color:var(--text-3);">AR balance · 93% current</div>
+      </div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--orange);">
+      <div class="panel-hdr"><span class="panel-hdr-title">Medium Risk · Engaged</span><span class="panel-hdr-badge" style="background:var(--orange-pale);color:var(--orange);border-color:var(--orange);">239 accts</span></div>
+      <div class="panel-body">
+        <div style="font-size:11px;color:var(--text-2);line-height:1.6;margin-bottom:10px;">Agent proposes strategy; analyst approves cadence and payment plans for borderline accounts.</div>
+        <div class="chip-row"><span class="chip">Tailored plans</span><span class="chip">Multi-channel</span><span class="chip">Agent + analyst</span></div>
+        <div style="margin-top:10px;font-size:22px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--orange);">$189M</div>
+        <div style="font-size:10px;color:var(--text-3);">AR balance · 21% past due</div>
+      </div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--red);">
+      <div class="panel-hdr"><span class="panel-hdr-title">High Risk · Analyst-Led</span><span class="panel-hdr-badge" style="background:var(--red-pale);color:var(--red);border-color:var(--red);">38 accts</span></div>
+      <div class="panel-body">
+        <div style="font-size:11px;color:var(--text-2);line-height:1.6;margin-bottom:10px;">Human analyst leads. Negotiation, credit holds, litigation referral. Agent prepares the brief.</div>
+        <div class="chip-row"><span class="chip">Direct negotiation</span><span class="chip">Legal review</span><span class="chip">Executive escalation</span></div>
+        <div style="margin-top:10px;font-size:22px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--red);">$93M</div>
+        <div style="font-size:10px;color:var(--text-3);">AR balance · 71% past due</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1rem;">
+    <div class="panel-hdr"><span class="panel-hdr-title">High-Risk Customer Queue · Analyst Action Required</span><span class="panel-hdr-badge">Top 6</span></div>
+    <div class="panel-body flush">
+      <table class="tbl">
+        <thead><tr><th>Customer</th><th>Past Due</th><th>Risk Score</th><th>Agent Recommendation</th><th>Analyst Note</th></tr></thead>
+        <tbody>
+          <tr><td>Atlantic Distributors</td><td class="mono">$4.2M</td><td><span class="pill red">92</span></td><td>Hold future orders · legal demand letter</td><td class="mono" style="color:var(--text-3);">Call scheduled</td></tr>
+          <tr><td>Meridian Foods Intl</td><td class="mono">$2.8M</td><td><span class="pill red">88</span></td><td>Payment plan · 90 days · partial release</td><td class="mono" style="color:var(--text-3);">Approved</td></tr>
+          <tr><td>Coastal Beverages</td><td class="mono">$1.6M</td><td><span class="pill gold">76</span></td><td>Escalate to customer CFO</td><td class="mono" style="color:var(--text-3);">In progress</td></tr>
+          <tr><td>Northland Retail Grp</td><td class="mono">$1.2M</td><td><span class="pill gold">71</span></td><td>Factor receivable · reduce exposure</td><td class="mono" style="color:var(--text-3);">Review</td></tr>
+          <tr><td>Vista Spirits LLC</td><td class="mono">$940K</td><td><span class="pill red">85</span></td><td>Bankruptcy watch · reserve 60%</td><td class="mono" style="color:var(--text-3);">Legal notified</td></tr>
+          <tr><td>Rainier Supply Co</td><td class="mono">$780K</td><td><span class="pill gold">68</span></td><td>Restructure terms to net 30</td><td class="mono" style="color:var(--text-3);">Pending</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Credit &amp; Collections Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Credit &amp; Collections Agent. The analyst configures, trains, and supervises — the agent runs the volume work.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.score</div><span class="skill-tag">ML</span></div><div class="skill-desc">Produces 0–100 credit risk score per customer using payment history, industry signals, bureau feeds, and macro indicators. Refreshed daily.</div><div class="skill-meta"><span>Sources: 12</span><span>SHAP explain</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">dunning.orchestrate</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Runs the right dunning cadence per customer segment (email, SMS, call, portal nudge) with AI-chosen channel and timing.</div><div class="skill-meta"><span>Multi-channel</span><span>A/B tested</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">payment-plan.propose</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Designs payment plans customers will actually keep — balances amount, cash flow, and commercial relationship. Analyst approves.</div><div class="skill-meta"><span>Human-in-loop</span><span>Optimizer</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">escalation.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Prepares executive briefing on any high-risk customer — timeline, touchpoints, exposure, recommended action — in under 60 seconds.</div><div class="skill-meta"><span>Model: LLM</span><span>One click</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">credit-limit.recalibrate</div><span class="skill-tag">Policy</span></div><div class="skill-desc">Reviews credit limits quarterly using current risk score + usage. Proposes increase, hold, or decrease with rationale.</div><div class="skill-meta"><span>Runs: quarterly</span><span>Auto-exec &lt; 5%</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">dispute.prevent</div><span class="skill-tag">Predictive</span></div><div class="skill-desc">Predicts which invoices will be disputed before they are — based on line, customer, amount pattern. Flags for proactive outreach.</div><div class="skill-meta"><span>Precision: 0.84</span><span>Preempt</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CASH APPLICATION ═════════════════════ -->
+<div class="persona-panel c-green" id="panel-cashapp">
+  <div class="p-head">
+    <div class="p-head-icon">💰</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Cash Application</div>
+      <div class="p-head-title">Cash Application Specialist</div>
+      <div class="p-head-sub">Supervises autonomous cash-matching processes and manages only the rare exceptions requiring judgment. Remittance interpretation, multi-invoice matching, and deduction research — all driven by agents.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 93% touchless</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Cash Matching Control</div><div class="sec-title">Incoming Payment → Application Flow</div></div><div class="sec-right">Today: $14.2M · 2,417 payments</div></div>
+
+  <div class="cash-flow" style="margin-bottom:1.5rem;">
+    <div class="cf-box inbound">
+      <div class="cf-box-lbl">◉ Incoming Payment</div>
+      <div class="cf-box-val b">2,417</div>
+      <div class="cf-box-sub">$14.2M · ACH, wire, check, card</div>
+    </div>
+    <div class="cf-arrow">→</div>
+    <div class="cf-box matched">
+      <div class="cf-box-lbl">◉ Auto-Matched</div>
+      <div class="cf-box-val g">2,248</div>
+      <div class="cf-box-sub">93.0% touchless · avg 0.8s</div>
+    </div>
+    <div class="cf-arrow">→</div>
+    <div class="cf-box except">
+      <div class="cf-box-lbl">◉ Matching Exceptions</div>
+      <div class="cf-box-val r">169</div>
+      <div class="cf-box-sub">7.0% · 28 analyst-escalated</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Touchless Match Rate</div><div class="kcell-val good">93.0%</div><div class="kcell-delta up">▲ +21pp vs baseline</div></div>
+    <div class="kcell"><div class="kcell-lbl">Unapplied Cash</div><div class="kcell-val warn">$1.8M</div><div class="kcell-sub">From $8.4M · −79%</div></div>
+    <div class="kcell"><div class="kcell-lbl">Exception Avg Age</div><div class="kcell-val acc">6.4h</div><div class="kcell-sub">From 3.2 days</div></div>
+    <div class="kcell"><div class="kcell-lbl">FTE Redeployed</div><div class="kcell-val good">8 of 12</div><div class="kcell-sub">Moved to analysis work</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Exception Types · Today</span><span class="panel-hdr-badge">169 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Exception</th><th>Count</th><th>Value</th><th>Typical Cause</th></tr></thead>
+          <tbody>
+            <tr><td>Short-paid · deduction</td><td class="mono">58</td><td class="mono">$412K</td><td>Chargeback · OS&amp;D claim</td></tr>
+            <tr><td>Over-paid</td><td class="mono">12</td><td class="mono">$48K</td><td>Duplicate payment</td></tr>
+            <tr><td>No remittance / unclear</td><td class="mono">47</td><td class="mono">$684K</td><td>Wire w/o reference</td></tr>
+            <tr><td>Multi-invoice lump sum</td><td class="mono">31</td><td class="mono">$1.1M</td><td>Consolidated check</td></tr>
+            <tr><td>Customer mismatch</td><td class="mono">14</td><td class="mono">$186K</td><td>Parent vs subsidiary</td></tr>
+            <tr><td>FX / bank fee variance</td><td class="mono">7</td><td class="mono">$52K</td><td>Intermediary fees</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Channel Match Performance</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Lockbox · check</span><span class="bl-value">88.1%</span></div><div class="bl-track"><div class="bl-fill" style="width:88%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">ACH · CTX with remit</span><span class="bl-value">98.4%</span></div><div class="bl-track"><div class="bl-fill" style="width:98.4%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Wire · w/ reference</span><span class="bl-value">91.6%</span></div><div class="bl-track"><div class="bl-fill" style="width:91.6%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Wire · w/o reference</span><span class="bl-value">62.4%</span></div><div class="bl-track"><div class="bl-fill" style="width:62%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Card · gateway</span><span class="bl-value">99.7%</span></div><div class="bl-track"><div class="bl-fill" style="width:99.7%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Customer portal</span><span class="bl-value">99.2%</span></div><div class="bl-track"><div class="bl-fill" style="width:99.2%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Cash Application Specialist — Skills Library</div>
+        <div class="ah-s">Skills that power the Cash Application Agent. The specialist reviews confidence-scored exceptions and teaches the agent new match patterns.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">remittance.interpret</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Reads remittance advice in any format (PDF, email, EDI 820, portal screenshot) and extracts invoice numbers, amounts, deductions.</div><div class="skill-meta"><span>Model: Vision LLM</span><span>Multilingual</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">match.multi-invoice</div><span class="skill-tag">Algo</span></div><div class="skill-desc">Solves the subset-sum problem to split a lump payment across multiple invoices with high confidence. Explains every choice.</div><div class="skill-meta"><span>ILP solver</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">deduction.classify</div><span class="skill-tag">ML</span></div><div class="skill-desc">Classifies short-pays into OS&amp;D, promo, pricing, unauthorized, tax — and routes to the right owner (AR, sales, logistics, trade).</div><div class="skill-meta"><span>12 classes</span><span>Route auto</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">customer.reconcile</div><span class="skill-tag">Graph</span></div><div class="skill-desc">Resolves parent/subsidiary/branch relationships using a customer graph. Matches payments from the right legal entity.</div><div class="skill-meta"><span>Neo4j</span><span>Fuzzy name</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">unapplied.clear</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Drives unapplied balances to zero. Correlates with customer inquiries, reaches out automatically, proposes reversals or corrections.</div><div class="skill-meta"><span>Runs: daily</span><span>Target: &lt; 1%</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">pattern.learn</div><span class="skill-tag">Feedback</span></div><div class="skill-desc">Captures specialist fixes as new match rules. The agent gets smarter every day — without code changes.</div><div class="skill-meta"><span>Active learning</span><span>Low-code</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CONTRACT & PRICING ═════════════════════ -->
+<div class="persona-panel c-gold" id="panel-contract">
+  <div class="p-head">
+    <div class="p-head-icon">📜</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Contract &amp; Pricing</div>
+      <div class="p-head-title">Contract &amp; Pricing Analyst</div>
+      <div class="p-head-sub">Designs and governs the pricing and contract rules that AI agents use to configure offers and interpret terms. The rule-setter — not the rule-executor.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 247 active rules</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Rule Library &amp; Offer Configuration</div><div class="sec-title">A-Spec Configuration Pipeline</div></div><div class="sec-right">247 rules · 84 offers</div></div>
+
+  <div class="rule-flow">
+    <div class="rule-box">
+      <div class="rb-lbl">◉ Step 01</div>
+      <div class="rb-t">Categorical Parameters</div>
+      <div class="rb-sub">Industry, region, tier, channel, volume band — the inputs that drive pricing logic.</div>
+    </div>
+    <div class="rule-arrow">→</div>
+    <div class="rule-box">
+      <div class="rb-lbl">◉ Step 02</div>
+      <div class="rb-t">Logic</div>
+      <div class="rb-sub">Rules, decision tables, and waterfall pricing — authored in low-code, versioned, and tested.</div>
+    </div>
+    <div class="rule-arrow">→</div>
+    <div class="rule-box">
+      <div class="rb-lbl">◉ Step 03</div>
+      <div class="rb-t">A-Spec Configuration</div>
+      <div class="rb-sub">Agent-ready offer specification — deployed to the Billing, Order, and CPQ agents.</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Active Rules</div><div class="kcell-val">247</div><div class="kcell-sub">Across 84 offers</div></div>
+    <div class="kcell"><div class="kcell-lbl">Rule Coverage</div><div class="kcell-val good">98.6%</div><div class="kcell-sub">Of deal volume</div></div>
+    <div class="kcell"><div class="kcell-lbl">Offers This Quarter</div><div class="kcell-val acc">18</div><div class="kcell-sub">New · 12 revised</div></div>
+    <div class="kcell"><div class="kcell-lbl">Time-to-Deploy</div><div class="kcell-val good">2.1d</div><div class="kcell-sub">From 21d · −90%</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Rule Library Activity · 30d</span><span class="panel-hdr-badge">Governed</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Rule</th><th>Type</th><th>Scope</th><th>Used</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Tier 1 Enterprise — Global</td><td>Waterfall</td><td>Volume &gt; 10k</td><td class="mono">4,218</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Rebate Accrual — Beverages</td><td>Accrual</td><td>Industry</td><td class="mono">1,864</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>FX Protection — EMEA EUR</td><td>Surcharge</td><td>Region</td><td class="mono">1,412</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Retail Promo Q2-26</td><td>Discount</td><td>Channel</td><td class="mono">984</td><td><span class="pill gold">Expires 30d</span></td></tr>
+            <tr><td>New Customer Intro Kit</td><td>Bundle</td><td>All</td><td class="mono">642</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Sustainability Surcharge</td><td>Add-on</td><td>All</td><td class="mono">318</td><td><span class="pill blue">Draft</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Offer Configuration Status</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Production · live</span><span class="bl-value">71</span></div><div class="bl-track"><div class="bl-fill" style="width:85%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Staged · testing</span><span class="bl-value">9</span></div><div class="bl-track"><div class="bl-fill" style="width:11%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Draft · authoring</span><span class="bl-value">4</span></div><div class="bl-track"><div class="bl-fill" style="width:5%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Archived last 30d</span><span class="bl-value">6</span></div><div class="bl-track"><div class="bl-fill" style="width:7%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Pending review</span><span class="bl-value">3</span></div><div class="bl-track"><div class="bl-fill" style="width:4%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Contract &amp; Pricing Analyst — Skills Library</div>
+        <div class="ah-s">Skills used by the analyst to author, govern, and deploy rules. The agent consumes the rules; the analyst curates them.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">rule.author</div><span class="skill-tag">Low-code</span></div><div class="skill-desc">Visual rule editor — categorical parameters → logic → outcome — with natural language preview and dry-run simulation on historical deals.</div><div class="skill-meta"><span>No-code UI</span><span>Versioned</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">contract.extract</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Extracts pricing terms, rebate schedules, and SLAs from contract PDFs into structured rule candidates for analyst review.</div><div class="skill-meta"><span>Model: LLM</span><span>PDF / DOCX</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">offer.configure</div><span class="skill-tag">A-Spec</span></div><div class="skill-desc">Assembles rules into agent-ready offer specs (A-Spec). Deploys to Billing, Order, CPQ agents with single publish action.</div><div class="skill-meta"><span>A-Spec JSON</span><span>One-click</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">impact.simulate</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Replays a proposed rule change against 12 months of history — shows margin, volume, and customer impact before go-live.</div><div class="skill-meta"><span>What-if</span><span>Historical replay</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">governance.review</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Enforces approval chains by rule type, value, and risk. Keeps audit trail of every rule change and approver for SOX.</div><div class="skill-meta"><span>SOX ready</span><span>Multi-approver</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">rule.lint</div><span class="skill-tag">Quality</span></div><div class="skill-desc">Detects rule conflicts, dead branches, and unreachable conditions before publish. Prevents pricing incidents in production.</div><div class="skill-meta"><span>Static analysis</span><span>Block publish</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CUSTOMER FINANCE MANAGER ═════════════════════ -->
+<div class="persona-panel c-magenta" id="panel-customer">
+  <div class="p-head">
+    <div class="p-head-icon">🤝</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Customer Finance</div>
+      <div class="p-head-title">Customer Finance Manager</div>
+      <div class="p-head-sub">Uses predictive insights from AI to prevent disputes and proactively improve customer financial experiences. Moves finance from back-office function to customer relationship partner.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Predictive-first</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Predictive Customer Financial Insights</div><div class="sec-title">Prevention &amp; Experience Monitor</div></div><div class="sec-right">Top 100 customers · 72% of AR</div></div>
+
+  <div class="grid-3">
+    <div class="panel" style="border-top:3px solid var(--magenta);">
+      <div class="panel-hdr"><span class="panel-hdr-title">◉ Prevent Disputes</span><span class="panel-hdr-badge">127 predicted</span></div>
+      <div class="panel-body">
+        <div style="font-size:32px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--magenta);line-height:1;">−64%</div>
+        <div style="font-size:10px;color:var(--text-3);margin-bottom:12px;">Dispute rate reduction YoY</div>
+        <div style="font-size:11px;color:var(--text-2);line-height:1.55;">AI flags invoices likely to be disputed — wrong ship-to, unclear line item, customer payment pattern — before they are sent.</div>
+      </div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--magenta);">
+      <div class="panel-hdr"><span class="panel-hdr-title">◉ On-Time Payment</span><span class="panel-hdr-badge">94% predicted paid</span></div>
+      <div class="panel-body">
+        <div style="font-size:32px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--magenta);line-height:1;">+12pp</div>
+        <div style="font-size:10px;color:var(--text-3);margin-bottom:12px;">Improvement in on-time rate</div>
+        <div style="font-size:11px;color:var(--text-2);line-height:1.55;">Customer-specific payment behavior forecasting. Proactively intervenes with invoices at risk — before they go late.</div>
+      </div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--magenta);">
+      <div class="panel-hdr"><span class="panel-hdr-title">◉ Fraud &amp; Risk Reduction</span><span class="panel-hdr-badge">$2.3M avoided</span></div>
+      <div class="panel-body">
+        <div style="font-size:32px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--magenta);line-height:1;">−38%</div>
+        <div style="font-size:10px;color:var(--text-3);margin-bottom:12px;">Fraud exposure reduction</div>
+        <div style="font-size:11px;color:var(--text-2);line-height:1.55;">Anomaly detection across payments, remittances, and bank changes. Stops social engineering attacks before funds leave.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Customer NPS (finance)</div><div class="kcell-val good">+62</div><div class="kcell-delta up">▲ +18 YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Disputes Prevented</div><div class="kcell-val acc">127</div><div class="kcell-sub">MTD · $1.9M value</div></div>
+    <div class="kcell"><div class="kcell-lbl">Proactive Interventions</div><div class="kcell-val">84</div><div class="kcell-sub">Calls / emails auto-triggered</div></div>
+    <div class="kcell"><div class="kcell-lbl">Customer Effort Score</div><div class="kcell-val good">4.6/5</div><div class="kcell-sub">Finance touchpoints</div></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1rem;">
+    <div class="panel-hdr"><span class="panel-hdr-title">Proactive Intervention Queue · This Week</span><span class="panel-hdr-badge">Predictive</span></div>
+    <div class="panel-body flush">
+      <table class="tbl">
+        <thead><tr><th>Customer</th><th>Predicted Event</th><th>Confidence</th><th>Recommended Action</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Harbor Distributors</td><td>Dispute on INV-284419 (price)</td><td><span class="pill red">0.91</span></td><td>Pre-call customer finance lead · explain price change</td><td><span class="pill green">Scheduled</span></td></tr>
+          <tr><td>Summit Beverages</td><td>Late payment risk · 14 days</td><td><span class="pill gold">0.78</span></td><td>Offer early-pay discount 1%/10 net 30</td><td><span class="pill blue">Proposed</span></td></tr>
+          <tr><td>Pacific Foods Intl</td><td>Chargeback on promo claim</td><td><span class="pill red">0.86</span></td><td>Send settlement proposal ahead of claim</td><td><span class="pill green">Sent</span></td></tr>
+          <tr><td>Lakeside Retail</td><td>Credit limit strain in 30d</td><td><span class="pill gold">0.72</span></td><td>Offer reviewed terms + quarterly true-up</td><td><span class="pill gold">Pending</span></td></tr>
+          <tr><td>North Star Spirits</td><td>Bank detail change · verify</td><td><span class="pill red">0.94</span></td><td>Callback on file number · block until verified</td><td><span class="pill red">Verify</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Customer Finance Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Customer Finance Agent. The manager shapes the strategy; the agent runs the predictive signals at scale.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">dispute.forecast</div><span class="skill-tag">Predictive</span></div><div class="skill-desc">Predicts invoices that will be disputed using customer, line, amount, channel, and timing features. Routes for proactive outreach.</div><div class="skill-meta"><span>Precision: 0.84</span><span>Pre-send</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">payment.forecast</div><span class="skill-tag">ML</span></div><div class="skill-desc">Predicts per-invoice pay date per customer. Feeds DSO forecast and cash flow planning. Flags at-risk invoices for intervention.</div><div class="skill-meta"><span>MAE: ±2.4 days</span><span>Per invoice</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">experience.nudge</div><span class="skill-tag">CX</span></div><div class="skill-desc">Sends the right communication at the right moment: early reminder, payment option, statement clarification, or thank-you — no spam.</div><div class="skill-meta"><span>Multi-channel</span><span>Personalized</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">fraud.detect</div><span class="skill-tag">ML</span></div><div class="skill-desc">Spots social engineering (bank change asks, vendor impersonation) and payment anomalies using graph + sequence models.</div><div class="skill-meta"><span>Graph ML</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">journey.map</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Maps every finance touchpoint with each customer — billing, payment, dispute, dunning. Highlights pain points for journey redesign.</div><div class="skill-meta"><span>Per customer</span><span>Time series</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">relationship.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Generates 1-page customer finance briefing before every key call: exposure, trends, issues, wins, talking points.</div><div class="skill-meta"><span>Model: LLM</span><span>On-demand</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ AR MANAGER / DIRECTOR O2C ═════════════════════ -->
+<div class="persona-panel c-purple" id="panel-director">
+  <div class="p-head">
+    <div class="p-head-icon">🎯</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · O2C Leadership</div>
+      <div class="p-head-title">AR Manager / Director of Order-to-Cash</div>
+      <div class="p-head-sub">Orchestrates end-to-end autonomous O2C operations, focusing on policy, risk management, and performance optimization. Owner of the agentic O2C platform and outcomes.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ End-to-end O2C</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · O2C Control Tower</div><div class="sec-title">End-to-End Performance &amp; Orchestration</div></div><div class="sec-right">All 7 agent domains live</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">DSO</div><div class="kcell-val acc">29.1d</div><div class="kcell-delta up">▼ −20.3d YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Revenue Integrity</div><div class="kcell-val good">98.4%</div><div class="kcell-sub">First-pass · ASC 606</div></div>
+    <div class="kcell"><div class="kcell-lbl">Touchless O2C</div><div class="kcell-val good">85%</div><div class="kcell-sub">End-to-end autonomous</div></div>
+    <div class="kcell"><div class="kcell-lbl">Bad Debt</div><div class="kcell-val good">0.31%</div><div class="kcell-sub">Of revenue · −41% YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Annual O2C Value</div><div class="kcell-val acc">$48M</div><div class="kcell-sub">FY target · 312% ROI</div></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Agent Domain Performance</div><div class="sec-title">Each Persona, Each Agent — One View</div></div></div>
+  <div class="panel" style="margin-bottom:1rem;">
+    <div class="panel-body flush">
+      <table class="tbl">
+        <thead><tr><th>Domain</th><th>Owner (Persona)</th><th>Autonomy</th><th>Exceptions</th><th>Value YTD</th><th>Health</th></tr></thead>
+        <tbody>
+          <tr><td>Contract &amp; Pricing</td><td>Pricing Analyst</td><td><span class="pill blue">98.6%</span></td><td class="mono">3</td><td class="mono">$4.1M</td><td><span class="pill green">● On track</span></td></tr>
+          <tr><td>Billing</td><td>Billing Specialist</td><td><span class="pill blue">93.0%</span></td><td class="mono">42</td><td class="mono">$6.8M</td><td><span class="pill green">● On track</span></td></tr>
+          <tr><td>Revenue Assurance</td><td>Revenue Accountant</td><td><span class="pill blue">96.8%</span></td><td class="mono">58</td><td class="mono">$9.2M</td><td><span class="pill green">● On track</span></td></tr>
+          <tr><td>Credit &amp; Collections</td><td>C&amp;C Analyst</td><td><span class="pill blue">81.2%</span></td><td class="mono">38</td><td class="mono">$11.4M</td><td><span class="pill gold">◐ Monitor</span></td></tr>
+          <tr><td>Cash Application</td><td>Cash App Specialist</td><td><span class="pill blue">93.0%</span></td><td class="mono">169</td><td class="mono">$7.6M</td><td><span class="pill green">● On track</span></td></tr>
+          <tr><td>Customer Finance</td><td>Customer Fin Manager</td><td><span class="pill blue">89.4%</span></td><td class="mono">84</td><td class="mono">$8.9M</td><td><span class="pill green">● On track</span></td></tr>
+          <tr style="background:var(--purple-pale);"><td><strong>End-to-End O2C</strong></td><td><strong>Director O2C</strong></td><td><span class="pill purple">85.1%</span></td><td class="mono"><strong>394</strong></td><td class="mono" style="color:var(--purple);font-weight:700;">$48M</td><td><span class="pill green">● Green</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Policy &amp; Risk Posture</span><span class="panel-hdr-badge">Governed</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Credit policy coverage</span><span class="bl-value">99.2%</span></div><div class="bl-track"><div class="bl-fill" style="width:99%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">SOX controls · pass</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Agent action audit trail</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Concentration risk &lt; 15%</span><span class="bl-value">11.8%</span></div><div class="bl-track"><div class="bl-fill" style="width:79%"></div></div></div>
+          <div class="bl-row"><div class="bl-top"><span class="bl-label">Reserve adequacy</span><span class="bl-value">1.7%</span></div><div class="bl-track"><div class="bl-fill" style="width:68%"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Performance Optimization Plays</span><span class="panel-hdr-badge">Next 90 days</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Play</th><th>Domain</th><th>Expected Value</th></tr></thead>
+          <tbody>
+            <tr><td>Segment dunning by industry</td><td>Collections</td><td class="mono">+$2.1M</td></tr>
+            <tr><td>Early-pay discount 1%/10</td><td>Customer Finance</td><td class="mono">+$1.4M</td></tr>
+            <tr><td>Remit learner auto-train</td><td>Cash App</td><td class="mono">+$0.9M</td></tr>
+            <tr><td>Rev leakage sweep · EMEA</td><td>Revenue</td><td class="mono">+$1.6M</td></tr>
+            <tr><td>Rebate true-up agent v2</td><td>Billing</td><td class="mono">+$1.2M</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">AR Manager / Director O2C — Skills Library</div>
+        <div class="ah-s">Skills used by the O2C leader. Orchestration, governance, and performance skills — consumed across every persona domain.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">orchestrator.route</div><span class="skill-tag">Control</span></div><div class="skill-desc">Routes O2C events between agent domains with SLAs, retries, and escalation paths. Single backbone for the agentic operation.</div><div class="skill-meta"><span>Event-driven</span><span>SLA tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.govern</div><span class="skill-tag">Governance</span></div><div class="skill-desc">Enforces policy across all persona domains — credit, pricing, revenue, collections. Versioned, approved, auditable.</div><div class="skill-meta"><span>Central</span><span>SOX ready</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">kpi.forecast</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Projects DSO, bad debt, revenue integrity 13 weeks forward. Simulates the impact of policy or process changes.</div><div class="skill-meta"><span>13-week</span><span>Monte Carlo</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">agent.observe</div><span class="skill-tag">Telemetry</span></div><div class="skill-desc">Monitors every agent action — autonomy rate, exception rate, latency, drift. Alerts leader when a domain degrades.</div><div class="skill-meta"><span>Real-time</span><span>Alerting</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">value.track</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Tracks the realised value of every agent skill and play. Ties dashboards back to P&amp;L, DSO, and working capital impact.</div><div class="skill-meta"><span>Audit-linked</span><span>Real dollars</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">exec.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Generates the monthly O2C executive briefing — performance, risks, plays, asks — with source citations and a one-page summary.</div><div class="skill-meta"><span>Model: LLM</span><span>Board-ready</span></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// Sidenav selection
+function sel(target, el){
+  document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.persona-panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('panel-'+target);
+  if(panel) panel.classList.add('active');
+  history.replaceState(null,'','#'+target);
+}
+// Deep link on load
+window.addEventListener('DOMContentLoaded',()=>{
+  const hash = (location.hash||'').replace('#','');
+  const valid = ['billing','revenue','credit','cashapp','contract','customer','director'];
+  if(hash && valid.includes(hash)){
+    const link = document.querySelector('.sn-item[data-target="'+hash+'"]');
+    sel(hash, link);
+  }
+});
+</script>
+
+</body>
+</html>
