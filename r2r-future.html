@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Future of R2R · Agentic AI Value Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-dark:#161616;
+      --blue:#0f62fe;--blue-l:#0043ce;--blue-pale:#edf5ff;
+      --cyan:#0072c3;--cyan-d:#00539a;--cyan-pale:#e5f6ff;
+      --teal:#007d79;--teal-pale:#d9fbfb;
+      --green:#198038;--green-pale:rgba(25,128,56,0.08);
+      --gold:#b28600;--gold-pale:rgba(178,134,0,0.10);
+      --orange:#ff832b;--orange-pale:rgba(255,131,43,0.10);
+      --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+      --purple:#6929c4;--purple-pale:#f6f2ff;
+      --magenta:#d02670;--magenta-pale:#fff0f7;
+      --text-0:#161616;--text-1:#393939;--text-2:#525252;--text-3:#6f6f6f;
+      --border:#e0e0e0;
+      --radius:0px;--radius-lg:2px;--transition:0.15s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;overflow-x:hidden;}
+    a{color:var(--teal);text-decoration:none;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;background:#ffffff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:12px;}
+    .nav-logo{width:48px;height:18px;background:#161616;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;color:#fff;}
+    .nav-sep{width:1px;height:20px;background:var(--border);}
+    .nav-title{font-size:13px;font-weight:600;}
+    .nav-links{display:flex;gap:4px;align-items:center;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:var(--transition);text-decoration:none;}
+    .btn-ghost{background:transparent;color:var(--teal);border:1px solid var(--teal);}
+    .btn-ghost:hover{background:var(--teal-pale);}
+    .btn-primary{background:var(--teal);color:#fff;}
+    .btn-primary:hover{background:#005d5d;}
+    .btn-sm{padding:5px 12px;font-size:11px;}
+    .badge-live{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+    .page{padding-top:48px;}
+
+    .hero{background:linear-gradient(135deg,#161616 0%,#0d3d3d 55%,#004d4d 100%);color:#fff;padding:3.5rem 2rem 3rem;position:relative;overflow:hidden;}
+    .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 20% 30%,rgba(0,125,121,0.3) 0,transparent 45%),radial-gradient(circle at 80% 70%,rgba(15,98,254,0.22) 0,transparent 45%);pointer-events:none;}
+    .hero-inner{max-width:1400px;margin:0 auto;position:relative;z-index:1;}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9ef0f0;background:rgba(0,125,121,0.3);border:1px solid rgba(158,240,240,0.3);padding:5px 14px;margin-bottom:1.25rem;}
+    .hero-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:#9ef0f0;}
+    .hero-title{font-size:44px;font-weight:300;line-height:1.1;margin-bottom:1rem;max-width:950px;}
+    .hero-title strong{font-weight:700;background:linear-gradient(90deg,#9ef0f0,#82cfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero-sub{font-size:15px;color:rgba(255,255,255,0.78);line-height:1.7;max-width:820px;margin-bottom:2rem;}
+    .hero-stats{display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);margin-top:1rem;}
+    .hero-stat{flex:1;padding:1.25rem 1.5rem;border-right:1px solid rgba(255,255,255,0.08);}
+    .hero-stat:last-child{border-right:none;}
+    .hero-stat-val{font-size:28px;font-weight:300;color:#fff;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:6px;}
+    .hero-stat-val strong{font-weight:600;color:#9ef0f0;}
+    .hero-stat-lbl{font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.8px;text-transform:uppercase;font-weight:600;}
+
+    .section{padding:3rem 2rem;}
+    .section-wrap{max-width:1400px;margin:0 auto;}
+    .sec-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+    .sec-title{font-size:28px;font-weight:300;line-height:1.2;margin-bottom:10px;color:var(--text-0);}
+    .sec-title strong{font-weight:700;}
+    .sec-sub{font-size:14px;color:var(--text-2);max-width:780px;line-height:1.7;margin-bottom:2rem;}
+
+    .vision-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:3rem;}
+    .vision-tile{background:#fff;padding:1.5rem;}
+    .vision-tile-num{font-size:30px;font-weight:300;color:var(--teal);font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:8px;}
+    .vision-tile-title{font-size:14px;font-weight:700;margin-bottom:6px;}
+    .vision-tile-sub{font-size:12px;color:var(--text-2);line-height:1.6;}
+
+    .persona-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+    .persona-card{background:#fff;border:1px solid var(--border);padding:0;display:flex;flex-direction:column;transition:var(--transition);cursor:pointer;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
+    .persona-card:hover{border-color:var(--text-0);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+    .persona-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);}
+    .persona-head{padding:1.25rem 1.25rem 0;display:flex;align-items:flex-start;gap:12px;}
+    .persona-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--accent-pale);border:2px solid var(--accent);flex-shrink:0;}
+    .persona-role{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+    .persona-name{font-size:14px;font-weight:700;color:var(--text-0);line-height:1.3;}
+    .persona-body{padding:1rem 1.25rem;flex:1;}
+    .persona-desc{font-size:11.5px;color:var(--text-2);line-height:1.55;margin-bottom:1rem;}
+    .persona-skills{display:flex;flex-wrap:wrap;gap:4px;}
+    .pskill{font-size:9px;font-weight:600;padding:2px 7px;background:var(--bg-1);border:1px solid var(--border);color:var(--text-2);text-transform:uppercase;letter-spacing:0.3px;}
+    .persona-foot{padding:10px 1.25rem;border-top:1px solid var(--border);background:var(--bg-1);font-size:11px;font-weight:600;color:var(--accent);display:flex;align-items:center;justify-content:space-between;}
+
+    .c-blue{--accent:var(--blue);--accent-pale:var(--blue-pale);}
+    .c-teal{--accent:var(--teal);--accent-pale:var(--teal-pale);}
+    .c-orange{--accent:var(--orange);--accent-pale:var(--orange-pale);}
+    .c-green{--accent:var(--green);--accent-pale:var(--green-pale);}
+    .c-gold{--accent:var(--gold);--accent-pale:var(--gold-pale);}
+    .c-magenta{--accent:var(--magenta);--accent-pale:var(--magenta-pale);}
+    .c-purple{--accent:var(--purple);--accent-pale:var(--purple-pale);}
+    .c-cyan{--accent:var(--cyan);--accent-pale:var(--cyan-pale);}
+
+    .flow-strip{background:var(--bg-1);border:1px solid var(--border);padding:2rem;margin-top:2.5rem;position:relative;}
+    .flow-strip-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-1);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px;}
+    .flow-strip-title::before{content:"";width:24px;height:2px;background:var(--teal);}
+    .flow{display:grid;grid-template-columns:repeat(8,1fr);gap:0;align-items:stretch;}
+    .flow-step{background:#fff;border:1px solid var(--border);padding:12px 8px;text-align:center;position:relative;}
+    .flow-step+.flow-step{border-left:none;}
+    .flow-step-icon{font-size:18px;margin-bottom:4px;}
+    .flow-step-name{font-size:10px;font-weight:700;line-height:1.25;margin-bottom:3px;}
+    .flow-step-role{font-size:8.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;}
+    .flow-step.a{border-top:3px solid var(--green);}
+    .flow-step.b{border-top:3px solid var(--teal);}
+    .flow-step.c{border-top:3px solid var(--orange);}
+    .flow-step.d{border-top:3px solid var(--purple);}
+    .flow-step.e{border-top:3px solid var(--gold);}
+    .flow-step.f{border-top:3px solid var(--blue);}
+    .flow-step.g{border-top:3px solid var(--magenta);}
+    .flow-step.h{border-top:3px solid var(--cyan);}
+
+    .outcomes{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.5rem;}
+    .out-card{background:#fff;border:1px solid var(--border);padding:1.25rem;border-left:3px solid var(--teal);}
+    .out-val{font-size:30px;font-weight:300;color:var(--teal);font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:6px;}
+    .out-lbl{font-size:11px;font-weight:700;color:var(--text-1);margin-bottom:4px;}
+    .out-note{font-size:10px;color:var(--text-2);line-height:1.5;}
+
+    .cta-band{background:var(--bg-dark);color:#fff;padding:2.5rem 2rem;}
+    .cta-wrap{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+    .cta-title{font-size:24px;font-weight:300;line-height:1.3;}
+    .cta-title strong{font-weight:700;background:linear-gradient(90deg,#9ef0f0,#82cfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .cta-sub{font-size:12px;color:rgba(255,255,255,0.55);margin-top:6px;}
+    .cta-actions{display:flex;gap:10px;}
+    .cta-btn-p{background:var(--teal);color:#fff;padding:12px 24px;font-weight:600;font-size:13px;text-decoration:none;border:none;cursor:pointer;}
+    .cta-btn-p:hover{background:#005d5d;}
+    .cta-btn-s{background:transparent;color:#fff;padding:11px 22px;font-weight:600;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,0.3);}
+    .cta-btn-s:hover{background:rgba(255,255,255,0.08);}
+
+    @media(max-width:1024px){.persona-grid{grid-template-columns:repeat(2,1fr);}.flow{grid-template-columns:repeat(4,1fr);}.vision-row{grid-template-columns:1fr;}.outcomes{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:640px){.persona-grid{grid-template-columns:1fr;}.hero-title{font-size:30px;}.hero-stats{flex-wrap:wrap;}.hero-stat{flex:1 1 50%;}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Agentic AI Value Platform · Future of R2R</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <a href="future-of-finance.html" class="btn btn-ghost btn-sm">Future of Finance</a>
+    <a href="o2c-future.html" class="btn btn-ghost btn-sm">Future of O2C</a>
+    <a href="r2r-personas.html" class="btn btn-primary btn-sm">Explore Personas →</a>
+    <span class="badge-live">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">The Future of Record-to-Report</div>
+      <div class="hero-title">The <strong>Agentic AI-Optimized</strong><br/>R2R Organization</div>
+      <div class="hero-sub">Record-to-Report evolves from reactive month-end sprints to continuous, autonomous close. Eight reimagined personas supervise autonomous journal, reconciliation, intercompany, tax, close, control, audit, and reporting agents — while humans own policy, judgment, narrative, and assurance.</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val"><strong>8</strong></div>
+          <div class="hero-stat-lbl">Reimagined personas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val"><strong>&lt;1d</strong></div>
+          <div class="hero-stat-lbl">Continuous close cycle</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val"><strong>&gt;48</strong></div>
+          <div class="hero-stat-lbl">Low-code agent skills</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val"><strong>$36M</strong></div>
+          <div class="hero-stat-lbl">Annual R2R value (IBM C0)</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val"><strong>99.4%</strong></div>
+          <div class="hero-stat-lbl">First-time-right close</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISION -->
+  <div class="section">
+    <div class="section-wrap">
+      <div class="sec-eyebrow">The Shift</div>
+      <div class="sec-title">From <strong>month-end firefighters</strong> to supervisors of continuous close</div>
+      <div class="sec-sub">Every R2R role evolves. Manual journals, recon chases, and late nights at close disappear. What remains is what humans are uniquely good at: policy, judgment, narrative, and assurance.</div>
+
+      <div class="vision-row">
+        <div class="vision-tile">
+          <div class="vision-tile-num">01</div>
+          <div class="vision-tile-title">From month-end to continuous</div>
+          <div class="vision-tile-sub">Agents post, reconcile, and certify in-flight. The close is a moment, not a sprint — and flux is understood day-one.</div>
+        </div>
+        <div class="vision-tile">
+          <div class="vision-tile-num">02</div>
+          <div class="vision-tile-title">From preparers to policy owners</div>
+          <div class="vision-tile-sub">CAOs and controllers define rules; agents execute at scale. Humans govern standards, review judgment, and sign certifications.</div>
+        </div>
+        <div class="vision-tile">
+          <div class="vision-tile-num">03</div>
+          <div class="vision-tile-title">From reports to narratives</div>
+          <div class="vision-tile-sub">AI produces the statements; the finance team produces the insight, story, and disclosure that audiences actually need.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONAS -->
+  <div class="section" style="background:var(--bg-1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="section-wrap">
+      <div class="sec-eyebrow">The 8 Reimagined Personas</div>
+      <div class="sec-title">Who runs <strong>the agentic R2R organization</strong></div>
+      <div class="sec-sub">Each persona supervises a specific agent domain. Click any card to open the persona dashboard and explore the low-code skills that define their AI companion.</div>
+
+      <div class="persona-grid">
+
+        <a href="r2r-personas.html#gl" class="persona-card c-green">
+          <div class="persona-head">
+            <div class="persona-icon">📒</div>
+            <div>
+              <div class="persona-role">General Ledger</div>
+              <div class="persona-name">General Ledger Accountant</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Oversees autonomous journal and reconciliation agents and resolves only complex accounting exceptions.</div>
+            <div class="persona-skills">
+              <span class="pskill">Journal audit</span>
+              <span class="pskill">Recon judgment</span>
+              <span class="pskill">Flux review</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#fa" class="persona-card c-teal">
+          <div class="persona-head">
+            <div class="persona-icon">🏭</div>
+            <div>
+              <div class="persona-role">Fixed Assets</div>
+              <div class="persona-name">Fixed Assets Accountant</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Governs AI-managed asset lifecycles and handles judgment-heavy asset classifications or adjustments.</div>
+            <div class="persona-skills">
+              <span class="pskill">Asset class</span>
+              <span class="pskill">Depreciation</span>
+              <span class="pskill">Impairment</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#ic" class="persona-card c-orange">
+          <div class="persona-head">
+            <div class="persona-icon">🔗</div>
+            <div>
+              <div class="persona-role">Intercompany</div>
+              <div class="persona-name">Intercompany Accountant</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Monitors AI-driven intercompany eliminations and addresses rare policy or structural exceptions across the network.</div>
+            <div class="persona-skills">
+              <span class="pskill">Eliminations</span>
+              <span class="pskill">Transfer price</span>
+              <span class="pskill">Network view</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#tax" class="persona-card c-purple">
+          <div class="persona-head">
+            <div class="persona-icon">🧮</div>
+            <div>
+              <div class="persona-role">Tax</div>
+              <div class="persona-name">Tax Accountant / Analyst</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Interprets tax policy and guides AI engines to maintain compliant, real-time tax calculations and reporting.</div>
+            <div class="persona-skills">
+              <span class="pskill">Policy guide</span>
+              <span class="pskill">Real-time calc</span>
+              <span class="pskill">Compliance</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#cao" class="persona-card c-gold">
+          <div class="persona-head">
+            <div class="persona-icon">🏛️</div>
+            <div>
+              <div class="persona-role">Leadership</div>
+              <div class="persona-name">R2R Process Owner / CAO</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Sets enterprise accounting standards and ensures autonomous systems apply them consistently and accurately.</div>
+            <div class="persona-skills">
+              <span class="pskill">Standards</span>
+              <span class="pskill">Policy</span>
+              <span class="pskill">Governance</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#controller" class="persona-card c-blue">
+          <div class="persona-head">
+            <div class="persona-icon">🎛️</div>
+            <div>
+              <div class="persona-role">Controllership</div>
+              <div class="persona-name">Controller / Assistant Controller</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Oversees continuous close accuracy, data integrity, and policy governance across autonomous accounting systems.</div>
+            <div class="persona-skills">
+              <span class="pskill">Continuous close</span>
+              <span class="pskill">Data integrity</span>
+              <span class="pskill">Flux</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#audit" class="persona-card c-magenta">
+          <div class="persona-head">
+            <div class="persona-icon">🔍</div>
+            <div>
+              <div class="persona-role">Audit &amp; Compliance</div>
+              <div class="persona-name">Audit &amp; Compliance Manager</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Monitors AI-generated control insights and investigates high-risk anomalies flagged by predictive systems.</div>
+            <div class="persona-skills">
+              <span class="pskill">Anomaly</span>
+              <span class="pskill">Controls</span>
+              <span class="pskill">SOX</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+        <a href="r2r-personas.html#reporting" class="persona-card c-cyan">
+          <div class="persona-head">
+            <div class="persona-icon">📰</div>
+            <div>
+              <div class="persona-role">Reporting</div>
+              <div class="persona-name">Financial Reporting Manager</div>
+            </div>
+          </div>
+          <div class="persona-body">
+            <div class="persona-desc">Curates and interprets AI-produced financial statements to create narrative, insight, and compliance-ready reports.</div>
+            <div class="persona-skills">
+              <span class="pskill">Narrative</span>
+              <span class="pskill">Disclosures</span>
+              <span class="pskill">Insight</span>
+            </div>
+          </div>
+          <div class="persona-foot"><span>View dashboard</span><span>→</span></div>
+        </a>
+
+      </div>
+
+      <!-- FLOW -->
+      <div class="flow-strip">
+        <div class="flow-strip-title">End-to-End Agentic R2R Flow · Continuous Close</div>
+        <div class="flow">
+          <div class="flow-step a">
+            <div class="flow-step-icon">📒</div>
+            <div class="flow-step-name">General Ledger</div>
+            <div class="flow-step-role">GL Accountant</div>
+          </div>
+          <div class="flow-step b">
+            <div class="flow-step-icon">🏭</div>
+            <div class="flow-step-name">Fixed Assets</div>
+            <div class="flow-step-role">FA Accountant</div>
+          </div>
+          <div class="flow-step c">
+            <div class="flow-step-icon">🔗</div>
+            <div class="flow-step-name">Intercompany</div>
+            <div class="flow-step-role">IC Accountant</div>
+          </div>
+          <div class="flow-step d">
+            <div class="flow-step-icon">🧮</div>
+            <div class="flow-step-name">Tax</div>
+            <div class="flow-step-role">Tax Analyst</div>
+          </div>
+          <div class="flow-step e">
+            <div class="flow-step-icon">🏛️</div>
+            <div class="flow-step-name">Standards</div>
+            <div class="flow-step-role">CAO</div>
+          </div>
+          <div class="flow-step f">
+            <div class="flow-step-icon">🎛️</div>
+            <div class="flow-step-name">Close &amp; Flux</div>
+            <div class="flow-step-role">Controller</div>
+          </div>
+          <div class="flow-step g">
+            <div class="flow-step-icon">🔍</div>
+            <div class="flow-step-name">Audit &amp; Control</div>
+            <div class="flow-step-role">Audit Mgr</div>
+          </div>
+          <div class="flow-step h">
+            <div class="flow-step-icon">📰</div>
+            <div class="flow-step-name">Reporting</div>
+            <div class="flow-step-role">Reporting Mgr</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OUTCOMES -->
+  <div class="section">
+    <div class="section-wrap">
+      <div class="sec-eyebrow">The Outcome</div>
+      <div class="sec-title">What <strong>autonomous R2R</strong> delivers</div>
+      <div class="sec-sub">Measured at IBM Client Zero and validated across enterprise deployments in 2025–2026.</div>
+
+      <div class="outcomes">
+        <div class="out-card" style="border-left-color:var(--green);">
+          <div class="out-val" style="color:var(--green);">&lt;1d</div>
+          <div class="out-lbl">Close cycle (from 6d)</div>
+          <div class="out-note">Continuous close. Journals and reconciliations happen in-flight; flux is understood on day-one.</div>
+        </div>
+        <div class="out-card" style="border-left-color:var(--teal);">
+          <div class="out-val" style="color:var(--teal);">99.4%</div>
+          <div class="out-lbl">First-time-right journals</div>
+          <div class="out-note">AI journal agent catches errors before they hit the books — not in review.</div>
+        </div>
+        <div class="out-card" style="border-left-color:var(--purple);">
+          <div class="out-val" style="color:var(--purple);">96%</div>
+          <div class="out-lbl">Touchless reconciliations</div>
+          <div class="out-note">Autonomous recon matches, explains, and escalates only the 4% that require analyst judgment.</div>
+        </div>
+        <div class="out-card" style="border-left-color:var(--cyan);">
+          <div class="out-val" style="color:var(--cyan);">$36M</div>
+          <div class="out-lbl">Annual R2R value</div>
+          <div class="out-note">FTE redeployment, penalty avoidance, audit efficiency, and close compression.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <div class="cta-wrap">
+      <div>
+        <div class="cta-title">Ready to meet <strong>the eight personas</strong>?</div>
+        <div class="cta-sub">Dashboards, agent skills, and continuous close blueprints — one page per role.</div>
+      </div>
+      <div class="cta-actions">
+        <a href="r2r-personas.html" class="cta-btn-p">Open the Persona Hub →</a>
+        <a href="o2c-future.html" class="cta-btn-s">View Future of O2C</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
