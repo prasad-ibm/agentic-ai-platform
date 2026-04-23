@@ -175,19 +175,6 @@ nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;borde
 </head>
 <body>
 
-<!-- ── AUTH GUARD ──────────────────────────────────────────────────────────── -->
-<script>
-(function(){
-  if(!(window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode)) return;
-  const raw = sessionStorage.getItem('aavp_auth');
-  if(!raw){ window.location.href = 'login.html?redirect=s2p-personas.html'; return; }
-  const { token } = JSON.parse(raw);
-  fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
-    .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=s2p-personas.html'; } })
-    .catch(() => {});
-})();
-</script>
-
 <nav class="topnav">
   <div class="nav-brand">
     <div class="nav-logo">IBM</div>

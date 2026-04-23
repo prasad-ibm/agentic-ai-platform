@@ -825,13 +825,6 @@ nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;borde
 </div><!-- /page -->
 
 <script>
-// Auth guard
-(function(){
-  if(!sessionStorage.getItem('aavp_auth')){
-    window.location.href='login.html?redirect=fpa-personas.html';
-  }
-})();
-
 function sel(target, el){
   document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
   if(el) el.classList.add('active');

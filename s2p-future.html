@@ -140,16 +140,6 @@
 </head>
 <body>
 
-<!-- Auth guard -->
-<script src="/config.js"></script>
-<script>
-  (function(){
-    if(!sessionStorage.getItem('aavp_auth')){
-      window.location.href='login.html?redirect=s2p-future.html';
-    }
-  })();
-</script>
-
 <!-- Mobile gate overlay -->
 <div class="mobile-gate">
   <div class="mobile-gate-icon">🖥️</div>

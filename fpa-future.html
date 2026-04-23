@@ -150,17 +150,6 @@
   <div class="mobile-gate-sub">The Agentic AI Value Platform is optimized for desktop browsers. Please open this page on a device with a screen width of at least 768 px.</div>
 </div>
 
-<!-- Auth guard -->
-<script src="/config.js"></script>
-<script>
-  (function(){
-    var auth = sessionStorage.getItem('aavp_auth');
-    if(!auth){
-      var dest = encodeURIComponent('fpa-future.html');
-      window.location.href = 'login.html?redirect=' + dest;
-    }
-  })();
-</script>
 
 <nav>
   <div class="nav-brand">
