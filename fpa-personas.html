@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FP&amp;A Persona Hub · Agentic AI Value Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+ --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-dark:#161616;
+ --blue:#0f62fe;--blue-pale:#edf5ff;
+ --cyan:#0072c3;--cyan-pale:#e5f6ff;
+ --teal:#007d79;--teal-pale:#d9fbfb;
+ --green:#198038;--green-pale:rgba(25,128,56,0.08);
+ --gold:#b28600;--gold-pale:rgba(178,134,0,0.10);
+ --orange:#ff832b;--orange-pale:rgba(255,131,43,0.10);
+ --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+ --purple:#6929c4;--purple-pale:#f6f2ff;
+ --magenta:#d02670;--magenta-pale:#fff0f7;
+ --text-0:#161616;--text-1:#393939;--text-2:#525252;--text-3:#6f6f6f;
+ --border:#e0e0e0;--transition:0.15s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;}
+a{color:var(--blue);text-decoration:none;}
+
+nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-logo{width:48px;height:18px;background:#161616;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;}
+.nav-sep{width:1px;height:20px;background:var(--border);}
+.nav-title{font-size:13px;font-weight:600;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:var(--transition);font-family:inherit;}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--blue);}
+.btn-ghost:hover{background:var(--blue-pale);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.badge-live{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+.page{padding-top:48px;display:flex;min-height:100vh;}
+
+.sidenav{width:280px;background:var(--bg-1);border-right:1px solid var(--border);flex-shrink:0;position:sticky;top:48px;align-self:flex-start;height:calc(100vh - 48px);overflow-y:auto;}
+.sn-head{padding:1.25rem 1.25rem 0.75rem;}
+.sn-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:4px;}
+.sn-sub{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.sn-note{font-size:11px;color:var(--text-2);line-height:1.5;}
+.sn-divider{height:1px;background:var(--border);margin:10px 0 0;}
+.sn-list{padding:0.5rem 0;}
+.sn-item{display:flex;align-items:center;gap:12px;padding:12px 1.25rem;cursor:pointer;border-left:3px solid transparent;transition:var(--transition);text-decoration:none;color:var(--text-1);}
+.sn-item:hover{background:#fff;}
+.sn-item.active{background:#fff;border-left-color:var(--accent);}
+.sn-icon{width:32px;height:32px;border-radius:50%;background:var(--accent-pale);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sn-item-text{flex:1;min-width:0;}
+.sn-item-role{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--accent);margin-bottom:2px;}
+.sn-item-name{font-size:12px;font-weight:600;line-height:1.3;color:var(--text-0);}
+.sn-item.active .sn-item-name{font-weight:700;}
+.sn-foot{padding:1rem 1.25rem;border-top:1px solid var(--border);margin-top:0.5rem;}
+.sn-foot-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.sn-back{font-size:11px;color:var(--blue);font-weight:600;display:block;margin-bottom:4px;}
+
+.c-blue{--accent:var(--blue);--accent-pale:var(--blue-pale);}
+.c-teal{--accent:var(--teal);--accent-pale:var(--teal-pale);}
+.c-orange{--accent:var(--orange);--accent-pale:var(--orange-pale);}
+.c-green{--accent:var(--green);--accent-pale:var(--green-pale);}
+.c-gold{--accent:var(--gold);--accent-pale:var(--gold-pale);}
+.c-magenta{--accent:var(--magenta);--accent-pale:var(--magenta-pale);}
+.c-purple{--accent:var(--purple);--accent-pale:var(--purple-pale);}
+.c-cyan{--accent:var(--cyan);--accent-pale:var(--cyan-pale);}
+
+.content{flex:1;min-width:0;padding:0;}
+.persona-panel{display:none;padding:1.75rem 2rem;}
+.persona-panel.active{display:block;}
+
+.p-head{display:flex;align-items:flex-start;gap:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+.p-head-icon{width:64px;height:64px;border-radius:50%;background:var(--accent-pale);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
+.p-head-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.p-head-title{font-size:26px;font-weight:700;line-height:1.15;margin-bottom:8px;}
+.p-head-sub{font-size:13px;color:var(--text-2);line-height:1.55;max-width:820px;}
+.p-head-actions{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+.p-head-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:5px 10px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+
+.sec-hdr{margin-bottom:1rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;}
+.sec-eyebrow{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.sec-title{font-size:15px;font-weight:700;}
+.sec-right{font-size:10px;color:var(--text-3);}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem;}
+.kpi-row.k5{grid-template-columns:repeat(5,1fr);}
+.kpi-row.k3{grid-template-columns:repeat(3,1fr);}
+.kcell{background:#fff;padding:14px 16px;}
+.kcell-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.kcell-val{font-size:26px;font-weight:300;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:3px;color:var(--text-0);}
+.kcell-val.good{color:var(--green);}
+.kcell-val.warn{color:var(--orange);}
+.kcell-val.bad{color:var(--red);}
+.kcell-val.acc{color:var(--accent);}
+.kcell-sub{font-size:10px;color:var(--text-2);}
+.kcell-delta{font-size:10px;font-weight:700;margin-top:5px;padding:2px 6px;display:inline-block;}
+.kcell-delta.up{background:var(--green-pale);color:var(--green);}
+.kcell-delta.dn{background:var(--red-pale);color:var(--red);}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.grid-13{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+
+.panel{background:#fff;border:1px solid var(--border);overflow:hidden;}
+.panel-hdr{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg-1);display:flex;align-items:center;justify-content:space-between;}
+.panel-hdr-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-1);}
+.panel-hdr-badge{font-size:9px;font-weight:700;padding:2px 8px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+.panel-body{padding:14px 16px;}
+.panel-body.flush{padding:0;}
+
+.bar-list{display:flex;flex-direction:column;gap:10px;}
+.bl-top{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;margin-bottom:4px;}
+.bl-label{font-weight:600;color:var(--text-1);}
+.bl-value{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--text-0);}
+.bl-track{height:7px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+.bl-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.tbl th{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg-1);}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-1);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg-1);}
+.mono{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.pill{font-size:9px;font-weight:700;padding:2px 7px;display:inline-block;}
+.pill.red{background:var(--red-pale);color:var(--red);}
+.pill.green{background:var(--green-pale);color:var(--green);}
+.pill.gold{background:var(--gold-pale);color:var(--gold);}
+.pill.blue{background:var(--blue-pale);color:var(--blue);}
+.pill.purple{background:var(--purple-pale);color:var(--purple);}
+.pill.teal{background:var(--teal-pale);color:var(--teal);}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-size:10px;font-weight:600;padding:4px 10px;background:var(--bg-1);border:1px solid var(--border);color:var(--text-1);}
+
+.hub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.hub-tile{background:#fff;border:1px solid var(--border);border-top:3px solid var(--accent);padding:14px;}
+.hub-tile-t{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.hub-tile-v{font-size:20px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--text-0);margin-bottom:3px;}
+.hub-tile-s{font-size:10px;color:var(--text-2);line-height:1.5;}
+
+.agents{background:var(--bg-1);border:1px solid var(--border);border-top:3px solid var(--accent);padding:1.5rem;margin-top:1rem;}
+.agents-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px;}
+.agents-title-wrap .ah-eye{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.agents-title-wrap .ah-t{font-size:18px;font-weight:700;}
+.agents-title-wrap .ah-s{font-size:12px;color:var(--text-2);margin-top:4px;max-width:680px;}
+.agents-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;}
+.skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.skill-card{background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);padding:12px 14px;}
+.skill-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px;}
+.skill-name{font-size:12px;font-weight:700;color:var(--text-0);display:flex;align-items:center;gap:6px;}
+.skill-name::before{content:"✦";color:var(--accent);font-size:10px;}
+.skill-tag{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);}
+.skill-desc{font-size:11px;color:var(--text-2);line-height:1.55;margin-bottom:8px;}
+.skill-meta{display:flex;gap:10px;font-size:9.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;}
+.skill-meta span{display:flex;align-items:center;gap:4px;}
+.skill-meta span::before{content:"●";color:var(--accent);font-size:7px;}
+
+@media(max-width:1024px){.page{flex-direction:column;}.sidenav{width:100%;position:static;height:auto;}.kpi-row,.kpi-row.k5,.kpi-row.k3{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-3,.grid-4,.grid-13,.hub-grid{grid-template-columns:1fr;}.skill-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">FP&amp;A Persona Hub · The Agentic Planner</span>
+  </div>
+  <div class="nav-links">
+    <a href="fpa-future.html" class="btn btn-ghost btn-sm">← Vision</a>
+    <a href="agentic-future.html" class="btn btn-ghost btn-sm">Agentic Future</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <span class="badge-live">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+
+<aside class="sidenav">
+  <div class="sn-head">
+    <div class="sn-title">FP&amp;A Persona Hub</div>
+    <div class="sn-sub">The Agentic Planner</div>
+    <div class="sn-note">Eight personas. Continuous planning. Every low-code skill.</div>
+  </div>
+  <div class="sn-divider"></div>
+  <div class="sn-list">
+    <a class="sn-item active c-blue" data-target="analyst" onclick="sel('analyst',this)">
+      <div class="sn-icon">📈</div>
+      <div class="sn-item-text"><div class="sn-item-role">Financial Analysis</div><div class="sn-item-name">Financial Analyst</div></div>
+    </a>
+    <a class="sn-item c-teal" data-target="senior" onclick="sel('senior',this)">
+      <div class="sn-icon">📊</div>
+      <div class="sn-item-text"><div class="sn-item-role">Senior Analysis</div><div class="sn-item-name">Senior Financial Analyst</div></div>
+    </a>
+    <a class="sn-item c-orange" data-target="cost" onclick="sel('cost',this)">
+      <div class="sn-icon">💰</div>
+      <div class="sn-item-text"><div class="sn-item-role">Cost &amp; Margin</div><div class="sn-item-name">Cost / Margin Analyst</div></div>
+    </a>
+    <a class="sn-item c-gold" data-target="corporate" onclick="sel('corporate',this)">
+      <div class="sn-icon">🏢</div>
+      <div class="sn-item-text"><div class="sn-item-role">Corporate FP&amp;A</div><div class="sn-item-name">Corporate FP&amp;A Manager</div></div>
+    </a>
+    <a class="sn-item c-green" data-target="bupartner" onclick="sel('bupartner',this)">
+      <div class="sn-icon">🤝</div>
+      <div class="sn-item-text"><div class="sn-item-role">BU Finance</div><div class="sn-item-name">BU Finance Partner</div></div>
+    </a>
+    <a class="sn-item c-purple" data-target="head" onclick="sel('head',this)">
+      <div class="sn-icon">🎯</div>
+      <div class="sn-item-text"><div class="sn-item-role">FP&amp;A Leadership</div><div class="sn-item-name">Head of FP&amp;A</div></div>
+    </a>
+    <a class="sn-item c-cyan" data-target="treasury" onclick="sel('treasury',this)">
+      <div class="sn-icon">🏦</div>
+      <div class="sn-item-text"><div class="sn-item-role">Treasury &amp; Cash</div><div class="sn-item-name">Treasury / Cash Forecasting Analyst</div></div>
+    </a>
+    <a class="sn-item c-magenta" data-target="strategic" onclick="sel('strategic',this)">
+      <div class="sn-icon">🔭</div>
+      <div class="sn-item-text"><div class="sn-item-role">Strategic Finance</div><div class="sn-item-name">Strategic Finance Manager</div></div>
+    </a>
+  </div>
+  <div class="sn-foot">
+    <div class="sn-foot-title">Related</div>
+    <a href="fpa-future.html" class="sn-back">← Future of FP&amp;A vision</a>
+    <a href="agentic-future.html" class="sn-back">◎ Agentic Future hub</a>
+    <a href="index.html" class="sn-back">⌂ Home</a>
+  </div>
+</aside>
+
+<div class="content" id="content">
+
+<!-- ═════════════════════ FINANCIAL ANALYST ═════════════════════ -->
+<div class="persona-panel active c-blue" id="panel-analyst">
+  <div class="p-head">
+    <div class="p-head-icon">📈</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Financial Analysis</div>
+      <div class="p-head-title">Financial Analyst</div>
+      <div class="p-head-sub">Curates AI-generated forecasts, scenarios, and business intelligence instead of building spreadsheet models. Reviews model outputs, enriches assumptions, and communicates insight — agents do the number-crunching.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Scenario-ready</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · AI-Generated Forecasts &amp; Business Intelligence</div><div class="sec-title">Forecast Workbench</div></div><div class="sec-right">Rolling 18-month · updated continuously</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Forecast Accuracy</div><div class="kcell-val good">88.4%</div><div class="kcell-delta up">▲ +24pp vs spreadsheet</div></div>
+    <div class="kcell"><div class="kcell-lbl">Scenarios Live</div><div class="kcell-val acc">14</div><div class="kcell-sub">Updated on signal change</div></div>
+    <div class="kcell"><div class="kcell-lbl">Time on Data Prep</div><div class="kcell-val warn">8%</div><div class="kcell-sub">From 62% · agent handles</div></div>
+    <div class="kcell"><div class="kcell-lbl">Variance Explained</div><div class="kcell-val good">94%</div><div class="kcell-sub">AI-attributed drivers</div></div>
+    <div class="kcell"><div class="kcell-lbl">Business Questions</div><div class="kcell-val acc">4.2h</div><div class="kcell-sub">Avg time-to-answer</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Scenario Comparison · Live Model</span><span class="panel-hdr-badge">14 scenarios</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Scenario</th><th>Revenue</th><th>EBITDA</th><th>Cash</th><th>vs Plan</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Base</td><td class="mono">$2.40B</td><td class="mono">$438M</td><td class="mono">$284M</td><td class="mono">+0%</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Upside +10%</td><td class="mono">$2.64B</td><td class="mono">$508M</td><td class="mono">$342M</td><td class="mono">+10%</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Downside −10%</td><td class="mono">$2.16B</td><td class="mono">$368M</td><td class="mono">$226M</td><td class="mono">−10%</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Volume Shock</td><td class="mono">$2.08B</td><td class="mono">$330M</td><td class="mono">$198M</td><td class="mono">−13%</td><td><span class="pill blue">Draft</span></td></tr>
+            <tr><td>FX Stress</td><td class="mono">$2.28B</td><td class="mono">$402M</td><td class="mono">$258M</td><td class="mono">−5%</td><td><span class="pill blue">Draft</span></td></tr>
+            <tr><td>M&amp;A Impact</td><td class="mono">$2.76B</td><td class="mono">$470M</td><td class="mono">$186M</td><td class="mono">+15%</td><td><span class="pill blue">Draft</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Forecast Accuracy Trend · 6 Months</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Nov</span><span class="bl-value">71%</span></div><div class="bl-track"><div class="bl-fill" style="width:71%"></div></div>
+          <div class="bl-top"><span class="bl-label">Dec</span><span class="bl-value">74%</span></div><div class="bl-track"><div class="bl-fill" style="width:74%"></div></div>
+          <div class="bl-top"><span class="bl-label">Jan</span><span class="bl-value">78%</span></div><div class="bl-track"><div class="bl-fill" style="width:78%"></div></div>
+          <div class="bl-top"><span class="bl-label">Feb</span><span class="bl-value">81%</span></div><div class="bl-track"><div class="bl-fill" style="width:81%"></div></div>
+          <div class="bl-top"><span class="bl-label">Mar</span><span class="bl-value">85%</span></div><div class="bl-track"><div class="bl-fill" style="width:85%"></div></div>
+          <div class="bl-top"><span class="bl-label">Apr</span><span class="bl-value">88%</span></div><div class="bl-track"><div class="bl-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Financial Analyst — Skills Library</div>
+        <div class="ah-s">Reusable low-code building blocks for the Financial Analyst Agent. The analyst configures assumptions, curates outputs, and communicates insight.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">forecast.generate</div><span class="skill-tag">ML</span></div><div class="skill-desc">Produces rolling 18-month revenue and cost forecasts per BU, product line, and geography from historical patterns and leading indicators.</div><div class="skill-meta"><span>Rolling</span><span>Multi-driver</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">scenario.build</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Spins up new scenarios from a business assumption — volume change, FX move, cost shock — in seconds. Manager reviews and publishes.</div><div class="skill-meta"><span>On-demand</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">variance.explain</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Attributes period-over-period variance to root drivers with supporting data and business context. Replaces manual flux commentary.</div><div class="skill-meta"><span>Model: LLM</span><span>Source-cited</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">data.assemble</div><span class="skill-tag">Platform</span></div><div class="skill-desc">Pulls actuals from ERP, CRM pipeline, HR, and operations into the planning model continuously. No manual data-wrangling.</div><div class="skill-meta"><span>Connectors: 12</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">kpi.alert</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Monitors KPIs against plan and prior year. Alerts analyst when drift exceeds configurable thresholds with root-cause hypothesis.</div><div class="skill-meta"><span>Always-on</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">insight.narrate</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Translates forecast data into plain-language business commentary ready for management review, board decks, and business partners.</div><div class="skill-meta"><span>Model: LLM</span><span>Audience-aware</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SENIOR FINANCIAL ANALYST ═════════════════════ -->
+<div class="persona-panel c-teal" id="panel-senior">
+  <div class="p-head">
+    <div class="p-head-icon">📊</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Senior Financial Analysis</div>
+      <div class="p-head-title">Senior Financial Analyst</div>
+      <div class="p-head-sub">Synthesizes predictive analytics and scalable financial guidance for business managers and leaders. Converts AI-generated signals into strategic recommendations — the judgment layer above the model.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Insight-led</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Predictive Analytics &amp; Insight Synthesis</div><div class="sec-title">Senior Analyst Intelligence Hub</div></div><div class="sec-right">14 business units · 8 product lines</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Insights Published MTD</div><div class="kcell-val acc">48</div><div class="kcell-sub">BU decks + exec briefs</div></div>
+    <div class="kcell"><div class="kcell-lbl">Prediction Lift</div><div class="kcell-val good">+24pp</div><div class="kcell-sub">vs last-year model baseline</div></div>
+    <div class="kcell"><div class="kcell-lbl">Mgr Questions Answered</div><div class="kcell-val good">91%</div><div class="kcell-sub">&lt;1 business day</div></div>
+    <div class="kcell"><div class="kcell-lbl">Time to Insight</div><div class="kcell-val acc">4.2h</div><div class="kcell-sub">From 3.2d · −87%</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Insight Queue · Agent-Flagged</span><span class="panel-hdr-badge">6 pending</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Insight</th><th>Type</th><th>BU</th><th>Business Impact</th><th>Action</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue softening Q3</td><td>Predictive</td><td>Commercial</td><td class="mono">$18M</td><td>Reprice pipeline</td><td><span class="pill green">Published</span></td></tr>
+            <tr><td>Cost run-rate drift</td><td>Variance</td><td>Industrial</td><td class="mono">$9M</td><td>Cost review</td><td><span class="pill green">Published</span></td></tr>
+            <tr><td>Margin mix shift</td><td>Analytics</td><td>Tech</td><td class="mono">$6M</td><td>Mix optimise</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Headcount over-plan</td><td>Workforce</td><td>Corporate</td><td class="mono">$4M</td><td>Hiring pause</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Capex underspend</td><td>Capital</td><td>Ops</td><td class="mono">$12M</td><td>Re-phase projects</td><td><span class="pill blue">Draft</span></td></tr>
+            <tr><td>Churn risk signal</td><td>CRM signal</td><td>Commercial</td><td class="mono">$22M</td><td>Retention offer</td><td><span class="pill blue">Draft</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">BU Insight Score · Quality Index</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Commercial &amp; Industrial</span><span class="bl-value">96%</span></div><div class="bl-track"><div class="bl-fill" style="width:96%"></div></div>
+          <div class="bl-top"><span class="bl-label">Technology</span><span class="bl-value">92%</span></div><div class="bl-track"><div class="bl-fill" style="width:92%"></div></div>
+          <div class="bl-top"><span class="bl-label">Healthcare</span><span class="bl-value">89%</span></div><div class="bl-track"><div class="bl-fill" style="width:89%"></div></div>
+          <div class="bl-top"><span class="bl-label">Financial Services</span><span class="bl-value">87%</span></div><div class="bl-track"><div class="bl-fill" style="width:87%"></div></div>
+          <div class="bl-top"><span class="bl-label">Consumer</span><span class="bl-value">83%</span></div><div class="bl-track"><div class="bl-fill" style="width:83%"></div></div>
+          <div class="bl-top"><span class="bl-label">Government</span><span class="bl-value">72%</span></div><div class="bl-track"><div class="bl-fill" style="width:72%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Senior Financial Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Senior Analyst Agent. The analyst governs the insight standard; the agent produces, synthesises, and delivers.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">predict.model</div><span class="skill-tag">ML</span></div><div class="skill-desc">Builds and maintains predictive models for revenue, headcount, and working capital by BU. Refreshed on new actuals.</div><div class="skill-meta"><span>Multi-model</span><span>Ensemble</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">signal.synthesise</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Aggregates leading indicators (pipeline, web, ops, macro) into a composite business signal index. Alerts on trend inflection.</div><div class="skill-meta"><span>20+ signals</span><span>Always-on</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">guidance.draft</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Drafts financial guidance narratives for business partners — context, implication, recommended action — for any metric.</div><div class="skill-meta"><span>Model: LLM</span><span>BU-tailored</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">benchmark.compare</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Compares BU performance to internal peers and external sector benchmarks. Identifies where the business is ahead or behind.</div><div class="skill-meta"><span>External data</span><span>Continuous</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">model.explain</div><span class="skill-tag">Explainability</span></div><div class="skill-desc">Provides SHAP-style driver decomposition for any forecast or prediction — so the senior analyst can answer "why?" confidently.</div><div class="skill-meta"><span>SHAP</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">brief.prepare</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Prepares business review decks, CFO briefs, and board materials from the live data model. Analyst curates and publishes.</div><div class="skill-meta"><span>Model: LLM</span><span>Deck-ready</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ COST / MARGIN ANALYST ═════════════════════ -->
+<div class="persona-panel c-orange" id="panel-cost">
+  <div class="p-head">
+    <div class="p-head-icon">💰</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Cost &amp; Margin Analysis</div>
+      <div class="p-head-title">Cost / Margin Analyst</div>
+      <div class="p-head-sub">Pinpoints cost drivers and margin leakage across the P&amp;L using AI-generated cost decomposition. Moves from summarising cost lines to investigating what's driving them and recommending action.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Margin-led</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · AI-Driven Cost Decomposition &amp; Margin Intelligence</div><div class="sec-title">Cost Driver Monitor</div></div><div class="sec-right">P&amp;L · $2.4B revenue base</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Gross Margin</div><div class="kcell-val acc">38.4%</div><div class="kcell-delta up">▲ +2.1pp YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Cost Variance vs Plan</div><div class="kcell-val bad">$14.2M</div><div class="kcell-sub">Over · 4 drivers identified</div></div>
+    <div class="kcell"><div class="kcell-lbl">Margin Leakage Found</div><div class="kcell-val good">$8.4M</div><div class="kcell-sub">Agent-identified QTD</div></div>
+    <div class="kcell"><div class="kcell-lbl">Unexplained Variance</div><div class="kcell-val warn">6%</div><div class="kcell-sub">From 38% · improving</div></div>
+    <div class="kcell"><div class="kcell-lbl">Cost Driver Coverage</div><div class="kcell-val good">94%</div><div class="kcell-sub">AI-attributed</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Cost Driver Decomposition · Live</span><span class="panel-hdr-badge">6 drivers</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Driver</th><th>Magnitude</th><th>Direction</th><th>Confidence</th><th>BU Attribution</th></tr></thead>
+          <tbody>
+            <tr><td>Freight inflation</td><td class="mono">$4.8M</td><td>↑ Unfav</td><td><span class="pill red">High</span></td><td>Ops / Supply Chain</td></tr>
+            <tr><td>Mix shift</td><td class="mono">$3.2M</td><td>↓ Fav</td><td><span class="pill green">High</span></td><td>Commercial</td></tr>
+            <tr><td>Labour rate</td><td class="mono">$2.6M</td><td>↑ Unfav</td><td><span class="pill red">High</span></td><td>Industrial</td></tr>
+            <tr><td>Volume deleverage</td><td class="mono">$1.8M</td><td>↑ Unfav</td><td><span class="pill gold">Med</span></td><td>Corporate</td></tr>
+            <tr><td>Price/volume</td><td class="mono">$2.1M</td><td>↓ Fav</td><td><span class="pill green">High</span></td><td>Commercial</td></tr>
+            <tr><td>FX</td><td class="mono">$0.9M</td><td>↑ Unfav</td><td><span class="pill gold">Med</span></td><td>Global</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Margin Bridge · Plan to Actual</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Plan Gross Margin</span><span class="bl-value">36.3%</span></div><div class="bl-track"><div class="bl-fill" style="width:72%"></div></div>
+          <div class="bl-top"><span class="bl-label">Volume effect</span><span class="bl-value">+0.8pp</span></div><div class="bl-track"><div class="bl-fill" style="width:16%;background:var(--green);"></div></div>
+          <div class="bl-top"><span class="bl-label">Mix effect</span><span class="bl-value">+1.3pp</span></div><div class="bl-track"><div class="bl-fill" style="width:26%;background:var(--green);"></div></div>
+          <div class="bl-top"><span class="bl-label">Price effect</span><span class="bl-value">+0.6pp</span></div><div class="bl-track"><div class="bl-fill" style="width:12%;background:var(--green);"></div></div>
+          <div class="bl-top"><span class="bl-label">Cost effect</span><span class="bl-value">−0.6pp</span></div><div class="bl-track"><div class="bl-fill" style="width:12%;background:var(--red);"></div></div>
+          <div class="bl-top"><span class="bl-label">Actual Gross Margin</span><span class="bl-value">38.4%</span></div><div class="bl-track"><div class="bl-fill" style="width:77%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Cost / Margin Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Cost &amp; Margin Agent. The analyst interprets findings and recommends action; the agent decomposing, detecting, and attributing.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">cost.decompose</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Breaks every cost line into its drivers: volume, rate, mix, FX, inflation, and one-time. Quantifies each driver's contribution to variance.</div><div class="skill-meta"><span>Full P&amp;L</span><span>Driver-level</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">leakage.detect</div><span class="skill-tag">ML</span></div><div class="skill-desc">Identifies margin leakage: missed pricing, over-allocated overhead, non-contract spend, freight anomalies. Produces recovery queue.</div><div class="skill-meta"><span>Always-on</span><span>Value-tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">driver.attribute</div><span class="skill-tag">AI</span></div><div class="skill-desc">Attributes P&amp;L variance to business events (new product launch, geography entry, cost program) with statistical confidence.</div><div class="skill-meta"><span>Causal model</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">margin.model</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Models margin impact of pricing changes, cost reduction initiatives, and mix scenarios before committing.</div><div class="skill-meta"><span>What-if</span><span>Scenario engine</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">benchmark.cost</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Compares cost structure to industry peers and internal benchmarks by function, geography, and product line.</div><div class="skill-meta"><span>External data</span><span>Structured output</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">action.recommend</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Translates cost intelligence into prioritised action recommendations for cost owners — with owner, timing, and estimated impact.</div><div class="skill-meta"><span>Model: LLM</span><span>Actionable</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CORPORATE FP&A MANAGER ═════════════════════ -->
+<div class="persona-panel c-gold" id="panel-corporate">
+  <div class="p-head">
+    <div class="p-head-icon">🏢</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Corporate FP&amp;A</div>
+      <div class="p-head-title">Corporate FP&amp;A Manager</div>
+      <div class="p-head-sub">Oversees the continuous planning platform aligned with enterprise strategy. Deploys planning logic as agent rules, manages the planning calendar, and is accountable for the integrity of consolidated numbers.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Always-on planning</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Continuous Planning Hub — Enterprise-Wide</div><div class="sec-title">Corporate Planning Control Tower</div></div><div class="sec-right">14 BUs · 8 geographies · rolling 18-month</div></div>
+
+  <div class="hub-grid">
+    <div class="hub-tile"><div class="hub-tile-t">◉ Active Plan Versions</div><div class="hub-tile-v">6</div><div class="hub-tile-s">Base + 5 scenarios live</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ BUs Reconciled</div><div class="hub-tile-v">14/14</div><div class="hub-tile-s">100% · continuous</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ Plan Submission Cycle</div><div class="hub-tile-v">&lt;1 day</div><div class="hub-tile-s">From 4 weeks · always-on</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ Plan Accuracy QTD</div><div class="hub-tile-v">91.4%</div><div class="hub-tile-s">▲ +18pp vs last cycle</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Plan Reconciliation · By BU</span><span class="panel-hdr-badge">14 BUs</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>BU</th><th>Plan Version</th><th>Revenue Plan</th><th>Cost Plan</th><th>vs Strat Plan</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Commercial</td><td class="mono">v4.1</td><td class="mono">$840M</td><td class="mono">$494M</td><td class="mono">+2%</td><td><span class="pill green">Ready</span></td></tr>
+            <tr><td>Industrial</td><td class="mono">v4.1</td><td class="mono">$620M</td><td class="mono">$378M</td><td class="mono">−1%</td><td><span class="pill green">Ready</span></td></tr>
+            <tr><td>Technology</td><td class="mono">v4.0</td><td class="mono">$480M</td><td class="mono">$268M</td><td class="mono">+4%</td><td><span class="pill green">Ready</span></td></tr>
+            <tr><td>Healthcare</td><td class="mono">v3.9</td><td class="mono">$284M</td><td class="mono">$172M</td><td class="mono">−3%</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Consumer</td><td class="mono">v4.1</td><td class="mono">$116M</td><td class="mono">$74M</td><td class="mono">+1%</td><td><span class="pill green">Ready</span></td></tr>
+            <tr><td>Government</td><td class="mono">v3.8</td><td class="mono">$60M</td><td class="mono">$42M</td><td class="mono">−5%</td><td><span class="pill gold">Review</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Planning Calendar · Old vs New Cycle Time</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Annual budget (old: 42d → new: 2d)</span><span class="bl-value">2d</span></div><div class="bl-track"><div class="bl-fill" style="width:5%"></div></div>
+          <div class="bl-top"><span class="bl-label">Quarterly reforecast (old: 21d → new: 1d)</span><span class="bl-value">1d</span></div><div class="bl-track"><div class="bl-fill" style="width:5%"></div></div>
+          <div class="bl-top"><span class="bl-label">Monthly plan update (old: 14d → new: 0.5d)</span><span class="bl-value">0.5d</span></div><div class="bl-track"><div class="bl-fill" style="width:4%"></div></div>
+          <div class="bl-top"><span class="bl-label">BU plan consolidation (old: 7d → new: cont.)</span><span class="bl-value">Cont.</span></div><div class="bl-track"><div class="bl-fill" style="width:3%"></div></div>
+          <div class="bl-top"><span class="bl-label">Scenario modelling (old: 5d → new: hours)</span><span class="bl-value">&lt;4h</span></div><div class="bl-track"><div class="bl-fill" style="width:4%"></div></div>
+          <div class="bl-top"><span class="bl-label">CFO pack prep (old: 3d → new: 1-click)</span><span class="bl-value">1-click</span></div><div class="bl-track"><div class="bl-fill" style="width:3%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Corporate FP&amp;A Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Corporate Planning Agent. The manager governs assumptions and signs off; the agent consolidates, triggers, and assembles.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">plan.consolidate</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Aggregates BU plans, allocates corporate overhead, eliminates intercompany, and produces consolidated plan P&amp;L, balance sheet, and cash flow.</div><div class="skill-meta"><span>Multi-entity</span><span>Live</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">assumption.govern</div><span class="skill-tag">Policy</span></div><div class="skill-desc">Maintains enterprise planning assumptions (macro, FX, inflation, headcount) and deploys updates to all BU models simultaneously.</div><div class="skill-meta"><span>Versioned</span><span>Governed</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">reforecast.trigger</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Detects when actual results or external signals diverge from plan beyond threshold and triggers a reforecast cycle automatically.</div><div class="skill-meta"><span>Continuous</span><span>Threshold-driven</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">gap.close</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Identifies the gap between current trajectory and plan target and generates a gap-close action list per BU with owner, initiative, and impact.</div><div class="skill-meta"><span>Continuous</span><span>Actionable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">strat.align</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Reconciles the plan with the strategic plan — identifies where near-term decisions diverge from long-term strategy and surfaces trade-offs.</div><div class="skill-meta"><span>Model: LLM</span><span>Exec-ready</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">pack.assemble</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Produces the monthly CFO/Board planning pack from the live model — financials, KPIs, commentary, outlook — in one click.</div><div class="skill-meta"><span>One-click</span><span>Source-traced</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ BU FINANCE PARTNER ═════════════════════ -->
+<div class="persona-panel c-green" id="panel-bupartner">
+  <div class="p-head">
+    <div class="p-head-icon">🤝</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · BU Finance Partner</div>
+      <div class="p-head-title">Business Unit Finance Partner</div>
+      <div class="p-head-sub">Embeds AI financial intelligence into business unit decisions and day-to-day operations. Translates AI-generated forecasts and insights into business recommendations — the trusted financial advisor, not the report-runner.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Embedded AI</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · BU Financial Intelligence — Real-Time</div><div class="sec-title">BU Finance Partner Dashboard</div></div><div class="sec-right">BU: Commercial &amp; Industrial · $840M revenue</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">BU Revenue Tracking</div><div class="kcell-val acc">$840M</div><div class="kcell-sub">102% of plan · +$16M</div></div>
+    <div class="kcell"><div class="kcell-lbl">Gross Margin</div><div class="kcell-val good">41.2%</div><div class="kcell-delta up">▲ +1.8pp vs plan</div></div>
+    <div class="kcell"><div class="kcell-lbl">Headcount vs Budget</div><div class="kcell-val good">98.4%</div><div class="kcell-sub">2 roles under</div></div>
+    <div class="kcell"><div class="kcell-lbl">Capex Utilisation</div><div class="kcell-val warn">84%</div><div class="kcell-sub">4 projects behind</div></div>
+    <div class="kcell"><div class="kcell-lbl">Forecast Risk</div><div class="kcell-val bad">$12M</div><div class="kcell-sub">Downside flagged · 3 factors</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">BU Business Performance · P&amp;L Summary</span><span class="panel-hdr-badge">Live</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>P&amp;L Line</th><th>Plan</th><th>Actual</th><th>vs Plan $</th><th>vs Plan %</th><th>Trend</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue</td><td class="mono">$824M</td><td class="mono">$840M</td><td class="mono">+$16M</td><td class="mono">+1.9%</td><td><span class="pill green">↑ Ahead</span></td></tr>
+            <tr><td>Gross Profit</td><td class="mono">$321M</td><td class="mono">$346M</td><td class="mono">+$25M</td><td class="mono">+7.8%</td><td><span class="pill green">↑ Ahead</span></td></tr>
+            <tr><td>OpEx</td><td class="mono">$168M</td><td class="mono">$172M</td><td class="mono">+$4M</td><td class="mono">+2.4%</td><td><span class="pill gold">→ On track</span></td></tr>
+            <tr><td>EBITDA</td><td class="mono">$153M</td><td class="mono">$174M</td><td class="mono">+$21M</td><td class="mono">+13.7%</td><td><span class="pill green">↑ Ahead</span></td></tr>
+            <tr><td>Capex</td><td class="mono">$48M</td><td class="mono">$40M</td><td class="mono">−$8M</td><td class="mono">−16.7%</td><td><span class="pill gold">⚠ Behind</span></td></tr>
+            <tr><td>Free Cash Flow</td><td class="mono">$118M</td><td class="mono">$128M</td><td class="mono">+$10M</td><td class="mono">+8.5%</td><td><span class="pill green">↑ Ahead</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">BU AI Signals · Proactive Intelligence</span><span class="panel-hdr-badge">5 signals</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Deal pipeline shift · −$22M Q3</span><span class="bl-value" style="color:var(--red)">High</span></div><div class="bl-track"><div class="bl-fill" style="width:88%;background:var(--red);"></div></div>
+          <div class="bl-top"><span class="bl-label">Cost run-rate vs budget · +4%</span><span class="bl-value" style="color:var(--orange)">Med</span></div><div class="bl-track"><div class="bl-fill" style="width:62%;background:var(--orange);"></div></div>
+          <div class="bl-top"><span class="bl-label">Headcount trend · under-hire risk</span><span class="bl-value" style="color:var(--orange)">Med</span></div><div class="bl-track"><div class="bl-fill" style="width:54%;background:var(--orange);"></div></div>
+          <div class="bl-top"><span class="bl-label">Customer churn risk · 2 accounts</span><span class="bl-value" style="color:var(--red)">High</span></div><div class="bl-track"><div class="bl-fill" style="width:80%;background:var(--red);"></div></div>
+          <div class="bl-top"><span class="bl-label">Capex delay · 4 projects</span><span class="bl-value" style="color:var(--orange)">Med</span></div><div class="bl-track"><div class="bl-fill" style="width:46%;background:var(--orange);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">BU Finance Partner — Skills Library</div>
+        <div class="ah-s">Skills that power the BU Finance Partner Agent. The partner owns the business relationship and decisions; the agent maintains the live financial picture.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">bu.forecast</div><span class="skill-tag">ML</span></div><div class="skill-desc">Maintains a live rolling forecast for the BU — refreshed daily from CRM, ops, HR, and financial actuals. No manual input from the partner.</div><div class="skill-meta"><span>BU-native</span><span>Always-on</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">decision.support</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Answers business leader questions (pricing, investment, headcount, product mix) with financial impact models in minutes.</div><div class="skill-meta"><span>On-demand</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">alert.surface</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Proactively surfaces financial signals to the BU leader — margin drift, cost overrun, revenue risk — before they appear in reports.</div><div class="skill-meta"><span>Proactive</span><span>Threshold-driven</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">budget.track</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Tracks every cost centre, headcount, and capex line against budget in real time. Flags variances and projects year-end outturn.</div><div class="skill-meta"><span>Real-time</span><span>Actionable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">narrative.translate</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Converts financial data into business-friendly language for BU leaders who aren't finance specialists.</div><div class="skill-meta"><span>Model: LLM</span><span>Audience-aware</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">collab.sync</div><span class="skill-tag">Platform</span></div><div class="skill-desc">Keeps BU plan data, business commentary, and approval decisions synchronised between the BU and the corporate FP&amp;A platform.</div><div class="skill-meta"><span>Real-time</span><span>Governed</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ HEAD OF FP&A ═════════════════════ -->
+<div class="persona-panel c-purple" id="panel-head">
+  <div class="p-head">
+    <div class="p-head-icon">🎯</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · FP&amp;A Leadership</div>
+      <div class="p-head-title">Head of FP&amp;A</div>
+      <div class="p-head-sub">Orchestrates the enterprise-wide connected planning network and governs the agent policy that every planning model uses. Accountable for the quality, speed, and strategic relevance of the entire FP&amp;A function.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Orchestrator</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Enterprise-Wide Connected Planning</div><div class="sec-title">Head of FP&amp;A — Control Hub</div></div><div class="sec-right">14 BUs · 8 geographies · 8 agent domains</div></div>
+
+  <div class="hub-grid">
+    <div class="hub-tile"><div class="hub-tile-t">◉ Plan Confidence</div><div class="hub-tile-v">91.4%</div><div class="hub-tile-s">Composite · all BUs</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ Agent Network Health</div><div class="hub-tile-v">100%</div><div class="hub-tile-s">8 of 8 domains live</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ Strategic Alignment Score</div><div class="hub-tile-v">88%</div><div class="hub-tile-s">Plan vs long-range</div></div>
+    <div class="hub-tile"><div class="hub-tile-t">◉ Planning Cycle Time</div><div class="hub-tile-v">&lt;1 day</div><div class="hub-tile-s">From 6 weeks · continuous</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">FP&amp;A Agent Domains · Status</span><span class="panel-hdr-badge">8 domains</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Agent Domain</th><th>Status</th><th>Owner Persona</th><th>Key KPI</th><th>Last Updated</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue Forecasting</td><td><span class="pill green">Live</span></td><td>Financial Analyst</td><td>88.4% accuracy</td><td class="mono">Live</td></tr>
+            <tr><td>Cost Intelligence</td><td><span class="pill green">Live</span></td><td>Cost / Margin Analyst</td><td>94% driver coverage</td><td class="mono">Live</td></tr>
+            <tr><td>Scenario Engine</td><td><span class="pill green">Live</span></td><td>Senior Analyst</td><td>14 scenarios active</td><td class="mono">Live</td></tr>
+            <tr><td>Cash Forecasting</td><td><span class="pill green">Live</span></td><td>Treasury Analyst</td><td>94.2% accuracy</td><td class="mono">Live</td></tr>
+            <tr><td>Workforce Planning</td><td><span class="pill green">Live</span></td><td>Corporate FP&amp;A Mgr</td><td>98.4% vs budget</td><td class="mono">Live</td></tr>
+            <tr><td>Capex Optimisation</td><td><span class="pill gold">Building</span></td><td>BU Finance Partner</td><td>84% utilisation</td><td class="mono">Apr 20</td></tr>
+            <tr><td>M&amp;A Modelling</td><td><span class="pill gold">Building</span></td><td>Strategic Finance Mgr</td><td>IRR coverage 94%</td><td class="mono">Apr 18</td></tr>
+            <tr><td>Disclosure Drafting</td><td><span class="pill green">Live</span></td><td>Head of FP&amp;A</td><td>18 decisions QTD</td><td class="mono">Live</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Enterprise Alignment · 14 BUs RAG Status</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Commercial</span><span class="bl-value">96%</span></div><div class="bl-track"><div class="bl-fill" style="width:96%"></div></div>
+          <div class="bl-top"><span class="bl-label">Industrial</span><span class="bl-value">92%</span></div><div class="bl-track"><div class="bl-fill" style="width:92%"></div></div>
+          <div class="bl-top"><span class="bl-label">Technology</span><span class="bl-value">90%</span></div><div class="bl-track"><div class="bl-fill" style="width:90%"></div></div>
+          <div class="bl-top"><span class="bl-label">Healthcare</span><span class="bl-value">84%</span></div><div class="bl-track"><div class="bl-fill" style="width:84%"></div></div>
+          <div class="bl-top"><span class="bl-label">Consumer</span><span class="bl-value">78%</span></div><div class="bl-track"><div class="bl-fill" style="width:78%;background:var(--orange);"></div></div>
+          <div class="bl-top"><span class="bl-label">Government</span><span class="bl-value">71%</span></div><div class="bl-track"><div class="bl-fill" style="width:71%;background:var(--orange);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Head of FP&amp;A — Skills Library</div>
+        <div class="ah-s">Skills that power the Head of FP&amp;A orchestration layer. The Head governs standards and strategy; the agent network executes across every domain.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">network.orchestrate</div><span class="skill-tag">Platform</span></div><div class="skill-desc">Connects all planning agents across BUs, geographies, and functions into a single coherent enterprise model. Owns the integration layer.</div><div class="skill-meta"><span>Always-on</span><span>Governed</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.govern</div><span class="skill-tag">Governance</span></div><div class="skill-desc">Maintains planning standards — assumption hierarchies, methodology rules, materiality thresholds — and deploys to all agents.</div><div class="skill-meta"><span>Versioned</span><span>Governed</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">talent.redeploy</div><span class="skill-tag">Workforce</span></div><div class="skill-desc">Analyses FP&amp;A team capacity freed by agents and recommends redeployment to higher-value analysis and business partnering.</div><div class="skill-meta"><span>Quarterly</span><span>People-led</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">function.bench</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Benchmarks FP&amp;A function cost, speed, and quality against industry peers. Identifies where the function leads or lags.</div><div class="skill-meta"><span>External data</span><span>Continuous</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">exec.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Produces the CEO/CFO planning brief — outlook, risks, opportunities, recommended actions — from the live enterprise model on demand.</div><div class="skill-meta"><span>Model: LLM</span><span>Executive-ready</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">transformation.track</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Monitors the FP&amp;A transformation programme — agent rollout, cycle time improvement, accuracy gain — against the roadmap.</div><div class="skill-meta"><span>KPI-linked</span><span>Transparent</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ TREASURY / CASH FORECASTING ANALYST ═════════════════════ -->
+<div class="persona-panel c-cyan" id="panel-treasury">
+  <div class="p-head">
+    <div class="p-head-icon">🏦</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Treasury &amp; Cash Forecasting</div>
+      <div class="p-head-title">Treasury / Cash Forecasting Analyst</div>
+      <div class="p-head-sub">Uses AI-driven cash forecasting to optimise liquidity, capture yield, and pre-empt cash risk zones. Moves from building daily cash reports to managing the treasury function's AI-generated position.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Predictive liquidity</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · AI-Driven Cash Management</div><div class="sec-title">Liquidity &amp; Cash Forecast Control</div></div><div class="sec-right">Global · 14 entities · 22 currencies</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Cash Position</div><div class="kcell-val acc">$284M</div><div class="kcell-sub">Global · 22 currencies</div></div>
+    <div class="kcell"><div class="kcell-lbl">Forecast Accuracy (13w)</div><div class="kcell-val good">94.2%</div><div class="kcell-delta up">▲ +28pp vs manual</div></div>
+    <div class="kcell"><div class="kcell-lbl">Cash Risk Zones</div><div class="kcell-val warn">3</div><div class="kcell-sub">Next 30 days</div></div>
+    <div class="kcell"><div class="kcell-lbl">Yield Captured</div><div class="kcell-val good">$1.4M</div><div class="kcell-sub">YTD on surplus placement</div></div>
+    <div class="kcell"><div class="kcell-lbl">Undrawn Facilities</div><div class="kcell-val good">$480M</div><div class="kcell-sub">Available · headroom</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">13-Week Cash Forecast · Weeks 1–6</span><span class="panel-hdr-badge">Daily refresh</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Week</th><th>Opening</th><th>Inflows</th><th>Outflows</th><th>Closing</th><th>vs Forecast</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">Wk 1</td><td class="mono">$284M</td><td class="mono">$62M</td><td class="mono">$48M</td><td class="mono">$298M</td><td class="mono">+$2M</td><td><span class="pill green">Clear</span></td></tr>
+            <tr><td class="mono">Wk 2</td><td class="mono">$298M</td><td class="mono">$54M</td><td class="mono">$72M</td><td class="mono">$280M</td><td class="mono">−$4M</td><td><span class="pill green">Clear</span></td></tr>
+            <tr><td class="mono">Wk 3</td><td class="mono">$280M</td><td class="mono">$44M</td><td class="mono">$86M</td><td class="mono">$238M</td><td class="mono">−$8M</td><td><span class="pill red">Risk</span></td></tr>
+            <tr><td class="mono">Wk 4</td><td class="mono">$238M</td><td class="mono">$68M</td><td class="mono">$52M</td><td class="mono">$254M</td><td class="mono">+$1M</td><td><span class="pill green">Clear</span></td></tr>
+            <tr><td class="mono">Wk 5</td><td class="mono">$254M</td><td class="mono">$58M</td><td class="mono">$61M</td><td class="mono">$251M</td><td class="mono">+$3M</td><td><span class="pill green">Clear</span></td></tr>
+            <tr><td class="mono">Wk 6</td><td class="mono">$251M</td><td class="mono">$72M</td><td class="mono">$64M</td><td class="mono">$259M</td><td class="mono">−$2M</td><td><span class="pill green">Clear</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Cash Risk Zones · Next 30 Days</span><span class="panel-hdr-badge">3 zones</span></div>
+      <div class="panel-body">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="border-left:3px solid var(--red);padding:10px 12px;background:var(--bg-1);">
+            <div style="font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Week 3 · High Severity</div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:3px;">Currency mismatch · €42M</div>
+            <div style="font-size:11px;color:var(--text-2);">EUR outflow vs USD position. Recommended: spot conversion or FX forward.</div>
+          </div>
+          <div style="border-left:3px solid var(--orange);padding:10px 12px;background:var(--bg-1);">
+            <div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Week 7 · Medium Severity</div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:3px;">Working capital trough</div>
+            <div style="font-size:11px;color:var(--text-2);">AR collection lag meets AP cycle peak. Recommended: draw on RCF $40M.</div>
+          </div>
+          <div style="border-left:3px solid var(--orange);padding:10px 12px;background:var(--bg-1);">
+            <div style="font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Week 11 · Medium Severity</div>
+            <div style="font-size:12px;font-weight:600;margin-bottom:3px;">Debt maturity · $120M</div>
+            <div style="font-size:11px;color:var(--text-2);">Term loan repayment. Recommended: refinance via bond market or extend facility.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Treasury / Cash Forecasting Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Treasury Agent. The analyst manages policy, approves hedges, and optimises placement; the agent forecasts, monitors, and connects.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">cash.forecast</div><span class="skill-tag">ML</span></div><div class="skill-desc">Produces a 13-week daily cash forecast per entity and currency from AR aging, AP due dates, payroll, tax, and capex schedules.</div><div class="skill-meta"><span>Daily refresh</span><span>94% accuracy</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">liquidity.optimise</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Recommends optimal cash placement: sweep to money-market, inter-company loan, or short-term investment — based on duration and rate.</div><div class="skill-meta"><span>Always-on</span><span>Yield-optimised</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">fx.hedge</div><span class="skill-tag">Treasury</span></div><div class="skill-desc">Monitors FX exposures from AR, AP, and intercompany positions. Proposes hedges and executes within approved policy limits.</div><div class="skill-meta"><span>Policy-governed</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.zone</div><span class="skill-tag">Predictive</span></div><div class="skill-desc">Forecasts future cash risk zones — shortfalls, concentration, covenant pressure — 30/60/90 days ahead with mitigation options.</div><div class="skill-meta"><span>Forward-looking</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">bank.connect</div><span class="skill-tag">Platform</span></div><div class="skill-desc">Aggregates real-time balances from 22+ bank connections. Cash position known continuously, not just at day-end.</div><div class="skill-meta"><span>Multi-bank</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">covenant.monitor</div><span class="skill-tag">Compliance</span></div><div class="skill-desc">Tracks financial covenants (leverage, coverage, liquidity ratios) continuously against actual and forecast data. Alerts before breach.</div><div class="skill-meta"><span>Continuous</span><span>Evidence-linked</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ STRATEGIC FINANCE MANAGER ═════════════════════ -->
+<div class="persona-panel c-magenta" id="panel-strategic">
+  <div class="p-head">
+    <div class="p-head-icon">🔭</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Strategic Finance</div>
+      <div class="p-head-title">Strategic Finance Manager</div>
+      <div class="p-head-sub">Leverages predictive models and long-range scenarios to inform investment decisions, resource allocation, and enterprise strategy. Brings financial rigour to the strategy table — powered by AI.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Strategic lens</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Predictive Scenarios &amp; Long-Range Strategy</div><div class="sec-title">Strategic Finance Intelligence Hub</div></div><div class="sec-right">5-year horizon · 12 strategic initiatives</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Strategic Initiatives</div><div class="kcell-val">12</div><div class="kcell-sub">$2.8B 5-year investment</div></div>
+    <div class="kcell"><div class="kcell-lbl">IRR Coverage</div><div class="kcell-val good">94%</div><div class="kcell-sub">AI-modelled · human-reviewed</div></div>
+    <div class="kcell"><div class="kcell-lbl">Scenario Freshness</div><div class="kcell-val acc">&lt;1d</div><div class="kcell-sub">Always-current</div></div>
+    <div class="kcell"><div class="kcell-lbl">Decisions Supported</div><div class="kcell-val good">18</div><div class="kcell-sub">QTD · board and exec level</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Strategic Initiative Portfolio</span><span class="panel-hdr-badge">12 initiatives</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Initiative</th><th>Investment</th><th>IRR</th><th>Payback</th><th>Risk</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Digital Platform Buildout</td><td class="mono">$480M</td><td class="mono">24%</td><td class="mono">4.2yr</td><td><span class="pill gold">Med</span></td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>APAC Market Entry</td><td class="mono">$320M</td><td class="mono">18%</td><td class="mono">5.8yr</td><td><span class="pill red">High</span></td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Supply Chain Modernisation</td><td class="mono">$240M</td><td class="mono">31%</td><td class="mono">3.1yr</td><td><span class="pill green">Low</span></td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>M&amp;A Target Alpha</td><td class="mono">$680M</td><td class="mono">16%</td><td class="mono">6.4yr</td><td><span class="pill red">High</span></td><td><span class="pill blue">Modelling</span></td></tr>
+            <tr><td>Sustainability Transition</td><td class="mono">$180M</td><td class="mono">12%</td><td class="mono">8.2yr</td><td><span class="pill gold">Med</span></td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Legacy ERP Replacement</td><td class="mono">$140M</td><td class="mono">22%</td><td class="mono">4.8yr</td><td><span class="pill green">Low</span></td><td><span class="pill gold">Hold</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Long-Range Scenarios · 5-Year Key Metrics</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Base · Revenue 5yr CAGR</span><span class="bl-value">8%</span></div><div class="bl-track"><div class="bl-fill" style="width:53%"></div></div>
+          <div class="bl-top"><span class="bl-label">Growth+ · Revenue 5yr CAGR</span><span class="bl-value">14%</span></div><div class="bl-track"><div class="bl-fill" style="width:74%"></div></div>
+          <div class="bl-top"><span class="bl-label">Downturn · Revenue 5yr CAGR</span><span class="bl-value">3%</span></div><div class="bl-track"><div class="bl-fill" style="width:20%;background:var(--red);"></div></div>
+          <div class="bl-top"><span class="bl-label">M&amp;A+ · Revenue 5yr CAGR</span><span class="bl-value">19%</span></div><div class="bl-track"><div class="bl-fill" style="width:95%"></div></div>
+          <div class="bl-top"><span class="bl-label">Digital Transformation · EBITDA margin</span><span class="bl-value">28%</span></div><div class="bl-track"><div class="bl-fill" style="width:70%"></div></div>
+          <div class="bl-top"><span class="bl-label">Base · EBITDA margin 5yr</span><span class="bl-value">21%</span></div><div class="bl-track"><div class="bl-fill" style="width:53%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Strategic Finance Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Strategic Finance Agent. The manager frames strategy and signs investment recommendations; the agent models, screens, and stress-tests.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">irr.model</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Builds discounted cash flow models for every capital allocation decision. Handles terminal value, tax shield, working capital, and scenario sensitivity.</div><div class="skill-meta"><span>DCF</span><span>Multi-scenario</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">scenario.longrange</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Runs 5–10 year scenarios from macro, market, and business assumptions. Refreshed as inputs change — not once a year.</div><div class="skill-meta"><span>Always-current</span><span>Driver-based</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">m&amp;a.screen</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Screens acquisition targets against strategic criteria, synergy potential, and financial fit. Produces ranked shortlist with preliminary valuation.</div><div class="skill-meta"><span>External data</span><span>Structured</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">capital.allocate</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Optimises capital allocation across the portfolio of initiatives by maximising risk-adjusted return within capital constraints.</div><div class="skill-meta"><span>Optimiser</span><span>Constrained</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.scenario</div><span class="skill-tag">Predictive</span></div><div class="skill-desc">Stress-tests investment cases against downside scenarios — demand shock, rate rise, competitor response — with probability-weighted outcomes.</div><div class="skill-meta"><span>Monte Carlo</span><span>Calibrated</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">strategy.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Produces board-ready strategic finance briefings — investment thesis, scenario analysis, recommendation — with source data linked.</div><div class="skill-meta"><span>Model: LLM</span><span>Board-ready</span></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page -->
+
+<script>
+// Auth guard
+(function(){
+  if(!sessionStorage.getItem('aavp_auth')){
+    window.location.href='login.html?redirect=fpa-personas.html';
+  }
+})();
+
+function sel(target, el){
+  document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.persona-panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('panel-'+target);
+  if(panel) panel.classList.add('active');
+  history.replaceState(null,'','#'+target);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// hash deep-link
+(function(){
+  const h = (location.hash||'').replace('#','');
+  if(!h) return;
+  const el = document.querySelector('.sn-item[data-target="'+h+'"]');
+  if(el) sel(h, el);
+})();
+</script>
+
+</body>
+</html>

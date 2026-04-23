@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>S2P Persona Hub · Agentic AI Value Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+ --bg-0:#ffffff;--bg-1:#f4f4f4;--bg-2:#e0e0e0;--bg-dark:#161616;
+ --blue:#0f62fe;--blue-pale:#edf5ff;
+ --cyan:#0072c3;--cyan-pale:#e5f6ff;
+ --teal:#007d79;--teal-pale:#d9fbfb;
+ --green:#198038;--green-pale:rgba(25,128,56,0.08);
+ --gold:#b28600;--gold-pale:rgba(178,134,0,0.10);
+ --orange:#ff832b;--orange-pale:rgba(255,131,43,0.10);
+ --red:#da1e28;--red-pale:rgba(218,30,40,0.08);
+ --purple:#6929c4;--purple-pale:#f6f2ff;
+ --magenta:#d02670;--magenta-pale:#fff0f7;
+ --text-0:#161616;--text-1:#393939;--text-2:#525252;--text-3:#6f6f6f;
+ --border:#e0e0e0;--transition:0.15s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-0);color:var(--text-0);line-height:1.5;}
+a{color:var(--green);text-decoration:none;}
+
+nav.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid var(--border);padding:0 2rem;height:48px;display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:12px;}
+.nav-logo{width:48px;height:18px;background:#161616;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:1px;}
+.nav-sep{width:1px;height:20px;background:var(--border);}
+.nav-title{font-size:13px;font-weight:600;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:var(--transition);font-family:inherit;}
+.btn-ghost{background:transparent;color:var(--green);border:1px solid var(--green);}
+.btn-ghost:hover{background:var(--green-pale);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+.badge-live{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;background:var(--green-pale);color:var(--green);border:1px solid rgba(25,128,56,0.2);}
+
+.page{padding-top:48px;display:flex;min-height:100vh;}
+
+.sidenav{width:280px;background:var(--bg-1);border-right:1px solid var(--border);flex-shrink:0;position:sticky;top:48px;align-self:flex-start;height:calc(100vh - 48px);overflow-y:auto;}
+.sn-head{padding:1.25rem 1.25rem 0.75rem;}
+.sn-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:4px;}
+.sn-sub{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.sn-note{font-size:11px;color:var(--text-2);line-height:1.5;}
+.sn-divider{height:1px;background:var(--border);margin:10px 0 0;}
+.sn-list{padding:0.5rem 0;}
+.sn-item{display:flex;align-items:center;gap:12px;padding:12px 1.25rem;cursor:pointer;border-left:3px solid transparent;transition:var(--transition);text-decoration:none;color:var(--text-1);}
+.sn-item:hover{background:#fff;}
+.sn-item.active{background:#fff;border-left-color:var(--accent);}
+.sn-icon{width:32px;height:32px;border-radius:50%;background:var(--accent-pale);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sn-item-text{flex:1;min-width:0;}
+.sn-item-role{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--accent);margin-bottom:2px;}
+.sn-item-name{font-size:12px;font-weight:600;line-height:1.3;color:var(--text-0);}
+.sn-item.active .sn-item-name{font-weight:700;}
+.sn-foot{padding:1rem 1.25rem;border-top:1px solid var(--border);margin-top:0.5rem;}
+.sn-foot-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.sn-back{font-size:11px;color:var(--green);font-weight:600;display:block;margin-bottom:4px;}
+
+.c-blue{--accent:var(--blue);--accent-pale:var(--blue-pale);}
+.c-teal{--accent:var(--teal);--accent-pale:var(--teal-pale);}
+.c-orange{--accent:var(--orange);--accent-pale:var(--orange-pale);}
+.c-green{--accent:var(--green);--accent-pale:var(--green-pale);}
+.c-gold{--accent:var(--gold);--accent-pale:var(--gold-pale);}
+.c-magenta{--accent:var(--magenta);--accent-pale:var(--magenta-pale);}
+.c-purple{--accent:var(--purple);--accent-pale:var(--purple-pale);}
+.c-cyan{--accent:var(--cyan);--accent-pale:var(--cyan-pale);}
+
+.content{flex:1;min-width:0;padding:0;}
+.persona-panel{display:none;padding:1.75rem 2rem;}
+.persona-panel.active{display:block;}
+
+.p-head{display:flex;align-items:flex-start;gap:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+.p-head-icon{width:64px;height:64px;border-radius:50%;background:var(--accent-pale);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;}
+.p-head-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.p-head-title{font-size:26px;font-weight:700;line-height:1.15;margin-bottom:8px;}
+.p-head-sub{font-size:13px;color:var(--text-2);line-height:1.55;max-width:820px;}
+.p-head-actions{margin-left:auto;display:flex;gap:8px;flex-shrink:0;}
+.p-head-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:5px 10px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+
+.sec-hdr{margin-bottom:1rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;}
+.sec-eyebrow{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.sec-title{font-size:15px;font-weight:700;}
+.sec-right{font-size:10px;color:var(--text-3);}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem;}
+.kpi-row.k5{grid-template-columns:repeat(5,1fr);}
+.kpi-row.k3{grid-template-columns:repeat(3,1fr);}
+.kcell{background:#fff;padding:14px 16px;}
+.kcell-lbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.kcell-val{font-size:26px;font-weight:300;font-family:'IBM Plex Mono',monospace;line-height:1;margin-bottom:3px;color:var(--text-0);}
+.kcell-val.good{color:var(--green);}
+.kcell-val.warn{color:var(--orange);}
+.kcell-val.bad{color:var(--red);}
+.kcell-val.acc{color:var(--accent);}
+.kcell-sub{font-size:10px;color:var(--text-2);}
+.kcell-delta{font-size:10px;font-weight:700;margin-top:5px;padding:2px 6px;display:inline-block;}
+.kcell-delta.up{background:var(--green-pale);color:var(--green);}
+.kcell-delta.dn{background:var(--red-pale);color:var(--red);}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.grid-13{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+
+.panel{background:#fff;border:1px solid var(--border);overflow:hidden;}
+.panel-hdr{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg-1);display:flex;align-items:center;justify-content:space-between;}
+.panel-hdr-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-1);}
+.panel-hdr-badge{font-size:9px;font-weight:700;padding:2px 8px;background:var(--accent-pale);color:var(--accent);border:1px solid var(--accent);}
+.panel-body{padding:14px 16px;}
+.panel-body.flush{padding:0;}
+
+.bar-list{display:flex;flex-direction:column;gap:10px;}
+.bl-top{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;margin-bottom:4px;}
+.bl-label{font-weight:600;color:var(--text-1);}
+.bl-value{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--text-0);}
+.bl-track{height:7px;background:var(--bg-2);border-radius:2px;overflow:hidden;}
+.bl-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.tbl th{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg-1);}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-1);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg-1);}
+.mono{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.pill{font-size:9px;font-weight:700;padding:2px 7px;display:inline-block;}
+.pill.red{background:var(--red-pale);color:var(--red);}
+.pill.green{background:var(--green-pale);color:var(--green);}
+.pill.gold{background:var(--gold-pale);color:var(--gold);}
+.pill.blue{background:var(--blue-pale);color:var(--blue);}
+.pill.purple{background:var(--purple-pale);color:var(--purple);}
+.pill.teal{background:var(--teal-pale);color:var(--teal);}
+
+.flow-strip{display:grid;grid-template-columns:1fr 30px 1fr 30px 1fr;gap:0;align-items:center;margin-bottom:1.25rem;}
+.fs-box{background:#fff;border:2px solid var(--accent);padding:12px;text-align:center;}
+.fs-box .fb-lbl{font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.fs-box .fb-t{font-size:12px;font-weight:700;margin-bottom:3px;}
+.fs-box .fb-sub{font-size:9.5px;color:var(--text-2);line-height:1.5;}
+.fs-arrow{text-align:center;font-size:18px;color:var(--accent);}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-size:10px;font-weight:600;padding:4px 10px;background:var(--bg-1);border:1px solid var(--border);color:var(--text-1);}
+
+.hub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.hub-tile{background:#fff;border:1px solid var(--border);border-top:3px solid var(--accent);padding:14px;}
+.hub-tile-t{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.hub-tile-v{font-size:20px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--text-0);margin-bottom:3px;}
+.hub-tile-s{font-size:10px;color:var(--text-2);line-height:1.5;}
+
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+.seg-card{background:#fff;border:1px solid var(--border);border-top:3px solid var(--accent);padding:14px;}
+.seg-card-t{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.seg-card-v{font-size:22px;font-weight:300;font-family:'IBM Plex Mono',monospace;color:var(--text-0);margin-bottom:3px;}
+.seg-card-s{font-size:10px;color:var(--text-2);line-height:1.5;}
+
+.agents{background:var(--bg-1);border:1px solid var(--border);border-top:3px solid var(--accent);padding:1.5rem;margin-top:1rem;}
+.agents-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px;}
+.agents-title-wrap .ah-eye{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.agents-title-wrap .ah-t{font-size:18px;font-weight:700;}
+.agents-title-wrap .ah-s{font-size:12px;color:var(--text-2);margin-top:4px;max-width:680px;}
+.agents-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;}
+.skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.skill-card{background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);padding:12px 14px;}
+.skill-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px;}
+.skill-name{font-size:12px;font-weight:700;color:var(--text-0);display:flex;align-items:center;gap:6px;}
+.skill-name::before{content:"✦";color:var(--accent);font-size:10px;}
+.skill-tag{font-size:8.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-3);}
+.skill-desc{font-size:11px;color:var(--text-2);line-height:1.55;margin-bottom:8px;}
+.skill-meta{display:flex;gap:10px;font-size:9.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.5px;}
+.skill-meta span{display:flex;align-items:center;gap:4px;}
+.skill-meta span::before{content:"●";color:var(--accent);font-size:7px;}
+
+@media(max-width:1024px){.page{flex-direction:column;}.sidenav{width:100%;position:static;height:auto;}.kpi-row,.kpi-row.k5,.kpi-row.k3{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-3,.grid-4,.grid-13,.hub-grid,.seg-grid{grid-template-columns:1fr;}.skill-grid{grid-template-columns:1fr;}.flow-strip{grid-template-columns:1fr;}.fs-arrow{transform:rotate(90deg);padding:6px 0;}}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH GUARD ──────────────────────────────────────────────────────────── -->
+<script>
+(function(){
+  if(!(window.PLATFORM_CONFIG && window.PLATFORM_CONFIG.protectedMode)) return;
+  const raw = sessionStorage.getItem('aavp_auth');
+  if(!raw){ window.location.href = 'login.html?redirect=s2p-personas.html'; return; }
+  const { token } = JSON.parse(raw);
+  fetch('/api/verify', { headers: { Authorization: 'Bearer ' + (token||'') } })
+    .then(r => { if(!r.ok){ sessionStorage.removeItem('aavp_auth'); window.location.href = 'login.html?redirect=s2p-personas.html'; } })
+    .catch(() => {});
+})();
+</script>
+
+<nav class="topnav">
+  <div class="nav-brand">
+    <div class="nav-logo">IBM</div>
+    <div class="nav-sep"></div>
+    <span class="nav-title">S2P Persona Hub · The Agentic Buyer</span>
+  </div>
+  <div class="nav-links">
+    <a href="s2p-future.html" class="btn btn-ghost btn-sm">← Vision</a>
+    <a href="CFO-Dashboard.html" class="btn btn-ghost btn-sm">CFO Dashboard</a>
+    <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+    <span class="badge-live">● Live</span>
+  </div>
+</nav>
+
+<div class="page">
+
+<aside class="sidenav">
+  <div class="sn-head">
+    <div class="sn-title">S2P Persona Hub</div>
+    <div class="sn-sub">The Agentic Buyer</div>
+    <div class="sn-note">Eight personas. End-to-end S2P. Every low-code skill.</div>
+  </div>
+  <div class="sn-divider"></div>
+  <div class="sn-list">
+    <a class="sn-item active c-blue" data-target="buyer" onclick="sel('buyer',this)">
+      <div class="sn-icon">🛒</div>
+      <div class="sn-item-text"><div class="sn-item-role">Procurement</div><div class="sn-item-name">Procurement Specialist / Buyer</div></div>
+    </a>
+    <a class="sn-item c-teal" data-target="category" onclick="sel('category',this)">
+      <div class="sn-icon">📊</div>
+      <div class="sn-item-text"><div class="sn-item-role">Category Management</div><div class="sn-item-name">Category Manager</div></div>
+    </a>
+    <a class="sn-item c-orange" data-target="vendor" onclick="sel('vendor',this)">
+      <div class="sn-icon">🤝</div>
+      <div class="sn-item-text"><div class="sn-item-role">Vendor Management</div><div class="sn-item-name">Vendor Mgmt Analyst</div></div>
+    </a>
+    <a class="sn-item c-cyan" data-target="ap" onclick="sel('ap',this)">
+      <div class="sn-icon">💳</div>
+      <div class="sn-item-text"><div class="sn-item-role">Accounts Payable</div><div class="sn-item-name">AP Specialist</div></div>
+    </a>
+    <a class="sn-item c-green" data-target="invoice" onclick="sel('invoice',this)">
+      <div class="sn-icon">📋</div>
+      <div class="sn-item-text"><div class="sn-item-role">Invoice Processing</div><div class="sn-item-name">Invoice Processing Analyst</div></div>
+    </a>
+    <a class="sn-item c-purple" data-target="p2pops" onclick="sel('p2pops',this)">
+      <div class="sn-icon">⚙️</div>
+      <div class="sn-item-text"><div class="sn-item-role">P2P Operations</div><div class="sn-item-name">P2P Operations Manager</div></div>
+    </a>
+    <a class="sn-item c-gold" data-target="sourcing" onclick="sel('sourcing',this)">
+      <div class="sn-icon">🔍</div>
+      <div class="sn-item-text"><div class="sn-item-role">Strategic Sourcing</div><div class="sn-item-name">Sourcing Manager</div></div>
+    </a>
+    <a class="sn-item c-magenta" data-target="risk" onclick="sel('risk',this)">
+      <div class="sn-icon">🛡️</div>
+      <div class="sn-item-text"><div class="sn-item-role">Supplier Risk</div><div class="sn-item-name">Supplier Risk / Compliance Mgr</div></div>
+    </a>
+  </div>
+  <div class="sn-foot">
+    <div class="sn-foot-title">Related</div>
+    <a href="s2p-future.html" class="sn-back">← Future of S2P vision</a>
+    <a href="fpa-future.html" class="sn-back">→ Future of FP&amp;A</a>
+    <a href="agentic-future.html" class="sn-back">◎ Agentic AI hub</a>
+  </div>
+</aside>
+
+<div class="content" id="content">
+
+<!-- ═════════════════════ PROCUREMENT SPECIALIST / BUYER ═════════════════════ -->
+<div class="persona-panel active c-blue" id="panel-buyer">
+  <div class="p-head">
+    <div class="p-head-icon">🛒</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Procurement</div>
+      <div class="p-head-title">Procurement Specialist / Buyer</div>
+      <div class="p-head-sub">Governs the sourcing rules and purchasing policies that autonomous buying agents apply to every requisition and order. Focuses on supplier strategy and exception judgment — not PO keying.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 94% autonomous</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Autonomous Purchasing Control Room</div><div class="sec-title">Requisition-to-Order Performance</div></div><div class="sec-right">Today · 1,842 requisitions</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Requisitions MTD</div><div class="kcell-val">28,420</div><div class="kcell-sub">94.2% straight-through</div></div>
+    <div class="kcell"><div class="kcell-lbl">First-Pass Approval</div><div class="kcell-val good">96.8%</div><div class="kcell-delta up">▲ +12pp YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Policy Violations</div><div class="kcell-val warn">84</div><div class="kcell-sub">Of 28,420 · 0.3%</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Cycle Time</div><div class="kcell-val acc">4.2h</div><div class="kcell-sub">From 3.8d · agent-driven</div></div>
+    <div class="kcell"><div class="kcell-lbl">Savings Captured</div><div class="kcell-val good">$2.1M</div><div class="kcell-sub">Negotiated + contract</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Exception Queue · Buyer Review Required</span><span class="panel-hdr-badge">84 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>REQ</th><th>Supplier</th><th>Policy Issue</th><th>Value</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">REQ-44821</td><td>Acme Supplies Inc.</td><td>Non-preferred supplier · no justification</td><td class="mono">$18,400</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td class="mono">REQ-44836</td><td>Global Tech Parts</td><td>Spend threshold exceeded · $50K cap</td><td class="mono">$62,100</td><td><span class="pill red">Hold</span></td></tr>
+            <tr><td class="mono">REQ-44849</td><td>FastShip Logistics</td><td>Single-source · missing justification</td><td class="mono">$9,800</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td class="mono">REQ-44852</td><td>Metro Office Co.</td><td>Category rule: MRO via contract only</td><td class="mono">$3,240</td><td><span class="pill green">Auto-fixed</span></td></tr>
+            <tr><td class="mono">REQ-44861</td><td>Precision Castings</td><td>ESG tier mismatch · Tier 3 blocked</td><td class="mono">$28,750</td><td><span class="pill red">Hold</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Policy Compliance by Type</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Preferred supplier</span><span class="bl-value">99%</span></div><div class="bl-track"><div class="bl-fill" style="width:99%"></div></div>
+          <div class="bl-top"><span class="bl-label">Spend threshold</span><span class="bl-value">97%</span></div><div class="bl-track"><div class="bl-fill" style="width:97%"></div></div>
+          <div class="bl-top"><span class="bl-label">Category rules</span><span class="bl-value">98%</span></div><div class="bl-track"><div class="bl-fill" style="width:98%"></div></div>
+          <div class="bl-top"><span class="bl-label">Single-source justification</span><span class="bl-value">95%</span></div><div class="bl-track"><div class="bl-fill" style="width:95%"></div></div>
+          <div class="bl-top"><span class="bl-label">GL coding accuracy</span><span class="bl-value">91%</span></div><div class="bl-track"><div class="bl-fill" style="width:91%"></div></div>
+          <div class="bl-top"><span class="bl-label">ESG tier compliance</span><span class="bl-value">94%</span></div><div class="bl-track"><div class="bl-fill" style="width:94%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Procurement Specialist / Buyer — Skills Library</div>
+        <div class="ah-s">Reusable low-code building blocks for the Purchasing Agent. The buyer configures policy, reviews exceptions, and governs supplier strategy.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">req.triage</div><span class="skill-tag">Routing</span></div><div class="skill-desc">Classifies every requisition by category, urgency, value, and supplier availability. Routes auto-approve, agent-buy, or human-review.</div><div class="skill-meta"><span>Input: req JSON</span><span>SLA: &lt;2s</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.enforce</div><span class="skill-tag">Logic</span></div><div class="skill-desc">Applies purchasing policy: spend thresholds, preferred suppliers, category rules, single-source justification. Returns pass/hold/review decision.</div><div class="skill-meta"><span>Versioned</span><span>Governed</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">supplier.select</div><span class="skill-tag">ML</span></div><div class="skill-desc">Recommends best supplier from approved list using price, lead time, quality score, and ESG tier.</div><div class="skill-meta"><span>Sources: 8</span><span>SHAP explain</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">po.generate</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Generates purchase orders from approved requisitions with correct GL coding, cost center, and contract reference. Posts to ERP.</div><div class="skill-meta"><span>Straight-through</span><span>ERP-native</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">savings.track</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Calculates realized savings vs. benchmark price for every PO. Tracks against category savings targets in real time.</div><div class="skill-meta"><span>Runs: per-PO</span><span>Value: tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">req.narrate</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Explains every purchasing decision in plain language for budget owners, approvers, and audit. One-click justification.</div><div class="skill-meta"><span>Model: LLM</span><span>Source-cited</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ CATEGORY MANAGER ═════════════════════ -->
+<div class="persona-panel c-teal" id="panel-category">
+  <div class="p-head">
+    <div class="p-head-icon">📊</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Category Management</div>
+      <div class="p-head-title">Category Manager</div>
+      <div class="p-head-sub">Designs and deploys long-range category strategies and sourcing plans as agent logic. The agent runs market scanning, supplier benchmarking, and spend analysis — the manager decides the strategy.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Strategy-led</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Category Strategy &amp; Spend Intelligence</div><div class="sec-title">Category Portfolio Overview</div></div><div class="sec-right">14 categories · $284M spend</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Managed Spend</div><div class="kcell-val acc">$284M</div><div class="kcell-sub">14 categories · 94% coverage</div></div>
+    <div class="kcell"><div class="kcell-lbl">Savings vs Target</div><div class="kcell-val good">108%</div><div class="kcell-sub">$12.4M vs $11.5M target</div></div>
+    <div class="kcell"><div class="kcell-lbl">Supplier Consolidation</div><div class="kcell-val good">34%</div><div class="kcell-delta up">▲ −18% supplier count</div></div>
+    <div class="kcell"><div class="kcell-lbl">Strategy Currency</div><div class="kcell-val acc">98%</div><div class="kcell-sub">Plans &lt; 90d old</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Category Spend · Top 6</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Indirect IT</span><span class="bl-value">$68M</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div>
+          <div class="bl-top"><span class="bl-label">MRO</span><span class="bl-value">$42M</span></div><div class="bl-track"><div class="bl-fill" style="width:62%"></div></div>
+          <div class="bl-top"><span class="bl-label">Professional Svcs</span><span class="bl-value">$38M</span></div><div class="bl-track"><div class="bl-fill" style="width:56%"></div></div>
+          <div class="bl-top"><span class="bl-label">Logistics</span><span class="bl-value">$34M</span></div><div class="bl-track"><div class="bl-fill" style="width:50%"></div></div>
+          <div class="bl-top"><span class="bl-label">Marketing</span><span class="bl-value">$28M</span></div><div class="bl-track"><div class="bl-fill" style="width:41%"></div></div>
+          <div class="bl-top"><span class="bl-label">Facilities</span><span class="bl-value">$24M</span></div><div class="bl-track"><div class="bl-fill" style="width:35%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Sourcing Events Pipeline</span><span class="panel-hdr-badge">5 active</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Category</th><th>Type</th><th>Status</th><th>Savings</th></tr></thead>
+          <tbody>
+            <tr><td>Indirect IT</td><td>RFP</td><td><span class="pill green">Active</span></td><td class="mono">$2.4M</td></tr>
+            <tr><td>Logistics</td><td>Auction</td><td><span class="pill green">Awarded</span></td><td class="mono">$1.8M</td></tr>
+            <tr><td>Professional Svcs</td><td>RFQ</td><td><span class="pill green">Active</span></td><td class="mono">$980K</td></tr>
+            <tr><td>MRO</td><td>RFP</td><td><span class="pill gold">Planning</span></td><td class="mono">$640K</td></tr>
+            <tr><td>Facilities</td><td>RFQ</td><td><span class="pill gold">Planning</span></td><td class="mono">$420K</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Category Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Category Intelligence Agent. The manager sets strategy; the agent runs scanning, benchmarking, and analysis continuously.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">spend.analyse</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Classifies and cubes all spend by category, supplier, cost center, geography, and time. Anomalies and rogue spend flagged automatically.</div><div class="skill-meta"><span>100% coverage</span><span>Daily refresh</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">market.scan</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Monitors supplier market: pricing trends, new entrants, commodity indices, geo-political risk. Surfaces signals to the category manager.</div><div class="skill-meta"><span>External feeds</span><span>Always-on</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">strategy.draft</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Drafts category strategy documents from spend data, market scan, and current supplier base. Manager reviews and publishes.</div><div class="skill-meta"><span>Model: LLM</span><span>Source-cited</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">rfp.build</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Generates RFP/RFQ packages from the category strategy: scope, spec, evaluation criteria, scoring model.</div><div class="skill-meta"><span>Template-driven</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">savings.model</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Models savings levers (consolidation, dual-source, rebid, demand management) and projects impact on the category P&amp;L.</div><div class="skill-meta"><span>Scenario engine</span><span>What-if</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">supplier.tier</div><span class="skill-tag">Policy</span></div><div class="skill-desc">Maintains preferred/approved/conditionally-approved/blocked supplier tiers. Syncs to all buying channels automatically.</div><div class="skill-meta"><span>Governed</span><span>Auto-sync</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ VENDOR MANAGEMENT ANALYST ═════════════════════ -->
+<div class="persona-panel c-orange" id="panel-vendor">
+  <div class="p-head">
+    <div class="p-head-icon">🤝</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Vendor Management</div>
+      <div class="p-head-title">Vendor Management Analyst</div>
+      <div class="p-head-sub">Drives supplier relationship decisions using AI-generated performance scorecards, risk signals, and compliance alerts. Negotiates, develops, and exits suppliers — the agent monitors 24/7.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Risk-aware</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Supplier Performance &amp; Compliance Hub</div><div class="sec-title">Vendor Portfolio — 847 Suppliers</div></div><div class="sec-right">847 active suppliers · $284M spend</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Active Suppliers</div><div class="kcell-val">847</div><div class="kcell-sub">14 categories</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Risk Score</div><div class="kcell-val good">24</div><div class="kcell-sub">Low · stable</div></div>
+    <div class="kcell"><div class="kcell-lbl">High-Risk Suppliers</div><div class="kcell-val bad">12</div><div class="kcell-sub">Requires review</div></div>
+    <div class="kcell"><div class="kcell-lbl">SLA Compliance</div><div class="kcell-val good">94.6%</div><div class="kcell-delta up">▲ +8pp YoY</div></div>
+    <div class="kcell"><div class="kcell-lbl">ESG Tier 1+2</div><div class="kcell-val acc">82%</div><div class="kcell-sub">Of 847 · target 90%</div></div>
+  </div>
+
+  <div class="seg-grid">
+    <div class="seg-card"><div class="seg-card-t">◉ Low Risk</div><div class="seg-card-v">680</div><div class="seg-card-s">Suppliers auto-monitored · agent-managed continuous</div></div>
+    <div class="seg-card"><div class="seg-card-t">◉ Medium Risk</div><div class="seg-card-v">155</div><div class="seg-card-s">Analyst-reviewed · quarterly QBR + signals watch</div></div>
+    <div class="seg-card"><div class="seg-card-t">◉ High Risk</div><div class="seg-card-v">12</div><div class="seg-card-s">Analyst-led · active investigation or exit planning</div></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1.5rem;">
+    <div class="panel-hdr"><span class="panel-hdr-title">High-Risk Supplier Watchlist</span><span class="panel-hdr-badge">12 flagged</span></div>
+    <div class="panel-body flush">
+      <table class="tbl">
+        <thead><tr><th>Supplier</th><th>Risk Score</th><th>Issue</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Meridian Castings Ltd.</td><td><span class="pill red">84</span></td><td>Financial distress · credit rating downgrade</td><td><span class="pill red">Dual-source now</span></td></tr>
+          <tr><td>DataEdge Systems</td><td><span class="pill red">78</span></td><td>Cyber risk · breach disclosed</td><td><span class="pill red">Suspend eval.</span></td></tr>
+          <tr><td>Horizon Freight Co.</td><td><span class="pill red">72</span></td><td>Geo-political: port disruption risk</td><td><span class="pill gold">Monitor &amp; buffer</span></td></tr>
+          <tr><td>ProClean Services</td><td><span class="pill gold">61</span></td><td>ESG audit expired · labor standards</td><td><span class="pill gold">Cert request</span></td></tr>
+          <tr><td>NorthStar Packaging</td><td><span class="pill gold">58</span></td><td>SLA miss streak · 3 consecutive quarters</td><td><span class="pill gold">Performance plan</span></td></tr>
+          <tr><td>Atlas Components Inc.</td><td><span class="pill gold">54</span></td><td>Sanctions watch list · subsidiary link</td><td><span class="pill red">Legal review</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Vendor Management Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Supplier Performance Agent. The analyst governs relationships and exits; the agent scores, monitors, and alerts 24/7.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">perf.score</div><span class="skill-tag">ML</span></div><div class="skill-desc">Scores each supplier 0–100 on delivery, quality, responsiveness, cost, and innovation using order, invoice, and survey data. Refreshed weekly.</div><div class="skill-meta"><span>847 suppliers</span><span>SHAP explain</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.monitor</div><span class="skill-tag">Predictive</span></div><div class="skill-desc">Monitors supplier financial health, news, sanctions, ESG violations, and cyber risk signals. Alerts on material change within hours.</div><div class="skill-meta"><span>Signals: 14</span><span>Always-on</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">compliance.verify</div><span class="skill-tag">Policy</span></div><div class="skill-desc">Validates supplier certifications (ISO, SOC2, ESG audits) are current. Auto-flags expiries 90/30/7 days ahead.</div><div class="skill-meta"><span>Auto-track</span><span>Cert library</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">relationship.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Prepares QBR packets, escalation briefs, and exit-strategy summaries from performance data. Manager reviews and uses in negotiations.</div><div class="skill-meta"><span>Model: LLM</span><span>One-click</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">onboard.automate</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Orchestrates supplier onboarding: document collection, validation, system setup, bank verification, approval routing.</div><div class="skill-meta"><span>Days not weeks</span><span>Straight-through</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">esg.track</div><span class="skill-tag">Sustainability</span></div><div class="skill-desc">Tracks Scope 3 supplier emissions, diversity certifications, and labor standards. Produces portfolio ESG score and improvement plan.</div><div class="skill-meta"><span>CSRD-aligned</span><span>Continuous</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ AP SPECIALIST ═════════════════════ -->
+<div class="persona-panel c-cyan" id="panel-ap">
+  <div class="p-head">
+    <div class="p-head-icon">💳</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Accounts Payable</div>
+      <div class="p-head-title">AP Specialist</div>
+      <div class="p-head-sub">Supervises AI-validated payment flows and manages only the rare exceptions requiring human judgment. Payment runs, bank reconciliation, and duplicate detection — all agent-handled.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 96% touchless</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Payment Flow Control</div><div class="sec-title">Invoice-to-Payment Pipeline</div></div><div class="sec-right">Today · $8.4M · 1,284 payments</div></div>
+
+  <div class="flow-strip">
+    <div class="fs-box">
+      <div class="fb-lbl">◉ Approved</div>
+      <div class="fb-t">Invoices Approved</div>
+      <div class="fb-sub">1,284 · $8.4M ready for payment run</div>
+    </div>
+    <div class="fs-arrow">→</div>
+    <div class="fs-box">
+      <div class="fb-lbl">◉ Scheduled</div>
+      <div class="fb-t">Auto-Scheduled</div>
+      <div class="fb-sub">1,232 · 95.9% touchless — optimized timing</div>
+    </div>
+    <div class="fs-arrow">→</div>
+    <div class="fs-box">
+      <div class="fb-lbl">◉ Exceptions</div>
+      <div class="fb-t">Payment Exceptions</div>
+      <div class="fb-sub">52 · 4.1% · 9 analyst-escalated</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Touchless Pay Rate</div><div class="kcell-val good">95.9%</div><div class="kcell-delta up">▲ +28pp vs baseline</div></div>
+    <div class="kcell"><div class="kcell-lbl">On-Time Payment</div><div class="kcell-val good">98.2%</div><div class="kcell-sub">Discount capture optimized</div></div>
+    <div class="kcell"><div class="kcell-lbl">Duplicate Blocked</div><div class="kcell-val good">$124K</div><div class="kcell-sub">MTD · agent detected</div></div>
+    <div class="kcell"><div class="kcell-lbl">Early Pay Discount</div><div class="kcell-val acc">$84K</div><div class="kcell-sub">Captured via dynamic disc.</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Exception Types · Review Queue</span><span class="panel-hdr-badge">52 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Exception Type</th><th>Count</th><th>Value</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Bank detail mismatch</td><td class="mono">9</td><td class="mono">$284K</td><td><span class="pill red">Analyst</span></td></tr>
+            <tr><td>Amount variance &gt;tol</td><td class="mono">14</td><td class="mono">$142K</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Duplicate suspect</td><td class="mono">8</td><td class="mono">$98K</td><td><span class="pill red">Block</span></td></tr>
+            <tr><td>Vendor blocked</td><td class="mono">6</td><td class="mono">$61K</td><td><span class="pill red">Hold</span></td></tr>
+            <tr><td>FX tolerance breach</td><td class="mono">15</td><td class="mono">$38K</td><td><span class="pill gold">Review</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Payment Channel Mix</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">SEPA</span><span class="bl-value">38%</span></div><div class="bl-track"><div class="bl-fill" style="width:38%"></div></div>
+          <div class="bl-top"><span class="bl-label">ACH</span><span class="bl-value">32%</span></div><div class="bl-track"><div class="bl-fill" style="width:32%"></div></div>
+          <div class="bl-top"><span class="bl-label">Wire</span><span class="bl-value">14%</span></div><div class="bl-track"><div class="bl-fill" style="width:14%"></div></div>
+          <div class="bl-top"><span class="bl-label">Virtual Card</span><span class="bl-value">9%</span></div><div class="bl-track"><div class="bl-fill" style="width:9%"></div></div>
+          <div class="bl-top"><span class="bl-label">Card</span><span class="bl-value">5%</span></div><div class="bl-track"><div class="bl-fill" style="width:5%"></div></div>
+          <div class="bl-top"><span class="bl-label">Cheque</span><span class="bl-value">2%</span></div><div class="bl-track"><div class="bl-fill" style="width:2%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">AP Specialist — Skills Library</div>
+        <div class="ah-s">Skills that power the AP Payment Agent. The specialist manages exceptions and governs payment policy; the agent validates, schedules, and reconciles.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">invoice.validate</div><span class="skill-tag">3-way</span></div><div class="skill-desc">Performs 3-way match (PO, receipt, invoice) instantly for every invoice. Identifies price, quantity, and tolerance exceptions.</div><div class="skill-meta"><span>Straight-through</span><span>ERP-native</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">duplicate.detect</div><span class="skill-tag">ML</span></div><div class="skill-desc">Identifies duplicate invoices using fuzzy vendor name, amount, date, and document fingerprint matching. Blocks before payment.</div><div class="skill-meta"><span>Precision: 0.97</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">payment.schedule</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Optimises payment timing per vendor: capture early-pay discounts, meet net terms, avoid late fees. Generates payment run.</div><div class="skill-meta"><span>Optimizer</span><span>Dynamic disc.</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">bank.reconcile</div><span class="skill-tag">Algo</span></div><div class="skill-desc">Matches bank statement lines to AP ledger daily using reference, amount, and date. Clears 99%+ automatically.</div><div class="skill-meta"><span>Runs: daily</span><span>Zero-drift</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">fraud.sentinel</div><span class="skill-tag">Security</span></div><div class="skill-desc">Detects payment fraud signals: new bank details, round-dollar clusters, unusual timing, vendor-master changes. Blocks and alerts.</div><div class="skill-meta"><span>Graph ML</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">ap.narrate</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Generates plain-language payment explanation for vendors, budget owners, and auditors. Dispute-ready evidence in seconds.</div><div class="skill-meta"><span>Model: LLM</span><span>Multilingual</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ INVOICE PROCESSING ANALYST ═════════════════════ -->
+<div class="persona-panel c-green" id="panel-invoice">
+  <div class="p-head">
+    <div class="p-head-icon">📋</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Invoice Processing</div>
+      <div class="p-head-title">Invoice Processing Analyst</div>
+      <div class="p-head-sub">Corrects structural and policy exceptions that the invoice processing agent flags. The agent handles 97% of invoices end-to-end — the analyst owns the edge cases and teaches the agent new resolution patterns.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ 97% auto-processed</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Invoice Processing Intelligence</div><div class="sec-title">Invoice Exception &amp; Policy Monitor</div></div><div class="sec-right">MTD · 48,420 invoices · 1,452 exceptions</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Invoices MTD</div><div class="kcell-val">48,420</div><div class="kcell-sub">97.0% agent-processed</div></div>
+    <div class="kcell"><div class="kcell-lbl">Exception Rate</div><div class="kcell-val warn">3.0%</div><div class="kcell-sub">1,452 open</div></div>
+    <div class="kcell"><div class="kcell-lbl">Policy Coverage</div><div class="kcell-val good">99.4%</div><div class="kcell-sub">Of 48,420 invoices</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Resolution Time</div><div class="kcell-val acc">2.8h</div><div class="kcell-sub">From 4.6d · −97%</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Exception Queue · Analyst Review</span><span class="panel-hdr-badge">1,452 open</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Exception Type</th><th>Count</th><th>Value</th><th>Auto-Resolve %</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Missing PO reference</td><td class="mono">284</td><td class="mono">$1.2M</td><td class="mono">72%</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Price variance &gt;2%</td><td class="mono">196</td><td class="mono">$840K</td><td class="mono">58%</td><td><span class="pill red">Analyst</span></td></tr>
+            <tr><td>Non-compliant format</td><td class="mono">312</td><td class="mono">$620K</td><td class="mono">91%</td><td><span class="pill green">Auto</span></td></tr>
+            <tr><td>Tax code error</td><td class="mono">148</td><td class="mono">$384K</td><td class="mono">64%</td><td><span class="pill gold">Review</span></td></tr>
+            <tr><td>Duplicate suspect</td><td class="mono">84</td><td class="mono">$298K</td><td class="mono">88%</td><td><span class="pill green">Auto</span></td></tr>
+            <tr><td>GL coding issue</td><td class="mono">428</td><td class="mono">$210K</td><td class="mono">79%</td><td><span class="pill gold">Review</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Policy Coverage by Category</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">PO compliance</span><span class="bl-value">99%</span></div><div class="bl-track"><div class="bl-fill" style="width:99%"></div></div>
+          <div class="bl-top"><span class="bl-label">Tax determination</span><span class="bl-value">98%</span></div><div class="bl-track"><div class="bl-fill" style="width:98%"></div></div>
+          <div class="bl-top"><span class="bl-label">GL coding</span><span class="bl-value">97%</span></div><div class="bl-track"><div class="bl-fill" style="width:97%"></div></div>
+          <div class="bl-top"><span class="bl-label">Format standards</span><span class="bl-value">99%</span></div><div class="bl-track"><div class="bl-fill" style="width:99%"></div></div>
+          <div class="bl-top"><span class="bl-label">Approval routing</span><span class="bl-value">96%</span></div><div class="bl-track"><div class="bl-fill" style="width:96%"></div></div>
+          <div class="bl-top"><span class="bl-label">Currency tolerance</span><span class="bl-value">88%</span></div><div class="bl-track"><div class="bl-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Invoice Processing Analyst — Skills Library</div>
+        <div class="ah-s">Skills that power the Invoice Processing Agent. The analyst resolves edge cases and teaches new patterns; the agent handles volume and improves continuously.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">invoice.ingest</div><span class="skill-tag">Capture</span></div><div class="skill-desc">Captures invoices from any channel (email, portal, EDI, scan) and extracts header, line, and tax data using computer vision and LLM.</div><div class="skill-meta"><span>Multilingual</span><span>99.4% accuracy</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.match</div><span class="skill-tag">3-way</span></div><div class="skill-desc">Matches invoice to PO and receipt. Flags price, quantity, and tax variances against configurable tolerance rules.</div><div class="skill-meta"><span>Real-time</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">exception.classify</div><span class="skill-tag">ML</span></div><div class="skill-desc">Classifies exceptions into 12 categories (format, price, tax, coding, duplicate, approval) and proposes resolution for each.</div><div class="skill-meta"><span>12 classes</span><span>Auto-resolve</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">gl.code</div><span class="skill-tag">AI</span></div><div class="skill-desc">Suggests correct GL account, cost centre, and project code from invoice description, vendor, and purchase context.</div><div class="skill-meta"><span>Learning</span><span>Configurable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">resolution.route</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Routes exceptions to the right resolver (AP analyst, budget owner, tax team, procurement) with evidence and recommended fix.</div><div class="skill-meta"><span>Human-in-loop</span><span>SLA-tracked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">pattern.capture</div><span class="skill-tag">Feedback</span></div><div class="skill-desc">Converts analyst fixes into new resolution rules. The agent handles the same exception autonomously next time.</div><div class="skill-meta"><span>Active learning</span><span>Low-code</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ P2P OPERATIONS MANAGER ═════════════════════ -->
+<div class="persona-panel c-purple" id="panel-p2pops">
+  <div class="p-head">
+    <div class="p-head-icon">⚙️</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · P2P Operations</div>
+      <div class="p-head-title">P2P Operations Manager</div>
+      <div class="p-head-sub">Monitors the P2P process performance control tower and governs the data and policy strategy underpinning every agent in the network. Process owner, not processor.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Control tower</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · P2P Process Performance</div><div class="sec-title">End-to-End P2P Control Tower</div></div><div class="sec-right">Live · 24 entity network</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">P2P Cycle Time</div><div class="kcell-val acc">4.8d</div><div class="kcell-sub">From 18d · agent-driven</div></div>
+    <div class="kcell"><div class="kcell-lbl">Straight-Through</div><div class="kcell-val good">91.4%</div><div class="kcell-delta up">▲ +42pp vs baseline</div></div>
+    <div class="kcell"><div class="kcell-lbl">Policy Adherence</div><div class="kcell-val good">99.1%</div><div class="kcell-sub">Across all agents</div></div>
+    <div class="kcell"><div class="kcell-lbl">Agent Uptime</div><div class="kcell-val good">99.9%</div><div class="kcell-sub">SLA: 99.5%</div></div>
+    <div class="kcell"><div class="kcell-lbl">Exception Backlog</div><div class="kcell-val warn">0.8d</div><div class="kcell-sub">Avg age · target &lt;1d</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">P2P Sub-Process KPIs</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Sub-Process</th><th>Cycle Time</th><th>Touchless %</th><th>Trend</th></tr></thead>
+          <tbody>
+            <tr><td>Req-to-PO</td><td class="mono">4.2h</td><td class="mono">94.2%</td><td><span class="pill green">▲</span></td></tr>
+            <tr><td>PO-to-Receipt</td><td class="mono">1.8d</td><td class="mono">98.4%</td><td><span class="pill green">▲</span></td></tr>
+            <tr><td>Invoice Receipt</td><td class="mono">0.8h</td><td class="mono">99.1%</td><td><span class="pill green">▲</span></td></tr>
+            <tr><td>3-way Match</td><td class="mono">1.4s</td><td class="mono">96.8%</td><td><span class="pill green">▲</span></td></tr>
+            <tr><td>Payment Run</td><td class="mono">0.6d</td><td class="mono">95.9%</td><td><span class="pill green">▲</span></td></tr>
+            <tr><td>Recon</td><td class="mono">Daily</td><td class="mono">99.2%</td><td><span class="pill gold">→</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Data &amp; Policy Strategy · 3 Pillars</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Data Quality</span><span class="bl-value">98.4%</span></div><div class="bl-track"><div class="bl-fill" style="width:98.4%"></div></div>
+          <div class="bl-top"><span class="bl-label">Policy Coverage</span><span class="bl-value">99.1%</span></div><div class="bl-track"><div class="bl-fill" style="width:99.1%"></div></div>
+          <div class="bl-top"><span class="bl-label">Agent Adoption</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">P2P Operations Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the P2P Control Tower Agent. The manager governs process and policy; the agent monitors, forecasts, and reports continuously.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">process.monitor</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Tracks every P2P sub-process KPI in real time. Surfaces bottlenecks, SLA breaches, and throughput anomalies before they escalate.</div><div class="skill-meta"><span>Live dashboard</span><span>Alert-driven</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">policy.govern</div><span class="skill-tag">Governance</span></div><div class="skill-desc">Maintains the master policy library for all S2P agents. Versions, tests, and deploys policy changes across the network.</div><div class="skill-meta"><span>Versioned</span><span>Governed</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">data.quality</div><span class="skill-tag">Platform</span></div><div class="skill-desc">Monitors supplier master, GL account, cost-centre, and contract data quality. Auto-cleanses within tolerance; flags material issues.</div><div class="skill-meta"><span>Continuous</span><span>Zero-drift</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">capacity.plan</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Forecasts P2P transaction volumes, exception rates, and analyst workload. Ensures right-sizing of agent and human capacity.</div><div class="skill-meta"><span>ML model</span><span>Forward-looking</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">sla.enforce</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Tracks every in-flight transaction against SLA. Escalates breaches before they happen using predicted completion time.</div><div class="skill-meta"><span>Predictive</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">ops.report</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Produces the weekly P2P operations pack — KPIs, exceptions, savings, policy changes — with root-cause commentary.</div><div class="skill-meta"><span>Model: LLM</span><span>Auto-scheduled</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SOURCING MANAGER ═════════════════════ -->
+<div class="persona-panel c-gold" id="panel-sourcing">
+  <div class="p-head">
+    <div class="p-head-icon">🔍</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Strategic Sourcing</div>
+      <div class="p-head-title">Sourcing Manager</div>
+      <div class="p-head-sub">Deploys AI-driven market intelligence and benchmarking to inform strategic sourcing decisions. Runs smarter RFx events, negotiates from a position of insight, and awards contracts that agents then govern.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Market-led</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Strategic Sourcing Intelligence</div><div class="sec-title">Sourcing Pipeline &amp; Market Signals</div></div><div class="sec-right">18 active events · $84M pipeline</div></div>
+  <div class="kpi-row">
+    <div class="kcell"><div class="kcell-lbl">Active Sourcing Events</div><div class="kcell-val">18</div><div class="kcell-sub">$84M pipeline value</div></div>
+    <div class="kcell"><div class="kcell-lbl">Savings Delivered YTD</div><div class="kcell-val good">$12.4M</div><div class="kcell-sub">vs $11.5M target · 108%</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Bid Response</div><div class="kcell-val acc">4.2</div><div class="kcell-sub">Suppliers per event · +1.4 vs LY</div></div>
+    <div class="kcell"><div class="kcell-lbl">Time-to-Award</div><div class="kcell-val acc">18d</div><div class="kcell-sub">From 42d · −57%</div></div>
+  </div>
+
+  <div class="grid-13">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Sourcing Event Pipeline</span><span class="panel-hdr-badge">18 active</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Category</th><th>Type</th><th>Stage</th><th>Suppliers</th><th>Savings Target</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Indirect IT</td><td>RFP</td><td>Bid eval.</td><td class="mono">6</td><td class="mono">$2.4M</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>Logistics</td><td>Auction</td><td>Awarded</td><td class="mono">4</td><td class="mono">$1.8M</td><td><span class="pill teal">Awarded</span></td></tr>
+            <tr><td>Professional Svcs</td><td>RFQ</td><td>Bid eval.</td><td class="mono">5</td><td class="mono">$980K</td><td><span class="pill green">Active</span></td></tr>
+            <tr><td>MRO</td><td>RFP</td><td>Spec review</td><td class="mono">8</td><td class="mono">$640K</td><td><span class="pill gold">Planning</span></td></tr>
+            <tr><td>Marketing</td><td>RFQ</td><td>Strategy</td><td class="mono">3</td><td class="mono">$480K</td><td><span class="pill gold">Planning</span></td></tr>
+            <tr><td>Facilities</td><td>RFQ</td><td>Scoping</td><td class="mono">4</td><td class="mono">$420K</td><td><span class="pill gold">Planning</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Market Intelligence Signals</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Commodity price trend ↓</span><span class="bl-value">−4.2%</span></div><div class="bl-track"><div class="bl-fill" style="width:42%"></div></div>
+          <div class="bl-top"><span class="bl-label">Supplier capacity ↑</span><span class="bl-value">+12%</span></div><div class="bl-track"><div class="bl-fill" style="width:62%"></div></div>
+          <div class="bl-top"><span class="bl-label">Geo-risk score</span><span class="bl-value">Medium · 48</span></div><div class="bl-track"><div class="bl-fill" style="width:48%;background:var(--orange);"></div></div>
+          <div class="bl-top"><span class="bl-label">ESG tier shift</span><span class="bl-value">+6% Tier 1</span></div><div class="bl-track"><div class="bl-fill" style="width:66%"></div></div>
+          <div class="bl-top"><span class="bl-label">New market entrants</span><span class="bl-value">3 this quarter</span></div><div class="bl-track"><div class="bl-fill" style="width:30%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Sourcing Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Strategic Sourcing Agent. The manager decides and negotiates; the agent benchmarks, generates, scores, and models continuously.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">market.benchmark</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Prices every category against external market benchmarks, commodity indices, and peer-group data. Tells the manager where the leverage is.</div><div class="skill-meta"><span>External feeds</span><span>Real-time</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">rfx.generate</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Generates complete RFQ/RFP packages — scope, specifications, evaluation criteria, scoring model — from category strategy inputs.</div><div class="skill-meta"><span>Template-driven</span><span>Low-code</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">bid.analyse</div><span class="skill-tag">Analytics</span></div><div class="skill-desc">Scores and ranks supplier bids on price, quality, risk, delivery, and ESG. Produces sourcing recommendation with evidence.</div><div class="skill-meta"><span>Multi-criteria</span><span>Explainable</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">negotiation.prep</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Prepares negotiation briefs — BATNA, anchor, target, leverage points — from market data and supplier history. Manager enters the room ready.</div><div class="skill-meta"><span>Model: LLM</span><span>Confidential</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">award.model</div><span class="skill-tag">Finance</span></div><div class="skill-desc">Models single-source vs. dual-source vs. split-award scenarios on total cost of ownership, risk, and savings.</div><div class="skill-meta"><span>TCO model</span><span>Scenario engine</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">contract.extract</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Extracts and structures key terms, SLAs, pricing schedules, and penalty clauses from awarded contracts for agent governance.</div><div class="skill-meta"><span>Model: LLM</span><span>Structured output</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════ SUPPLIER RISK / COMPLIANCE MANAGER ═════════════════════ -->
+<div class="persona-panel c-magenta" id="panel-risk">
+  <div class="p-head">
+    <div class="p-head-icon">🛡️</div>
+    <div>
+      <div class="p-head-eyebrow">Persona · Supplier Risk &amp; Compliance</div>
+      <div class="p-head-title">Supplier Risk / Compliance Manager</div>
+      <div class="p-head-sub">Synthesizes news, ESG, regulatory, and compliance signals into supplier risk decisions. The agent monitors every supplier continuously — the manager investigates the flags and decides the response.</div>
+    </div>
+    <div class="p-head-actions"><span class="p-head-tag">◉ Always-on</span></div>
+  </div>
+
+  <div class="sec-hdr"><div><div class="sec-eyebrow">Dashboard · Supplier Risk Intelligence</div><div class="sec-title">Continuous Risk Monitoring — 847 Suppliers</div></div><div class="sec-right">847 suppliers · 14 risk dimensions</div></div>
+  <div class="kpi-row k5">
+    <div class="kcell"><div class="kcell-lbl">Suppliers Monitored</div><div class="kcell-val">847</div><div class="kcell-sub">24/7 · 14 signal types</div></div>
+    <div class="kcell"><div class="kcell-lbl">High-Risk Alerts</div><div class="kcell-val bad">8</div><div class="kcell-sub">Action required</div></div>
+    <div class="kcell"><div class="kcell-lbl">Compliance Violations</div><div class="kcell-val bad">3</div><div class="kcell-sub">Regulatory or ESG</div></div>
+    <div class="kcell"><div class="kcell-lbl">Avg Risk Score</div><div class="kcell-val good">24</div><div class="kcell-sub">Portfolio · low risk</div></div>
+    <div class="kcell"><div class="kcell-lbl">Risk Events Prevented</div><div class="kcell-val good">14</div><div class="kcell-sub">QTD · agent early-warn</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Risk Alert Queue · Investigate</span><span class="panel-hdr-badge">8 high-risk</span></div>
+      <div class="panel-body flush">
+        <table class="tbl">
+          <thead><tr><th>Supplier</th><th>Risk Type</th><th>Severity</th><th>Signal Source</th><th>Recommended Action</th></tr></thead>
+          <tbody>
+            <tr><td>Meridian Castings Ltd.</td><td>Financial</td><td><span class="pill red">Critical</span></td><td>Credit bureau</td><td>Dual-source immediately</td></tr>
+            <tr><td>DataEdge Systems</td><td>Cyber</td><td><span class="pill red">High</span></td><td>Breach disclosure</td><td>Suspend &amp; evaluate</td></tr>
+            <tr><td>Atlas Components Inc.</td><td>Sanctions</td><td><span class="pill red">High</span></td><td>OFAC watch</td><td>Legal review</td></tr>
+            <tr><td>ProClean Services</td><td>ESG / Labor</td><td><span class="pill gold">Medium</span></td><td>Audit expiry</td><td>Request recertification</td></tr>
+            <tr><td>Horizon Freight Co.</td><td>Geo-political</td><td><span class="pill gold">Medium</span></td><td>Port disruption</td><td>Buffer stock &amp; monitor</td></tr>
+            <tr><td>NorthStar Packaging</td><td>Regulatory</td><td><span class="pill gold">Medium</span></td><td>EPA filing</td><td>Compliance plan</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hdr"><span class="panel-hdr-title">Risk Dimension Coverage</span></div>
+      <div class="panel-body">
+        <div class="bar-list">
+          <div class="bl-top"><span class="bl-label">Financial health</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div>
+          <div class="bl-top"><span class="bl-label">News / media</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div>
+          <div class="bl-top"><span class="bl-label">Sanctions / PEP</span><span class="bl-value">100%</span></div><div class="bl-track"><div class="bl-fill" style="width:100%"></div></div>
+          <div class="bl-top"><span class="bl-label">ESG / labor</span><span class="bl-value">96%</span></div><div class="bl-track"><div class="bl-fill" style="width:96%"></div></div>
+          <div class="bl-top"><span class="bl-label">Cyber security</span><span class="bl-value">94%</span></div><div class="bl-track"><div class="bl-fill" style="width:94%"></div></div>
+          <div class="bl-top"><span class="bl-label">Regulatory</span><span class="bl-value">98%</span></div><div class="bl-track"><div class="bl-fill" style="width:98%"></div></div>
+          <div class="bl-top"><span class="bl-label">Geo-political</span><span class="bl-value">92%</span></div><div class="bl-track"><div class="bl-fill" style="width:92%"></div></div>
+          <div class="bl-top"><span class="bl-label">Cert expiry</span><span class="bl-value">88%</span></div><div class="bl-track"><div class="bl-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="agents">
+    <div class="agents-head">
+      <div class="agents-title-wrap">
+        <div class="ah-eye">Agent Skills · Low-Code Foundation</div>
+        <div class="ah-t">Supplier Risk / Compliance Manager — Skills Library</div>
+        <div class="ah-s">Skills that power the Supplier Risk Agent. The manager investigates flags and decides responses; the agent monitors, screens, and briefs 24/7.</div>
+      </div>
+      <div class="agents-badge">◉ 6 skills</div>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.monitor</div><span class="skill-tag">Intelligence</span></div><div class="skill-desc">Watches all 847 suppliers across 14 risk dimensions — financial stress, news, sanctions, ESG, cyber, geo-political. Alerts within hours of material change.</div><div class="skill-meta"><span>Always-on</span><span>14 signals</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">sanctions.screen</div><span class="skill-tag">Compliance</span></div><div class="skill-desc">Screens suppliers, ultimate beneficial owners, and bank accounts against OFAC, EU, UN, and country-specific lists. Real-time and on-change.</div><div class="skill-meta"><span>Real-time</span><span>Regulator-ready</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">esg.assess</div><span class="skill-tag">Sustainability</span></div><div class="skill-desc">Assesses supplier ESG posture from audits, certifications, disclosure filings, and news. Produces portfolio ESG score.</div><div class="skill-meta"><span>CSRD-aligned</span><span>Scope 3</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">risk.brief</div><span class="skill-tag">GenAI</span></div><div class="skill-desc">Prepares risk briefing for any flagged supplier — timeline, signals, exposure, and recommended response — in under 60 seconds.</div><div class="skill-meta"><span>Model: LLM</span><span>Evidence-linked</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">compliance.track</div><span class="skill-tag">Policy</span></div><div class="skill-desc">Tracks every supplier's regulatory and contractual compliance obligations. Auto-alerts on upcoming deadlines and confirmed breaches.</div><div class="skill-meta"><span>Multi-jurisdiction</span><span>Auto-track</span></div></div>
+      <div class="skill-card"><div class="skill-top"><div class="skill-name">exit.plan</div><span class="skill-tag">Workflow</span></div><div class="skill-desc">Orchestrates supplier exit when risk reaches threshold — identifies alternatives, manages transition, documents rationale.</div><div class="skill-meta"><span>Risk-triggered</span><span>Audit trail</span></div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page -->
+
+<script>
+function sel(target, el){
+  document.querySelectorAll('.sn-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.persona-panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('panel-'+target);
+  if(panel) panel.classList.add('active');
+  history.replaceState(null,'','#'+target);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+// hash deep-link
+(function(){
+  const h = (location.hash||'').replace('#','');
+  if(!h) return;
+  const el = document.querySelector('.sn-item[data-target="'+h+'"]');
+  if(el) sel(h, el);
+})();
+</script>
+
+</body>
+</html>
