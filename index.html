@@ -131,9 +131,51 @@
       font-size: 0.875rem; font-weight: 400; color: var(--text-1);
       height: 48px; display: flex; align-items: center; padding: 0 1rem;
       border-bottom: 2px solid transparent; transition: all var(--transition);
+      text-decoration: none; white-space: nowrap;
     }
     .nav-links a:hover { color: var(--text-0); background: var(--bg-1); }
     .nav-links a.active { color: var(--text-0); border-bottom-color: var(--blue); }
+
+    /* ── PLATFORM DROPDOWN ─────────────────────────────────────────────── */
+    .nav-dropdown { position: relative; display: flex; align-items: center; }
+    .nav-dropdown > .nav-drop-trigger {
+      font-size: 0.875rem; font-weight: 400; color: var(--text-1);
+      height: 48px; display: flex; align-items: center; gap: 5px; padding: 0 1rem;
+      border-bottom: 2px solid transparent; transition: all var(--transition);
+      cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    .nav-dropdown:hover > .nav-drop-trigger,
+    .nav-dropdown > .nav-drop-trigger:hover {
+      color: var(--text-0); background: var(--bg-1);
+    }
+    .nav-drop-caret {
+      font-size: 9px; opacity: 0.55; margin-top: 1px;
+      transition: transform 0.15s ease;
+    }
+    .nav-dropdown:hover .nav-drop-caret { transform: rotate(180deg); }
+    .nav-drop-menu {
+      display: none;
+      position: absolute; top: 48px; left: 0;
+      background: #fff; border: 1px solid var(--border);
+      border-top: 2px solid var(--blue);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      min-width: 200px; z-index: 500;
+      flex-direction: column;
+    }
+    .nav-dropdown:hover .nav-drop-menu { display: flex; }
+    .nav-drop-menu a {
+      font-size: 13px; font-weight: 400; color: var(--text-1);
+      padding: 11px 18px; height: auto;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+      transition: background 0.12s ease;
+      text-decoration: none;
+    }
+    .nav-drop-menu a:last-child { border-bottom: none; }
+    .nav-drop-menu a:hover { background: var(--bg-1); color: var(--blue); }
+    .nav-drop-menu a .dm-icon { font-size: 14px; width: 18px; text-align: center; }
+    .nav-drop-menu a .dm-label { font-weight: 600; font-size: 12px; }
+    .nav-drop-menu a .dm-sub { font-size: 10px; color: var(--text-3); margin-top: 1px; }
     .nav-cta { display: flex; gap: 0; }
     .nav-cta a {
       padding: 0 1.25rem; height: 48px; display: flex; align-items: center;
@@ -543,11 +585,16 @@
   <div class="nav-links">
     <a href="#problem" class="active">The Gap</a>
     <a href="#success">Client Zero</a>
-    <a href="#platform">Platform</a>
-    <a href="assets.html">Asset Library</a>
-    <a href="assess.html">Assess</a>
-    <a href="tracker.html">Deployments</a>
-    <a href="roi.html">ROI Tracker</a>
+    <div class="nav-dropdown">
+      <span class="nav-drop-trigger">Platform <span class="nav-drop-caret">▼</span></span>
+      <div class="nav-drop-menu">
+        <a href="#platform"><span class="dm-icon">🏗️</span><div><div class="dm-label">Platform Overview</div><div class="dm-sub">Architecture &amp; capabilities</div></div></a>
+        <a href="assets.html"><span class="dm-icon">📦</span><div><div class="dm-label">Asset Library</div><div class="dm-sub">Accelerators &amp; templates</div></div></a>
+        <a href="assess.html"><span class="dm-icon">📋</span><div><div class="dm-label">Assess</div><div class="dm-sub">Maturity assessment</div></div></a>
+        <a href="tracker.html"><span class="dm-icon">🚀</span><div><div class="dm-label">Deployments</div><div class="dm-sub">Track live deployments</div></div></a>
+        <a href="roi.html"><span class="dm-icon">💰</span><div><div class="dm-label">ROI Tracker</div><div class="dm-sub">Value &amp; business case</div></div></a>
+      </div>
+    </div>
     <a href="#exec-dashboards">Exec Dashboards</a>
     <a href="agentic-future.html">Agentic Future</a>
   </div>
